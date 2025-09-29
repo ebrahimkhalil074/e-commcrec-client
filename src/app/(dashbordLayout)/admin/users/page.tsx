@@ -1,7 +1,7 @@
 import AllUsersTable from "@/src/components/table/UsersTable";
 
 const UsersPage = async () => {
-  const res = await fetch("http://localhost:5000/api/v1/user");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/user`);
   const usersData = await res.json();
 
   console.log(usersData);
