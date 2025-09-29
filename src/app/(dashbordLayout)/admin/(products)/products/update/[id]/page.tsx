@@ -1,16 +1,693 @@
+// "use client";
+
+// import { useFieldArray, useForm, useWatch, Controller } from "react-hook-form";
+// import { Input, Textarea } from "@heroui/input";
+// import { Button } from "@heroui/button";
+// import { Card, CardHeader, CardBody } from "@heroui/card";
+// import { Divider } from "@heroui/divider";
+// import { Select, SelectItem } from "@heroui/select";
+// import { useGetAllCategory } from "@/src/hooks/category.hook";
+// import { useGetAllBrands } from "@/src/hooks/brand.hook";
+// import { useGetProductById, useUpdateProduct } from "@/src/hooks/product.hook";
+// import { useParams } from "next/navigation";
+// import { ChangeEvent, useEffect, useState } from "react";
+
+// type ProductForm = {
+//   name: string;
+//   description: string;
+//   price: number;
+//   discount: number;
+//   stock: number;
+//   warranty: string;
+//   categoryId: string;
+//   subCategoryId?: string | null;
+//   brandId: string;
+//   images: { file: File | null }[];
+//   variants: {
+//     color: string;
+//     price?: number;
+//     sizes: { size: string | number | null; stock: number }[];
+//   }[];
+// };
+
+// export default function UpdateProductPage() {
+//   const { id } = useParams();
+//   const { data: productData } = useGetProductById(id as string);
+//   const product = productData?.data;
+//   const { mutate } = useUpdateProduct();
+
+//   const [imageFiles, setImageFiles] = useState<File[]>([]);
+//   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+//   const [existingImages, setExistingImages] = useState<string[]>([]);
+
+//   const { control, handleSubmit, reset } = useForm<ProductForm>({
+//     defaultValues: {
+//       images: [{ file: null }],
+//       variants: [{ color: "", price: 0, sizes: [{ size: "", stock: 0 }] }],
+//       subCategoryId: null,
+//     },
+//   });
+
+//   // Load product into form
+//   useEffect(() => {
+//     if (product) {
+//       reset({
+//         name: product.name || "",
+//         description: product.description || "",
+//         price: product.price || 0,
+//         discount: product.discount || 0,
+//         stock: product.stock || 0,
+//         warranty: product.warranty || "",
+//         categoryId: product.categoryId || "",
+//         subCategoryId: product.subCategoryId || null,
+//         brandId: product.brandId || "",
+//         variants:
+//           product.variants?.map((v) => ({
+//             color: v.color || "",
+//             price: v.price || 0,
+//             sizes:
+//               v.sizes?.map((s) => ({
+//                 size: s.size || "",
+//                 stock: s.stock || 0,
+//               })) || [{ size: "", stock: 0 }],
+//           })) || [{ color: "", price: 0, sizes: [{ size: "", stock: 0 }] }],
+//         images: [{ file: null }],
+//       });
+
+//       setExistingImages(product.images?.map((img: any) => img.url) || []);
+//     }
+//   }, [product, reset]);
+
+//   // Category watch
+//   const selectedCategoryId = useWatch({ control, name: "categoryId" });
+
+//   // Categories & Brands
+//   const { data: categoryData } = useGetAllCategory(undefined);
+//   const categories = categoryData?.data || [];
+//   const { data: brandData } = useGetAllBrands(undefined);
+//   const brands = brandData?.data || [];
+
+//   // Image handlers
+//   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+//     const files = e.target.files;
+//     if (!files) return;
+//     const newFiles = Array.from(files);
+//     setImageFiles((prev) => [...prev, ...newFiles]);
+
+//     newFiles.forEach((file) => {
+//       const reader = new FileReader();
+//       reader.onloadend = () =>
+//         setImagePreviews((prev) => [...prev, reader.result as string]);
+//       reader.readAsDataURL(file);
+//     });
+//   };
+
+//   const handleDeleteExistingImage = (index: number) => {
+//     setExistingImages((prev) => prev.filter((_, i) => i !== index));
+//   };
+
+//   const handleRemoveNewImage = (index: number) => {
+//     setImageFiles((prev) => prev.filter((_, i) => i !== index));
+//     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+//   };
+
+//   // Submit
+//   const onSubmit = (data: ProductForm) => {
+//   const productDataToSend = {
+//     ...data,
+//     images: existingImages,
+//     price: Number(data.price),
+//     stock: Number(data.stock),
+//     discount: Number(data.discount),
+//     variants: data.variants.map((variant) => ({
+//       ...variant,
+//       price: variant.price ? Number(variant.price) : 0,
+//       sizes: variant.sizes.map((s) => ({
+//         ...s,
+//         size: isNaN(Number(s.size)) ? s.size : Number(s.size),
+//         stock: Number(s.stock),
+//       })),
+//     })),
+//   };
+
+//   const formData = new FormData();
+//   formData.append("data", JSON.stringify(productDataToSend));
+//   imageFiles.forEach((file) => formData.append("file", file));
+
+//   // ✅ এখন সঠিকভাবে object আকারে পাঠানো হবে
+//   mutate({ id: product.id, productData: formData });
+//   setImagePreviews([]);
+// };
+
+//   // Variants array
+//   const { fields: variantFields, append: addVariant, remove: removeVariant } =
+//     useFieldArray({ control, name: "variants" });
+
+//   // Subcategories filter
+//   const subCategories =
+//     categories.find((cat: any) => cat.id === selectedCategoryId)?.subCategories || [];
+
+//   return (
+//     <div className="max-w-5xl mx-auto p-6">
+//       <Card shadow="lg" className="rounded-2xl border-amber-500 border">
+//         <CardHeader className="bg-amber-500 text-white font-bold text-xl">
+//           Update Product
+//         </CardHeader>
+//         <CardBody>
+//           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+//             {/* Basic Info */}
+//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//               <Controller
+//                 name="name"
+//                 control={control}
+//                 render={({ field }) => <Input label="Product Name" isRequired {...field} />}
+//               />
+//               <Controller
+//                 name="price"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <Input type="number" label="Price" isRequired {...field} />
+//                 )}
+//               />
+//               <Controller
+//                 name="discount"
+//                 control={control}
+//                 render={({ field }) => <Input type="number" label="Discount" {...field} />}
+//               />
+//               <Controller
+//                 name="stock"
+//                 control={control}
+//                 render={({ field }) => <Input type="number" label="Stock" {...field} />}
+//               />
+//               <Controller
+//                 name="warranty"
+//                 control={control}
+//                 render={({ field }) => <Input label="Warranty" {...field} />}
+//               />
+
+//               <Controller
+//                 name="categoryId"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <Select label="Category" {...field} selectedKeys={[field.value]}>
+//                     {categories.map((cat: any) => (
+//                       <SelectItem key={cat.id} value={cat.id}>
+//                         {cat.name}
+//                       </SelectItem>
+//                     ))}
+//                   </Select>
+//                 )}
+//               />
+
+//               <Controller
+//                 name="subCategoryId"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <Select label="SubCategory" {...field} selectedKeys={[field.value || ""]}>
+//                     {subCategories.map((sub: any) => (
+//                       <SelectItem key={sub.id} value={sub.id}>
+//                         {sub.name}
+//                       </SelectItem>
+//                     ))}
+//                   </Select>
+//                 )}
+//               />
+
+//               <Controller
+//                 name="brandId"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <Select label="Brand" {...field} selectedKeys={[field.value]}>
+//                     {brands.map((brand: any) => (
+//                       <SelectItem key={brand.id} value={brand.id}>
+//                         {brand.name}
+//                       </SelectItem>
+//                     ))}
+//                   </Select>
+//                 )}
+//               />
+//             </div>
+
+//             <Controller
+//               name="description"
+//               control={control}
+//               render={({ field }) => <Textarea label="Description" {...field} />}
+//             />
+
+//             <Divider className="my-4" />
+
+//             {/* Images Section */}
+//             <div>
+//               <h3 className="font-semibold text-lg text-amber-600">Images</h3>
+//               <div className="flex gap-3 flex-wrap mb-3">
+//                 {existingImages.map((url, i) => (
+//                   <div key={i} className="relative w-24 h-24 border p-1">
+//                     <img src={url} className="w-full h-full object-cover" />
+//                     <Button
+//                       variant="flat"
+//                       className="absolute top-0 right-0 bg-red-500 text-white"
+//                       onPress={() => handleDeleteExistingImage(i)}
+//                     >
+//                       X
+//                     </Button>
+//                   </div>
+//                 ))}
+//               </div>
+
+//               <div className="flex gap-3 flex-wrap mb-3">
+//                 {imagePreviews.map((url, i) => (
+//                   <div key={i} className="relative w-[200px] border p-1">
+//                     <img src={url} className="w-full h-full object-cover" />
+//                     <Button
+//                       variant="shadow"
+//                       size="sm"
+//                       className="absolute top-0 right-0 text-red-500"
+//                       onPress={() => handleRemoveNewImage(i)}
+//                     >
+//                       X
+//                     </Button>
+//                   </div>
+//                 ))}
+//               </div>
+
+//               <Input
+//                 type="file"
+//                 className="rounded-md p-2 flex-1"
+//                 multiple
+//                 accept="image/*"
+//                 onChange={handleImageChange}
+//               />
+//             </div>
+
+//             <Divider className="my-4" />
+
+//             {/* Variants Section */}
+//             <div>
+//               <h3 className="font-semibold text-lg text-amber-600">Variants</h3>
+//               {variantFields.map((variant, vIndex) => (
+//                 <Card key={variant.id} className="p-4 border border-amber-200 rounded-lg mt-3">
+//                   <div className="flex flex-col md:flex-row gap-4">
+//                     <Controller
+//                       name={`variants.${vIndex}.color`}
+//                       control={control}
+//                       render={({ field }) => <Input label="Color" {...field} />}
+//                     />
+//                     <Controller
+//                       name={`variants.${vIndex}.price`}
+//                       control={control}
+//                       render={({ field }) => (
+//                         <Input type="number" label="Variant Price" {...field} />
+//                       )}
+//                     />
+//                   </div>
+//                   <div className="mt-3">
+//                     <h4 className="text-amber-500 font-medium">Sizes</h4>
+//                     <VariantSizes control={control} vIndex={vIndex} />
+//                   </div>
+//                 </Card>
+//               ))}
+//               <div className="flex justify-between gap-3 mt-3">
+//                 <Button
+//                   variant="flat"
+//                   onPress={() =>
+//                     addVariant({ color: "", price: 0, sizes: [{ size: "", stock: 0 }] })
+//                   }
+//                   className="bg-amber-500 text-white"
+//                 >
+//                   + Add Variant
+//                 </Button>
+//                 <Button
+//                   variant="flat"
+//                   onPress={() => removeVariant(variantFields.length - 1)}
+//                   className="bg-red-500 text-white"
+//                   isDisabled={variantFields.length === 0}
+//                 >
+//                   - Remove Variant
+//                 </Button>
+//               </div>
+//             </div>
+
+//             <Divider className="my-4" />
+
+//             <Button type="submit" className="w-full font-bold bg-amber-500 text-white">
+//               Update Product
+//             </Button>
+//           </form>
+//         </CardBody>
+//       </Card>
+//     </div>
+//   );
+// }
+
+// // Sizes subcomponent
+// function VariantSizes({ control, vIndex }: any) {
+//   const { fields, append } = useFieldArray({
+//     control,
+//     name: `variants.${vIndex}.sizes`,
+//   });
+
+//   return (
+//     <div className="space-y-3 mt-2">
+//       {fields.map((field, sIndex) => (
+//         <div key={field.id} className="flex gap-3 items-center">
+//           <Controller
+//             name={`variants.${vIndex}.sizes.${sIndex}.size`}
+//             control={control}
+//             render={({ field }) => <Input label="Size" {...field} />}
+//           />
+//           <Controller
+//             name={`variants.${vIndex}.sizes.${sIndex}.stock`}
+//             control={control}
+//             render={({ field }) => <Input type="number" label="Stock" {...field} />}
+//           />
+//         </div>
+//       ))}
+//       <Button variant="flat" onPress={() => append({ size: "", stock: 0 })}>
+//         + Add Size
+//       </Button>
+//     </div>
+//   );
+// }
+
+// "use client";
+
+// import { useFieldArray, useForm, useWatch, Controller, FieldValues, Control } from "react-hook-form";
+// import { Input, Textarea } from "@heroui/input";
+// import { Button } from "@heroui/button";
+// import { Card, CardHeader, CardBody } from "@heroui/card";
+// import { Divider } from "@heroui/divider";
+// import { Select, SelectItem } from "@heroui/select";
+// import { useParams } from "next/navigation";
+// import { ChangeEvent, useEffect, useState } from "react";
+// import Image from "next/image";
+
+// import { useGetAllCategory } from "@/src/hooks/category.hook";
+// import { useGetAllBrands } from "@/src/hooks/brand.hook";
+// import { useGetProductById, useUpdateProduct } from "@/src/hooks/product.hook";
+
+// // ---------- Types ----------
+// type VariantSize = { size: string | number; stock: number };
+// type Variant = { color: string; price?: number; sizes: VariantSize[] };
+
+// type ProductForm = {
+//   name: string;
+//   description: string;
+//   price: number;
+//   discount: number;
+//   stock: number;
+//   warranty: string;
+//   categoryId: string;
+//   subCategoryId: string | null;
+//   brandId: string;
+//   images: { file: File | null }[];
+//   variants: Variant[];
+// };
+
+// export default function UpdateProductPage() {
+//   const { id } = useParams<{ id: string }>();
+//   const { data: productData } = useGetProductById(id);
+//   const product = productData?.data;
+//   const { mutate } = useUpdateProduct();
+
+//   const [imageFiles, setImageFiles] = useState<File[]>([]);
+//   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+//   const [existingImages, setExistingImages] = useState<string[]>([]);
+
+//   const { control, handleSubmit, reset } = useForm<ProductForm>({
+//     defaultValues: {
+//       name: "",
+//       description: "",
+//       price: 0,
+//       discount: 0,
+//       stock: 0,
+//       warranty: "",
+//       categoryId: "",
+//       subCategoryId: null,
+//       brandId: "",
+//       images: [{ file: null }],
+//       variants: [{ color: "", price: 0, sizes: [{ size: "", stock: 0 }] }],
+//     },
+//   });
+
+//   // ✅ Load product
+//   useEffect(() => {
+//     if (product) {
+//       reset({
+//         name: product.name ?? "",
+//         description: product.description ?? "",
+//         price: Number(product.price ?? 0),
+//         discount: Number(product.discount ?? 0),
+//         stock: Number(product.stock ?? 0),
+//         warranty: product.warranty ?? "",
+//         categoryId: product.categoryId ?? "",
+//         subCategoryId: product.subCategoryId ?? null,
+//         brandId: product.brandId ?? "",
+//         variants:
+//           product.variants?.map((v: any) => ({
+//             color: v.color ?? "",
+//             price: Number(v.price ?? 0),
+//             sizes:
+//               v.sizes?.map((s: any) => ({
+//                 size: s.size ?? "",
+//                 stock: Number(s.stock ?? 0),
+//               })) ?? [{ size: "", stock: 0 }],
+//           })) ?? [{ color: "", price: 0, sizes: [{ size: "", stock: 0 }] }],
+//         images: [{ file: null }],
+//       });
+//       setExistingImages(product.images?.map((img: any) => img.url) || []);
+//     }
+//   }, [product, reset]);
+
+//   const selectedCategoryId = useWatch({ control, name: "categoryId" });
+//   const { data: categoryData } = useGetAllCategory(undefined);
+//   const categories = categoryData?.data || [];
+//   const { data: brandData } = useGetAllBrands(undefined);
+//   const brands = brandData?.data || [];
+
+//   // ✅ Image handlers
+//   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+//     if (!e.target.files) return;
+//     const newFiles = Array.from(e.target.files);
+//     setImageFiles((prev) => [...prev, ...newFiles]);
+//     newFiles.forEach((file) => {
+//       const reader = new FileReader();
+//       reader.onloadend = () => setImagePreviews((p) => [...p, reader.result as string]);
+//       reader.readAsDataURL(file);
+//     });
+//   };
+
+//   const onSubmit = (data: ProductForm) => {
+//     const productDataToSend = {
+//       ...data,
+//       images: existingImages,
+//       variants: data.variants.map((v) => ({
+//         ...v,
+//         price: Number(v.price ?? 0),
+//         sizes: v.sizes.map((s) => ({ ...s, stock: Number(s.stock) })),
+//       })),
+//     };
+
+//     const formData = new FormData();
+//     formData.append("data", JSON.stringify(productDataToSend));
+//     imageFiles.forEach((file) => formData.append("file", file));
+//     mutate({ id: product?.id as string, productData: formData });
+//     setImagePreviews([]);
+//   };
+
+//   const { fields: variantFields, append: addVariant, remove: removeVariant } =
+//     useFieldArray({ control, name: "variants" });
+
+//   const subCategories =
+//     categories.find((c: any) => c.id === selectedCategoryId)?.subCategories || [];
+
+//   return (
+//     <div className="max-w-5xl mx-auto p-6">
+//       <Card className="rounded-2xl border-amber-500 border" shadow="lg">
+//         <CardHeader className="bg-amber-500 text-white font-bold text-xl">
+//           Update Product
+//         </CardHeader>
+//         <CardBody>
+//           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+//             {/* === Basic Info === */}
+//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//               <Controller name="name" control={control} render={({ field }) => <Input isRequired label="Product Name" {...field} />} />
+//               <Controller name="price" control={control} render={({ field }) => <Input isRequired type="number" label="Price" {...field} />} />
+//               <Controller name="discount" control={control} render={({ field }) => <Input type="number" label="Discount" {...field} />} />
+//               <Controller name="stock" control={control} render={({ field }) => <Input type="number" label="Stock" {...field} />} />
+//               <Controller name="warranty" control={control} render={({ field }) => <Input label="Warranty" {...field} />} />
+//               <Controller
+//                 name="categoryId"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <Select label="Category" {...field} selectedKeys={field.value ? [field.value] : []}>
+//                     {categories.map((cat: any) => (
+//                       <SelectItem key={cat.id}>{cat.name}</SelectItem>
+//                     ))}
+//                   </Select>
+//                 )}
+//               />
+//               <Controller
+//                 name="subCategoryId"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <Select label="SubCategory" {...field} selectedKeys={field.value ? [field.value] : []}>
+//                     {subCategories.map((sub: any) => (
+//                       <SelectItem key={sub.id}>{sub.name}</SelectItem>
+//                     ))}
+//                   </Select>
+//                 )}
+//               />
+//               <Controller
+//                 name="brandId"
+//                 control={control}
+//                 render={({ field }) => (
+//                   <Select label="Brand" {...field} selectedKeys={field.value ? [field.value] : []}>
+//                     {brands.map((b: any) => (
+//                       <SelectItem key={b.id}>{b.name}</SelectItem>
+//                     ))}
+//                   </Select>
+//                 )}
+//               />
+//             </div>
+
+//             <Controller name="description" control={control} render={({ field }) => <Textarea label="Description" {...field} />} />
+
+//             <Divider className="my-4" />
+
+//             {/* === Images === */}
+//             <div>
+//               <h3 className="font-semibold text-lg text-amber-600">Images</h3>
+//               <div className="flex gap-3 flex-wrap mb-3">
+//                 {existingImages.map((url, i) => (
+//                   <div key={i} className="relative w-24 h-24 border p-1">
+//                     <Image alt="existing" src={url} width={96} height={96} className="object-cover w-full h-full" />
+//                     <Button
+//                       className="absolute top-0 right-0 bg-red-500 text-white"
+//                       variant="flat"
+//                       onPress={() => setExistingImages((p) => p.filter((_, idx) => idx !== i))}
+//                     >
+//                       X
+//                     </Button>
+//                   </div>
+//                 ))}
+//               </div>
+
+//               <label htmlFor="newImages" className="block font-medium mb-1">Add Images</label>
+//               <Input
+//                 id="newImages"
+//                 type="file"
+//                 multiple
+//                 accept="image/*"
+//                 onChange={handleImageChange}
+//               />
+//               <div className="flex gap-3 flex-wrap mt-3">
+//                 {imagePreviews.map((url, i) => (
+//                   <div key={i} className="relative w-24 h-24 border p-1">
+//                     <Image alt="preview" src={url} width={96} height={96} className="object-cover w-full h-full" />
+//                     <Button
+//                       className="absolute top-0 right-0 text-red-500"
+//                       size="sm"
+//                       variant="shadow"
+//                       onPress={() => {
+//                         setImageFiles((p) => p.filter((_, idx) => idx !== i));
+//                         setImagePreviews((p) => p.filter((_, idx) => idx !== i));
+//                       }}
+//                     >
+//                       X
+//                     </Button>
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+
+//             <Divider className="my-4" />
+
+//             {/* === Variants === */}
+//             <div>
+//               <h3 className="font-semibold text-lg text-amber-600">Variants</h3>
+//               {variantFields.map((variant, vIndex) => (
+//                 <Card key={variant.id} className="p-4 border border-amber-200 rounded-lg mt-3">
+//                   <div className="flex flex-col md:flex-row gap-4">
+//                     <Controller name={`variants.${vIndex}.color`} control={control} render={({ field }) => <Input label="Color" {...field} />} />
+//                     <Controller name={`variants.${vIndex}.price`} control={control} render={({ field }) => <Input type="number" label="Variant Price" {...field} />} />
+//                   </div>
+//                   <div className="mt-3">
+//                     <h4 className="text-amber-500 font-medium">Sizes</h4>
+//                     <VariantSizes control={control} vIndex={vIndex} />
+//                   </div>
+//                 </Card>
+//               ))}
+//               <div className="flex justify-between gap-3 mt-3">
+//                 <Button onPress={() => addVariant({ color: "", price: 0, sizes: [{ size: "", stock: 0 }] })}>+ Add Variant</Button>
+//                 <Button
+//                   color="danger"
+//                   isDisabled={!variantFields.length}
+//                   onPress={() => removeVariant(variantFields.length - 1)}
+//                 >
+//                   - Remove Variant
+//                 </Button>
+//               </div>
+//             </div>
+
+//             <Divider className="my-4" />
+
+//             <Button className="w-full font-bold bg-amber-500 text-white" type="submit">
+//               Update Product
+//             </Button>
+//           </form>
+//         </CardBody>
+//       </Card>
+//     </div>
+//   );
+// }
+
+// // ===== Sizes subcomponent =====
+// function VariantSizes({ control, vIndex }: { control: Control<ProductForm>; vIndex: number }) {
+//   const { fields, append } = useFieldArray({
+//     control,
+//     name: `variants.${vIndex}.sizes` as const,
+//   });
+
+//   return (
+//     <div className="space-y-3 mt-2">
+//       {fields.map((field, sIndex) => (
+//         <div key={field.id} className="flex gap-3 items-center">
+//           <Controller name={`variants.${vIndex}.sizes.${sIndex}.size`} control={control} render={({ field }) => <Input label="Size" {...field} />} />
+//           <Controller name={`variants.${vIndex}.sizes.${sIndex}.stock`} control={control} render={({ field }) => <Input type="number" label="Stock" {...field} />} />
+//         </div>
+//       ))}
+//       <Button variant="flat" onPress={() => append({ size: "", stock: 0 })}>
+//         + Add Size
+//       </Button>
+//     </div>
+//   );
+// }
+
 "use client";
 
-import { useFieldArray, useForm, useWatch, Controller } from "react-hook-form";
+import {
+  useFieldArray,
+  useForm,
+  useWatch,
+  Controller,
+  Control,
+} from "react-hook-form";
 import { Input, Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Divider } from "@heroui/divider";
 import { Select, SelectItem } from "@heroui/select";
+import { useParams } from "next/navigation";
+import { ChangeEvent, useEffect, useState } from "react";
+import Image from "next/image";
+
 import { useGetAllCategory } from "@/src/hooks/category.hook";
 import { useGetAllBrands } from "@/src/hooks/brand.hook";
 import { useGetProductById, useUpdateProduct } from "@/src/hooks/product.hook";
-import { useParams } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+
+// ---------- Types ----------
+type VariantSize = { size: string | number; stock: number };
+type Variant = { color: string; price?: number; sizes: VariantSize[] };
 
 type ProductForm = {
   name: string;
@@ -20,19 +697,15 @@ type ProductForm = {
   stock: number;
   warranty: string;
   categoryId: string;
-  subCategoryId?: string | null;
+  subCategoryId: string | undefined;
   brandId: string;
   images: { file: File | null }[];
-  variants: {
-    color: string;
-    price?: number;
-    sizes: { size: string | number | null; stock: number }[];
-  }[];
+  variants: Variant[];
 };
 
 export default function UpdateProductPage() {
-  const { id } = useParams();
-  const { data: productData } = useGetProductById(id as string);
+  const { id } = useParams<{ id: string }>();
+  const { data: productData } = useGetProductById(id);
   const product = productData?.data;
   const { mutate } = useUpdateProduct();
 
@@ -42,187 +715,192 @@ export default function UpdateProductPage() {
 
   const { control, handleSubmit, reset } = useForm<ProductForm>({
     defaultValues: {
+      name: "",
+      description: "",
+      price: 0,
+      discount: 0,
+      stock: 0,
+      warranty: "",
+      categoryId: "",
+      subCategoryId: undefined,
+      brandId: "",
       images: [{ file: null }],
       variants: [{ color: "", price: 0, sizes: [{ size: "", stock: 0 }] }],
-      subCategoryId: null,
     },
   });
 
-  // Load product into form
   useEffect(() => {
     if (product) {
       reset({
-        name: product.name || "",
-        description: product.description || "",
-        price: product.price || 0,
-        discount: product.discount || 0,
-        stock: product.stock || 0,
-        warranty: product.warranty || "",
-        categoryId: product.categoryId || "",
-        subCategoryId: product.subCategoryId || null,
-        brandId: product.brandId || "",
-        variants:
-          product.variants?.map((v) => ({
-            color: v.color || "",
-            price: v.price || 0,
-            sizes:
-              v.sizes?.map((s) => ({
-                size: s.size || "",
-                stock: s.stock || 0,
-              })) || [{ size: "", stock: 0 }],
-          })) || [{ color: "", price: 0, sizes: [{ size: "", stock: 0 }] }],
+        name: product.name ?? "",
+        description: product.description ?? "",
+        price: Number(product.price ?? 0),
+        discount: Number(product.discount ?? 0),
+        stock: Number(product.stock ?? 0),
+        warranty: product.warranty ?? "",
+        categoryId: product.categoryId ?? "",
+        subCategoryId: product.subCategoryId ?? null,
+        brandId: product.brandId ?? "",
+        variants: product.variants?.map((v: any) => ({
+          color: v.color ?? "",
+          price: Number(v.price ?? 0),
+          sizes: v.sizes?.map((s: any) => ({
+            size: s.size ?? "",
+            stock: Number(s.stock ?? 0),
+          })) ?? [{ size: "", stock: 0 }],
+        })) ?? [{ color: "", price: 0, sizes: [{ size: "", stock: 0 }] }],
         images: [{ file: null }],
       });
-
       setExistingImages(product.images?.map((img: any) => img.url) || []);
     }
   }, [product, reset]);
 
-  // Category watch
   const selectedCategoryId = useWatch({ control, name: "categoryId" });
-
-  // Categories & Brands
   const { data: categoryData } = useGetAllCategory(undefined);
   const categories = categoryData?.data || [];
   const { data: brandData } = useGetAllBrands(undefined);
   const brands = brandData?.data || [];
 
-  // Image handlers
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    const newFiles = Array.from(files);
-    setImageFiles((prev) => [...prev, ...newFiles]);
+    if (!e.target.files) return;
+    const newFiles = Array.from(e.target.files);
 
+    setImageFiles((prev) => [...prev, ...newFiles]);
     newFiles.forEach((file) => {
       const reader = new FileReader();
+
       reader.onloadend = () =>
-        setImagePreviews((prev) => [...prev, reader.result as string]);
+        setImagePreviews((p) => [...p, reader.result as string]);
       reader.readAsDataURL(file);
     });
   };
 
-  const handleDeleteExistingImage = (index: number) => {
-    setExistingImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleRemoveNewImage = (index: number) => {
-    setImageFiles((prev) => prev.filter((_, i) => i !== index));
-    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // Submit
   const onSubmit = (data: ProductForm) => {
-  const productDataToSend = {
-    ...data,
-    images: existingImages,
-    price: Number(data.price),
-    stock: Number(data.stock),
-    discount: Number(data.discount),
-    variants: data.variants.map((variant) => ({
-      ...variant,
-      price: variant.price ? Number(variant.price) : 0,
-      sizes: variant.sizes.map((s) => ({
-        ...s,
-        size: isNaN(Number(s.size)) ? s.size : Number(s.size),
-        stock: Number(s.stock),
+    const productDataToSend = {
+      ...data,
+      images: existingImages,
+      variants: data.variants.map((v) => ({
+        ...v,
+        price: Number(v.price ?? 0),
+        sizes: v.sizes.map((s) => ({ ...s, stock: Number(s.stock) })),
       })),
-    })),
+    };
+
+    const formData = new FormData();
+
+    formData.append("data", JSON.stringify(productDataToSend));
+    imageFiles.forEach((file) => formData.append("file", file));
+    mutate({ id: product?.id as string, productData: formData });
+    setImagePreviews([]);
   };
 
-  const formData = new FormData();
-  formData.append("data", JSON.stringify(productDataToSend));
-  imageFiles.forEach((file) => formData.append("file", file));
+  const {
+    fields: variantFields,
+    append: addVariant,
+    remove: removeVariant,
+  } = useFieldArray({ control, name: "variants" });
 
-  // ✅ এখন সঠিকভাবে object আকারে পাঠানো হবে
-  mutate({ id: product.id, productData: formData });
-  setImagePreviews([]);
-};
-
-
-  // Variants array
-  const { fields: variantFields, append: addVariant, remove: removeVariant } =
-    useFieldArray({ control, name: "variants" });
-
-  // Subcategories filter
   const subCategories =
-    categories.find((cat: any) => cat.id === selectedCategoryId)?.subCategories || [];
+    categories.find((c: any) => c.id === selectedCategoryId)?.subCategories ||
+    [];
+
+  // ✅ Helper to render number input with string value
+  const NumberInput = ({ field, label }: { field: any; label: string }) => (
+    <Input
+      ref={field.ref}
+      label={label}
+      name={field.name}
+      type="number"
+      value={field.value?.toString() ?? ""}
+      onBlur={field.onBlur}
+      onChange={(e) => field.onChange(Number(e.target.value))}
+    />
+  );
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <Card shadow="lg" className="rounded-2xl border-amber-500 border">
+      <Card className="rounded-2xl border-amber-500 border" shadow="lg">
         <CardHeader className="bg-amber-500 text-white font-bold text-xl">
           Update Product
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Basic Info */}
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            {/* === Basic Info === */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Controller
+                control={control}
                 name="name"
-                control={control}
-                render={({ field }) => <Input label="Product Name" isRequired {...field} />}
-              />
-              <Controller
-                name="price"
-                control={control}
                 render={({ field }) => (
-                  <Input type="number" label="Price" isRequired {...field} />
+                  <Input isRequired label="Product Name" {...field} />
                 )}
               />
               <Controller
+                control={control}
+                name="price"
+                render={({ field }) => (
+                  <NumberInput field={field} label="Price" />
+                )}
+              />
+              <Controller
+                control={control}
                 name="discount"
-                control={control}
-                render={({ field }) => <Input type="number" label="Discount" {...field} />}
+                render={({ field }) => (
+                  <NumberInput field={field} label="Discount" />
+                )}
               />
               <Controller
+                control={control}
                 name="stock"
-                control={control}
-                render={({ field }) => <Input type="number" label="Stock" {...field} />}
+                render={({ field }) => (
+                  <NumberInput field={field} label="Stock" />
+                )}
               />
               <Controller
-                name="warranty"
                 control={control}
+                name="warranty"
                 render={({ field }) => <Input label="Warranty" {...field} />}
               />
-
               <Controller
+                control={control}
                 name="categoryId"
-                control={control}
                 render={({ field }) => (
-                  <Select label="Category" {...field} selectedKeys={[field.value]}>
+                  <Select
+                    label="Category"
+                    {...field}
+                    selectedKeys={field.value ? [field.value] : []}
+                  >
                     {categories.map((cat: any) => (
-                      <SelectItem key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </SelectItem>
+                      <SelectItem key={cat.id}>{cat.name}</SelectItem>
                     ))}
                   </Select>
                 )}
               />
-
               <Controller
+                control={control}
                 name="subCategoryId"
-                control={control}
                 render={({ field }) => (
-                  <Select label="SubCategory" {...field} selectedKeys={[field.value || ""]}>
+                  <Select
+                    label="SubCategory"
+                    {...field}
+                    selectedKeys={field.value ? [field.value] : []}
+                  >
                     {subCategories.map((sub: any) => (
-                      <SelectItem key={sub.id} value={sub.id}>
-                        {sub.name}
-                      </SelectItem>
+                      <SelectItem key={sub.id}>{sub.name}</SelectItem>
                     ))}
                   </Select>
                 )}
               />
-
               <Controller
-                name="brandId"
                 control={control}
+                name="brandId"
                 render={({ field }) => (
-                  <Select label="Brand" {...field} selectedKeys={[field.value]}>
-                    {brands.map((brand: any) => (
-                      <SelectItem key={brand.id} value={brand.id}>
-                        {brand.name}
-                      </SelectItem>
+                  <Select
+                    label="Brand"
+                    {...field}
+                    selectedKeys={field.value ? [field.value] : []}
+                  >
+                    {brands.map((b: any) => (
+                      <SelectItem key={b.id}>{b.name}</SelectItem>
                     ))}
                   </Select>
                 )}
@@ -230,24 +908,36 @@ export default function UpdateProductPage() {
             </div>
 
             <Controller
-              name="description"
               control={control}
-              render={({ field }) => <Textarea label="Description" {...field} />}
+              name="description"
+              render={({ field }) => (
+                <Textarea label="Description" {...field} />
+              )}
             />
 
             <Divider className="my-4" />
 
-            {/* Images Section */}
+            {/* === Images Section === */}
             <div>
               <h3 className="font-semibold text-lg text-amber-600">Images</h3>
               <div className="flex gap-3 flex-wrap mb-3">
                 {existingImages.map((url, i) => (
                   <div key={i} className="relative w-24 h-24 border p-1">
-                    <img src={url} className="w-full h-full object-cover" />
+                    <Image
+                      alt="existing"
+                      className="object-cover w-full h-full"
+                      height={96}
+                      src={url}
+                      width={96}
+                    />
                     <Button
-                      variant="flat"
                       className="absolute top-0 right-0 bg-red-500 text-white"
-                      onPress={() => handleDeleteExistingImage(i)}
+                      variant="flat"
+                      onPress={() =>
+                        setExistingImages((p) =>
+                          p.filter((_, idx) => idx !== i),
+                        )
+                      }
                     >
                       X
                     </Button>
@@ -255,49 +945,65 @@ export default function UpdateProductPage() {
                 ))}
               </div>
 
-              <div className="flex gap-3 flex-wrap mb-3">
-                {imagePreviews.map((url, i) => (
-                  <div key={i} className="relative w-[200px] border p-1">
-                    <img src={url} className="w-full h-full object-cover" />
-                    <Button
-                      variant="shadow"
-                      size="sm"
-                      className="absolute top-0 right-0 text-red-500"
-                      onPress={() => handleRemoveNewImage(i)}
-                    >
-                      X
-                    </Button>
-                  </div>
-                ))}
-              </div>
-
+              <label className="block font-medium mb-1" htmlFor="newImages">
+                Add Images
+              </label>
               <Input
-                type="file"
-                className="rounded-md p-2 flex-1"
                 multiple
                 accept="image/*"
+                id="newImages"
+                type="file"
                 onChange={handleImageChange}
               />
+              <div className="flex gap-3 flex-wrap mt-3">
+                {imagePreviews.map((url, i) => (
+                  <div key={i} className="relative w-24 h-24 border p-1">
+                    <Image
+                      alt="preview"
+                      className="object-cover w-full h-full"
+                      height={96}
+                      src={url}
+                      width={96}
+                    />
+                    <Button
+                      className="absolute top-0 right-0 text-red-500"
+                      size="sm"
+                      variant="shadow"
+                      onPress={() => {
+                        setImageFiles((p) => p.filter((_, idx) => idx !== i));
+                        setImagePreviews((p) =>
+                          p.filter((_, idx) => idx !== i),
+                        );
+                      }}
+                    >
+                      X
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <Divider className="my-4" />
 
-            {/* Variants Section */}
+            {/* === Variants Section === */}
             <div>
               <h3 className="font-semibold text-lg text-amber-600">Variants</h3>
               {variantFields.map((variant, vIndex) => (
-                <Card key={variant.id} className="p-4 border border-amber-200 rounded-lg mt-3">
+                <Card
+                  key={variant.id}
+                  className="p-4 border border-amber-200 rounded-lg mt-3"
+                >
                   <div className="flex flex-col md:flex-row gap-4">
                     <Controller
-                      name={`variants.${vIndex}.color`}
                       control={control}
+                      name={`variants.${vIndex}.color`}
                       render={({ field }) => <Input label="Color" {...field} />}
                     />
                     <Controller
-                      name={`variants.${vIndex}.price`}
                       control={control}
+                      name={`variants.${vIndex}.price`}
                       render={({ field }) => (
-                        <Input type="number" label="Variant Price" {...field} />
+                        <NumberInput field={field} label="Variant Price" />
                       )}
                     />
                   </div>
@@ -309,19 +1015,20 @@ export default function UpdateProductPage() {
               ))}
               <div className="flex justify-between gap-3 mt-3">
                 <Button
-                  variant="flat"
                   onPress={() =>
-                    addVariant({ color: "", price: 0, sizes: [{ size: "", stock: 0 }] })
+                    addVariant({
+                      color: "",
+                      price: 0,
+                      sizes: [{ size: "", stock: 0 }],
+                    })
                   }
-                  className="bg-amber-500 text-white"
                 >
                   + Add Variant
                 </Button>
                 <Button
-                  variant="flat"
+                  color="danger"
+                  isDisabled={!variantFields.length}
                   onPress={() => removeVariant(variantFields.length - 1)}
-                  className="bg-red-500 text-white"
-                  isDisabled={variantFields.length === 0}
                 >
                   - Remove Variant
                 </Button>
@@ -330,7 +1037,10 @@ export default function UpdateProductPage() {
 
             <Divider className="my-4" />
 
-            <Button type="submit" className="w-full font-bold bg-amber-500 text-white">
+            <Button
+              className="w-full font-bold bg-amber-500 text-white"
+              type="submit"
+            >
               Update Product
             </Button>
           </form>
@@ -340,26 +1050,44 @@ export default function UpdateProductPage() {
   );
 }
 
-// Sizes subcomponent
-function VariantSizes({ control, vIndex }: any) {
+// ===== Sizes subcomponent =====
+function VariantSizes({
+  control,
+  vIndex,
+}: {
+  control: Control<ProductForm>;
+  vIndex: number;
+}) {
   const { fields, append } = useFieldArray({
     control,
-    name: `variants.${vIndex}.sizes`,
+    name: `variants.${vIndex}.sizes` as const,
   });
+
+  const NumberInput = ({ field, label }: { field: any; label: string }) => (
+    <Input
+      ref={field.ref}
+      label={label}
+      name={field.name}
+      type="number"
+      value={field.value?.toString() ?? ""}
+      onBlur={field.onBlur}
+      onChange={(e) => field.onChange(Number(e.target.value))}
+    />
+  );
 
   return (
     <div className="space-y-3 mt-2">
       {fields.map((field, sIndex) => (
         <div key={field.id} className="flex gap-3 items-center">
           <Controller
-            name={`variants.${vIndex}.sizes.${sIndex}.size`}
             control={control}
-            render={({ field }) => <Input label="Size" {...field} />}
+            name={`variants.${vIndex}.sizes.${sIndex}.size`}
+            render={({ field }) => <NumberInput field={field} label="Size" />}
           />
           <Controller
-            name={`variants.${vIndex}.sizes.${sIndex}.stock`}
             control={control}
-            render={({ field }) => <Input type="number" label="Stock" {...field} />}
+            name={`variants.${vIndex}.sizes.${sIndex}.stock`}
+            render={({ field }) => <NumberInput field={field} label="Stock" />}
           />
         </div>
       ))}

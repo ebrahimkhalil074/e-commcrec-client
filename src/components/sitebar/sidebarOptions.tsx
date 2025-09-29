@@ -1,10 +1,16 @@
-'use client'
+"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
-const SidebarOptions = ({ links, sidebarOpen }: { links: any; sidebarOpen: boolean }) => {
+const SidebarOptions = ({
+  links,
+  sidebarOpen,
+}: {
+  links: any;
+  sidebarOpen: boolean;
+}) => {
   const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
 
@@ -17,7 +23,7 @@ const SidebarOptions = ({ links, sidebarOpen }: { links: any; sidebarOpen: boole
 
   return (
     <div className="mt-2">
-      {links?.map((link) => {
+      {links?.map((link: any) => {
         const isActive = pathname === link.href;
         const hasChildren = link.children && link.children.length > 0;
         const isOpen = openMenus[link.label] || false;
@@ -27,10 +33,10 @@ const SidebarOptions = ({ links, sidebarOpen }: { links: any; sidebarOpen: boole
             {hasChildren ? (
               <>
                 <button
-                  onClick={() => toggleMenu(link.label)}
                   className={`flex items-center justify-between w-full rounded-md px-3 py-2 transition ${
                     isOpen ? "bg-amber-500 text-white" : "hover:bg-amber-300"
                   }`}
+                  onClick={() => toggleMenu(link.label)}
                 >
                   <span className="flex items-center gap-2">
                     {link.icon}
@@ -47,17 +53,18 @@ const SidebarOptions = ({ links, sidebarOpen }: { links: any; sidebarOpen: boole
                 {/* Submenu */}
                 {isOpen && sidebarOpen && (
                   <div className="ml-6 mt-1 space-y-2">
-                    {link.children?.map((child) => {
+                    {link.children?.map((child: any) => {
                       const isChildActive = pathname === child.href;
+
                       return (
                         <Link
                           key={child.href}
-                          href={child.href}
                           className={`block px-3 py-2 rounded-md ${
                             isChildActive
                               ? "bg-amber-500 text-white font-semibold"
                               : "hover:bg-amber-300"
                           }`}
+                          href={child.href}
                         >
                           ➤ {child.label}
                         </Link>
@@ -68,12 +75,12 @@ const SidebarOptions = ({ links, sidebarOpen }: { links: any; sidebarOpen: boole
               </>
             ) : (
               <Link
-                href={link.href}
                 className={`flex items-center gap-2 w-full rounded-md px-3 py-2 transition ${
                   isActive
                     ? "bg-amber-500 text-white font-semibold"
                     : "hover:bg-amber-300"
                 }`}
+                href={link.href}
               >
                 {link.icon}
                 {sidebarOpen && link.label}

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, ChangeEvent, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -7,7 +7,11 @@ import { Button } from "@heroui/button";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Input } from "@heroui/input";
 import { Divider } from "@heroui/react";
-import { usegetCayegoryById, useUpdateCategory } from "@/src/hooks/category.hook";
+
+import {
+  useGetCayegoryById,
+  useUpdateCategory,
+} from "@/src/hooks/category.hook";
 
 type FormValues = {
   name: string;
@@ -17,7 +21,7 @@ type FormValues = {
 export default function UpdateCategoryForm() {
   const { id } = useParams();
   const router = useRouter();
-  const { data: categoryData } = usegetCayegoryById(id as string);
+  const { data: categoryData } = useGetCayegoryById(id as string);
   const category = categoryData?.data;
   const { mutate } = useUpdateCategory();
 
@@ -40,10 +44,12 @@ export default function UpdateCategoryForm() {
   // handle new image selection
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (!file) return;
 
     setImageFile(file);
     const reader = new FileReader();
+
     reader.onloadend = () => setImagePreview(reader.result as string);
     reader.readAsDataURL(file);
   };
@@ -55,6 +61,7 @@ export default function UpdateCategoryForm() {
 
   const onSubmit = (data: FormValues) => {
     const formData = new FormData();
+
     formData.append("data", JSON.stringify({ name: data.name }));
 
     if (imageFile) {
@@ -71,50 +78,46 @@ export default function UpdateCategoryForm() {
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <Card shadow="lg" className="rounded-2xl border-amber-500 border">
+      <Card className="rounded-2xl border-amber-500 border" shadow="lg">
         <CardHeader className="bg-amber-500 text-white font-bold text-xl">
           Update Category
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             {/* Name */}
             <Controller
-          name="name"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-          <Input
-          {...field}
-          label="Category Name"
-          isRequired
-          />
-          )}
-          />
+              control={control}
+              name="name"
+              render={({ field }) => (
+                <Input {...field} isRequired label="Category Name" />
+              )}
+              rules={{ required: true }}
+            />
 
             {/* File Upload */}
             <input
-              type="file"
               accept="image/*"
-              onChange={handleImageChange}
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 
                 file:rounded-full file:border-0 file:text-sm file:font-semibold 
                 file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
+              type="file"
+              onChange={handleImageChange}
             />
 
             {/* Image Preview */}
             {imagePreview && (
               <div className="space-y-2">
                 <img
-                  src={imagePreview}
                   alt="Preview"
                   className="w-32 h-32 object-cover rounded-lg border"
+                  src={imagePreview}
                 />
                 <Button
                   color="danger"
                   size="sm"
+                  type="button"
                   variant="flat"
                   onChange={handleRemoveImage}
-                  type="button"
                 >
                   Remove Image
                 </Button>
@@ -123,7 +126,7 @@ export default function UpdateCategoryForm() {
 
             <Divider className="my-4" />
 
-            <Button  type="submit" className="w-full bg-amber-500 font-bold ">
+            <Button className="w-full bg-amber-500 font-bold " type="submit">
               Update Category
             </Button>
           </form>

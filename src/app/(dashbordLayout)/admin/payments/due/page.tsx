@@ -18,7 +18,14 @@
 
 import React, { useEffect, useState } from "react";
 import { Card, CardBody } from "@heroui/card";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/table";
 import { Spinner } from "@heroui/spinner";
 
 interface UserDue {
@@ -52,8 +59,11 @@ export default function DuePaymentPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/v1/payment/due-summary`);
+        const res = await fetch(
+          `http://localhost:5000/api/v1/payment/due-summary`,
+        );
         const json = await res.json();
+
         setUsers(json.data?.data);
         setMeta(json.data.meta);
       } catch (err) {
@@ -62,6 +72,7 @@ export default function DuePaymentPage() {
         setLoading(false);
       }
     };
+
     fetchData();
   }, []);
 
@@ -72,7 +83,7 @@ export default function DuePaymentPage() {
       </div>
     );
   }
-  console.log(users)
+  console.log(users);
 
   return (
     <div className="p-6 space-y-6">
@@ -95,13 +106,17 @@ export default function DuePaymentPage() {
         <Card className="shadow-md rounded-xl">
           <CardBody>
             <p className="text-sm text-gray-500">Average Due Per User</p>
-            <p className="text-2xl font-bold">৳{meta?.averageDuePerUser.toFixed(2) || "0.00"}</p>
+            <p className="text-2xl font-bold">
+              ৳{meta?.averageDuePerUser.toFixed(2) || "0.00"}
+            </p>
           </CardBody>
         </Card>
         <Card className="shadow-md rounded-xl">
           <CardBody>
             <p className="text-sm text-gray-500">Max Due User</p>
-            <p className="text-lg font-semibold">{meta?.maxDueUser?.name || "N/A"}</p>
+            <p className="text-lg font-semibold">
+              {meta?.maxDueUser?.name || "N/A"}
+            </p>
             <p className="text-xl font-bold text-red-500">
               ৳{meta?.maxDueUser?.totalDue.toFixed(2) || "0.00"}
             </p>
@@ -130,10 +145,20 @@ export default function DuePaymentPage() {
                   <TableCell>{u.name}</TableCell>
                   <TableCell>{u.email}</TableCell>
                   <TableCell>{u.role}</TableCell>
-                  <TableCell className="text-red-500 font-semibold">৳{u.totalDue}</TableCell>
+                  <TableCell className="text-red-500 font-semibold">
+                    ৳{u.totalDue}
+                  </TableCell>
                   <TableCell>{u.dueCount}</TableCell>
-                  <TableCell>{u.lastDueDate ? new Date(u.lastDueDate).toLocaleDateString() : "N/A"}</TableCell>
-                  <TableCell>{u.oldestDueDate ? new Date(u.oldestDueDate).toLocaleDateString() : "N/A"}</TableCell>
+                  <TableCell>
+                    {u.lastDueDate
+                      ? new Date(u.lastDueDate).toLocaleDateString()
+                      : "N/A"}
+                  </TableCell>
+                  <TableCell>
+                    {u.oldestDueDate
+                      ? new Date(u.oldestDueDate).toLocaleDateString()
+                      : "N/A"}
+                  </TableCell>
                   <TableCell>৳{u.maxSingleDue}</TableCell>
                 </TableRow>
               ))}

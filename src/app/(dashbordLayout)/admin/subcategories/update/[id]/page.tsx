@@ -1,21 +1,24 @@
-'use client'
+"use client";
 
-import { useGetAllCategory } from "@/src/hooks/category.hook";
 import { Button } from "@heroui/button";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Input } from "@heroui/input";
 import { Divider } from "@heroui/react";
-import { Select, SelectItem } from "@heroui/select";
 import { useForm } from "react-hook-form";
 import { useParams } from "next/navigation";
-import { usegetSubCayegoryById, useUpdateSubCategory } from "@/src/hooks/sub-cat.hook";
 import { useEffect } from "react";
+
+import {
+  useGetSubCayegoryById,
+  useUpdateSubCategory,
+} from "@/src/hooks/sub-cat.hook";
+import { useGetAllCategory } from "@/src/hooks/category.hook";
 
 const UpdateSubCategoryPage = () => {
   const { id } = useParams();
 
   // SubCategory by ID
-  const { data: subCategoryData } = usegetSubCayegoryById(id as string);
+  const { data: subCategoryData } = useGetSubCayegoryById(id as string);
 
   // All Categories for showing parent
   const { data: categoryData } = useGetAllCategory(undefined);
@@ -23,19 +26,19 @@ const UpdateSubCategoryPage = () => {
 
   const { mutate } = useUpdateSubCategory();
 
-  const { register, handleSubmit,reset } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       name: subCategoryData?.data?.name || "",
     },
   });
-useEffect(() => {
-  if (subCategoryData?.data) {
-    reset({
-      name: subCategoryData.data.name,
-    });
-  }
-}, [subCategoryData, reset]);
 
+  useEffect(() => {
+    if (subCategoryData?.data) {
+      reset({
+        name: subCategoryData.data.name,
+      });
+    }
+  }, [subCategoryData, reset]);
 
   const categoryOptions = categories.map((cat: any) => ({
     key: cat?.id,
@@ -43,34 +46,31 @@ useEffect(() => {
   }));
 
   const parentCategory = categoryOptions.find(
-    (c) => c.key === subCategoryData?.data?.categoryId
+    (c: any) => c.key === subCategoryData?.data?.categoryId,
   );
 
   const onSubmit = (data: any) => {
-    console.log(subCategoryData.data.id)
-    console.log(data)
-    const updatedData ={
-      id:subCategoryData.data.id,
-      data:data
-    }
- mutate(
-updatedData
-)
+    const updatedData = {
+      id: subCategoryData.data.id,
+      data: data,
+    };
+
+    mutate(updatedData);
   };
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <Card shadow="lg" className="rounded-2xl border-amber-500 border">
+      <Card className="rounded-2xl border-amber-500 border" shadow="lg">
         <CardHeader className="bg-amber-500 text-white font-bold text-xl">
           Update SubCategory
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             {/* Show Parent Category (Read only) */}
             <Input
+              isReadOnly
               label="Parent Category"
               value={parentCategory?.label || "N/A"}
-              isReadOnly
             />
 
             {/* SubCategory Name (Editable) */}
@@ -82,7 +82,7 @@ updatedData
 
             <Divider className="my-4" />
 
-            <Button type="submit" className="w-full bg-amber-500 font-bold">
+            <Button className="w-full bg-amber-500 font-bold" type="submit">
               Update SubCategory
             </Button>
           </form>

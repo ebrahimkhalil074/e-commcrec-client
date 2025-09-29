@@ -71,7 +71,9 @@ export default function AllReviewsPage() {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <FaStar
                       key={i}
-                      className={i < review.rating ? "text-amber-500" : "text-gray-300"}
+                      className={
+                        i < review.rating ? "text-amber-500" : "text-gray-300"
+                      }
                     />
                   ))}
                 </td>

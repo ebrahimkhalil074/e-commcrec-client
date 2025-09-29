@@ -265,18 +265,12 @@
 //     </div>
 //   );
 // }
-  
 
 "use client";
 
 import React, { useMemo, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/src/redux/store";
-import { useCreateOrder } from "@/src/hooks/order.hook";
-import { useUser } from "@/src/context/User.context";
-import { useGetUserByEmail } from "@/src/hooks/user.hook";
 import { useForm, Controller, useWatch } from "react-hook-form";
-import { Textarea, Button, Input } from "@heroui/react";
+import { Textarea, Button } from "@heroui/react";
 import {
   FaUser,
   FaEnvelope,
@@ -287,6 +281,10 @@ import {
   FaGlobeAsia,
   FaLandmark,
 } from "react-icons/fa";
+
+import { useCreateOrder } from "@/src/hooks/order.hook";
+import { useUser } from "@/src/context/User.context";
+import { useGetUserByEmail } from "@/src/hooks/user.hook";
 import { useGetCart } from "@/src/hooks/cart.hook";
 import { useCreateAddress } from "@/src/hooks/address.hook";
 import { IconInput } from "@/src/components/form/IconInput";
@@ -308,18 +306,19 @@ type AddressFormValues = {
 
 export default function CheckoutPage() {
   const { data, isLoading } = useGetCart();
-  const cartItems = data?.items ?? [];
+  const cartItems = (data as { items: any[] })?.items ?? [];
 
   const { user } = useUser();
   const { data: userData } = useGetUserByEmail(user?.email as string);
   const currentUser = userData?.data;
   const billingAddress = currentUser?.addresses?.find(
-    (addr: any) => addr.type === "BILLING"
+    (addr: any) => addr.type === "BILLING",
   );
 
   const totalPrice = useMemo(
-    () => cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
-    [cartItems]
+    () =>
+      cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
+    [cartItems],
   );
 
   const {
@@ -347,7 +346,9 @@ export default function CheckoutPage() {
   // dynamic due calculation
   const paidAmount = useWatch({ control, name: "paidAmount", defaultValue: 0 });
   const dueAmount =
-    user?.role === "SELLER" ? Math.max(totalPrice - (paidAmount || 0), 0) : totalPrice;
+    user?.role === "SELLER"
+      ? Math.max(totalPrice - (paidAmount || 0), 0)
+      : totalPrice;
 
   // set default values from saved billing address
   useEffect(() => {
@@ -379,17 +380,24 @@ export default function CheckoutPage() {
       total: totalPrice,
       userAddressId: billingAddress?.id || null,
     };
+
     mutate(orderData, {
       onSuccess: (res) => {
         const data = res?.data;
+
         if (!data) return alert("Something went wrong. Please try again.");
         const { paymentUrl, dueId } = data;
+
         if (user?.role === "SELLER" && !formData.paidAmount) {
           alert(`Order placed successfully! Pending due: ${totalPrice}`);
+
           return;
         }
         if (paymentUrl) window.location.href = paymentUrl;
-        else alert(`Order placed successfully! Pending due: ${dueId ?? dueAmount}`);
+        else
+          alert(
+            `Order placed successfully! Pending due: ${dueId ?? dueAmount}`,
+          );
       },
       onError: () => {
         alert("Order creation failed. Please try again.");
@@ -420,150 +428,159 @@ export default function CheckoutPage() {
         Checkout
       </h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <form
+        className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {/* Billing / Shipping Form */}
         <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
           <h2 className="col-span-2 text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6">
             Billing / Shipping Details
           </h2>
 
-       {/* Full Name */}
-      <Controller
-            name="fullName"
+          {/* Full Name */}
+          <Controller
             control={control}
-            rules={{ required: "fullName number is required" }}
+            name="fullName"
             render={({ field }) => (
               <IconInput
-                icon={FaUser}
-                label="fullName"
                 required
                 error={errors.fullName?.message}
                 field={field}
+                icon={FaUser}
+                label="fullName"
               />
             )}
+            rules={{ required: "fullName number is required" }}
           />
 
-
           <Controller
-            name="email"
             control={control}
+            name="email"
+            render={({ field }) => (
+              <IconInput
+                error={errors.email?.message}
+                field={field}
+                icon={FaEnvelope}
+                label="Email (Optional)"
+              />
+            )}
             rules={{
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 message: "Invalid email format",
               },
             }}
-            render={({ field }) => (
-              <IconInput
-                icon={FaEnvelope}
-                label="Email (Optional)"
-                error={errors.email?.message}
-                field={field}
-              />
-            )}
           />
 
           <Controller
-            name="phone"
             control={control}
-            rules={{ required: "Phone number is required" }}
+            name="phone"
             render={({ field }) => (
               <IconInput
-                icon={FaPhoneAlt}
-                label="Phone"
                 required
                 error={errors.phone?.message}
                 field={field}
+                icon={FaPhoneAlt}
+                label="Phone"
               />
             )}
+            rules={{ required: "Phone number is required" }}
           />
 
           <Controller
-            name="street"
             control={control}
-            rules={{ required: "Street address is required" }}
+            name="street"
             render={({ field }) => (
               <div className="flex flex-col gap-1 sm:col-span-2">
                 <div className="flex items-start gap-3 bg-gray-50 dark:bg-gray-900 p-3 rounded-xl shadow-sm hover:shadow-md transition">
                   <FaMapMarkedAlt className="text-amber-500 text-xl mt-2" />
                   <Textarea
                     {...field}
+                    className="flex-1"
+                    errorMessage={errors.street?.message}
+                    isInvalid={!!errors.street}
                     label="Street Address"
                     rows={3}
-                    isInvalid={!!errors.street}
-                    errorMessage={errors.street?.message}
-                    className="flex-1"
                   />
                 </div>
               </div>
             )}
+            rules={{ required: "Street address is required" }}
           />
 
           <Controller
-            name="city"
             control={control}
-            rules={{ required: "City is required" }}
+            name="city"
             render={({ field }) => (
               <IconInput
-                icon={FaCity}
-                label="City"
                 required
                 error={errors.city?.message}
                 field={field}
+                icon={FaCity}
+                label="City"
+              />
+            )}
+            rules={{ required: "City is required" }}
+          />
+
+          <Controller
+            control={control}
+            name="district"
+            render={({ field }) => (
+              <IconInput
+                field={field}
+                icon={FaRegAddressCard}
+                label="District (Optional)"
               />
             )}
           />
 
           <Controller
-            name="district"
             control={control}
-            render={({ field }) => (
-              <IconInput icon={FaRegAddressCard} label="District (Optional)" field={field} />
-            )}
-          />
-
-          <Controller
             name="state"
-            control={control}
-            render={({ field }) => (
-              <IconInput icon={FaRegAddressCard} label="State (Optional)" field={field} />
-            )}
-          />
-
-          <Controller
-            name="postalCode"
-            control={control}
-            rules={{ required: "Postal Code is required" }}
             render={({ field }) => (
               <IconInput
-                icon={FaEnvelope}
-                label="Postal Code"
+                field={field}
+                icon={FaRegAddressCard}
+                label="State (Optional)"
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="postalCode"
+            render={({ field }) => (
+              <IconInput
                 required
                 error={errors.postalCode?.message}
                 field={field}
+                icon={FaEnvelope}
+                label="Postal Code"
               />
             )}
+            rules={{ required: "Postal Code is required" }}
           />
 
           <Controller
-            name="country"
             control={control}
-            rules={{ required: "Country is required" }}
+            name="country"
             render={({ field }) => (
               <IconInput
-                icon={FaGlobeAsia}
-                label="Country"
                 required
                 error={errors.country?.message}
                 field={field}
+                icon={FaGlobeAsia}
+                label="Country"
               />
             )}
+            rules={{ required: "Country is required" }}
           />
 
           <Controller
-            name="type"
             control={control}
-            rules={{ required: "Type is required" }}
+            name="type"
             render={({ field }) => (
               <div className="flex flex-col gap-1 sm:col-span-2">
                 <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-900 p-3 rounded-xl shadow-sm hover:shadow-md transition">
@@ -578,29 +595,36 @@ export default function CheckoutPage() {
                   </select>
                 </div>
                 {errors.type && (
-                  <p className="text-sm text-red-500 mt-1">{errors.type.message}</p>
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.type.message}
+                  </p>
                 )}
               </div>
             )}
+            rules={{ required: "Type is required" }}
           />
 
           <Controller
-            name="landmark"
             control={control}
+            name="landmark"
             render={({ field }) => (
-              <IconInput icon={FaLandmark} label="Landmark (Optional)" field={field} />
+              <IconInput
+                field={field}
+                icon={FaLandmark}
+                label="Landmark (Optional)"
+              />
             )}
           />
 
           {user?.role === "SELLER" && (
             <Controller
-              name="paidAmount"
               control={control}
+              name="paidAmount"
               render={({ field }) => (
                 <IconInput
+                  field={field}
                   icon={FaRegAddressCard}
                   label="Paid Amount"
-                  field={field}
                   type="number"
                 />
               )}
@@ -608,9 +632,9 @@ export default function CheckoutPage() {
           )}
 
           <Button
+            className="rounded-2xl bg-amber-400 text-white shadow-md hover:bg-amber-500"
             type="button"
             onClick={handleSubmit(handleSaveAddress)}
-            className="rounded-2xl bg-amber-400 text-white shadow-md hover:bg-amber-500"
           >
             Save Address
           </Button>
@@ -656,7 +680,10 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          <Button type="submit" className="mt-auto rounded-2xl shadow-lg bg-amber-500">
+          <Button
+            className="mt-auto rounded-2xl shadow-lg bg-amber-500"
+            type="submit"
+          >
             Place Order
           </Button>
         </aside>

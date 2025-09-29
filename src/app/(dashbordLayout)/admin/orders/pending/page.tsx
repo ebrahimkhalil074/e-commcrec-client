@@ -2,12 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardHeader } from "@heroui/card";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/table";
 import { Chip } from "@heroui/chip";
 import { Spinner } from "@heroui/spinner";
 import { Button } from "@heroui/button";
-import { useAssignDeliveryBoyForOrder, useMarkAsShippedOrder } from "@/src/hooks/order.hook";
 import { toast } from "sonner";
+
+import {
+  useAssignDeliveryBoyForOrder,
+  useMarkAsShippedOrder,
+} from "@/src/hooks/order.hook";
 
 type Order = {
   id: string;
@@ -33,10 +44,14 @@ export default function PendingOrdersPage() {
   // ✅ fetchOrders আলাদা করলাম
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/v1/order?status=PENDING", {
-        cache: "no-store",
-      });
+      const res = await fetch(
+        "http://localhost:5000/api/v1/order?status=PENDING",
+        {
+          cache: "no-store",
+        },
+      );
       const data = await res.json();
+
       setOrders(data.data || []);
     } catch (err) {
       console.error(err);
@@ -50,8 +65,11 @@ export default function PendingOrdersPage() {
 
     const fetchDeliveryBoys = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/v1/user?role=DELIVERYBOY");
+        const res = await fetch(
+          "http://localhost:5000/api/v1/user?role=DELIVERYBOY",
+        );
         const data = await res.json();
+
         setDeliveryBoys(data.data || []);
       } catch (err) {
         console.error(err);
@@ -90,7 +108,12 @@ export default function PendingOrdersPage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center py-10"><Spinner size="lg" /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center py-10">
+        <Spinner size="lg" />
+      </div>
+    );
 
   return (
     <Card className="p-6">
@@ -99,8 +122,8 @@ export default function PendingOrdersPage() {
       </CardHeader>
 
       <Table
-        aria-label="Pending Orders Table"
         removeWrapper
+        aria-label="Pending Orders Table"
         className="border border-amber-200 rounded-xl shadow-md overflow-x-auto mt-4"
       >
         <TableHeader>
@@ -117,48 +140,54 @@ export default function PendingOrdersPage() {
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.id}>
-              <TableCell className="font-mono">{order.id.slice(0, 8)}...</TableCell>
+              <TableCell className="font-mono">
+                {order.id.slice(0, 8)}...
+              </TableCell>
               <TableCell>{order.user.name}</TableCell>
               <TableCell>{order.user.email}</TableCell>
-              <TableCell className="font-semibold">${order.total.toFixed(2)}</TableCell>
+              <TableCell className="font-semibold">
+                ${order.total.toFixed(2)}
+              </TableCell>
               <TableCell>
                 {order.payment ? (
-                  <Chip size="sm" color="success" variant="flat">
-                    {order.payment.method} ({order.payment.transactionId.slice(0, 8)}...)
+                  <Chip color="success" size="sm" variant="flat">
+                    {order.payment.method} (
+                    {order.payment.transactionId.slice(0, 8)}...)
                   </Chip>
                 ) : (
-                  <Chip size="sm" color="danger" variant="flat">
+                  <Chip color="danger" size="sm" variant="flat">
                     No Payment
                   </Chip>
                 )}
               </TableCell>
               <TableCell>
-                <Chip size="sm" color="warning" variant="flat">
+                <Chip color="warning" size="sm" variant="flat">
                   {order.status}
                 </Chip>
               </TableCell>
               <TableCell>{order.deliveryBoy?.name || "-"}</TableCell>
               <TableCell className="flex gap-2">
                 <Button
-                  size="sm"
                   className="bg-amber-500 text-white hover:bg-amber-600"
+                  disabled={order.status !== "PENDING"}
+                  size="sm"
                   onPress={() => {
                     if (!order.deliveryBoy) {
                       toast("Please assign a delivery boy first!");
+
                       return;
                     }
                     markAsShipped(order.id);
                   }}
-                  disabled={order.status !== "PENDING"}
                 >
                   Mark as Shipped
                 </Button>
 
                 <select
                   className="border rounded px-2 py-1 text-sm"
-                  onChange={(e) => assignDeliveryBoy(order.id, e.target.value)}
-                  value={order.deliveryBoy?.id || ""}
                   disabled={assigning === order.id}
+                  value={order.deliveryBoy?.id || ""}
+                  onChange={(e) => assignDeliveryBoy(order.id, e.target.value)}
                 >
                   <option value="">Assign DeliveryBoy</option>
                   {deliveryBoys.map((b) => (

@@ -1,7 +1,5 @@
 // prodctdetails page
 
-
-
 // "use client";
 
 // import { useGetProductById } from "@/src/hooks/product.hook";
@@ -176,7 +174,6 @@
 // };
 
 // export default ProductDetails;
-
 
 // "use client";
 
@@ -380,7 +377,6 @@
 // };
 
 // export default ProductDetails;
-
 
 // "use client";
 
@@ -938,7 +934,6 @@
 
 // export default ProductDetails;
 
-
 // "use client";
 // import { useState, useMemo } from "react";
 // import { useDispatch } from "react-redux";
@@ -1103,7 +1098,6 @@
 //     </div>
 //   );
 // }
-
 
 // "use client";
 

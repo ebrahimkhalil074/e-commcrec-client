@@ -15,7 +15,6 @@
 //   FaLandmark,
 // } from "react-icons/fa";
 
-
 // type FormValues = {
 //   name: string;
 //   email: string;
@@ -153,7 +152,6 @@
 //         {/* শুধুমাত্র প্রোফাইল ইনফো দেখানোর সেকশন */}
 // {!watch("isEditing") && (
 //   <div className="mt-8 space-y-6">
-   
 
 //     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4">
 //       {/* Phone */}
@@ -273,14 +271,18 @@
 //   );
 // }
 
-
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Avatar, Button, Input, Textarea, Select, SelectItem } from "@heroui/react";
+import {
+  Avatar,
+  Button,
+  Input,
+  Textarea,
+  Select,
+  SelectItem,
+} from "@heroui/react";
 import { useForm, Controller } from "react-hook-form";
-import { useGetUserByEmail, useUpdateUser, } from "@/src/hooks/user.hook";
-import { useUser } from "@/src/context/User.context";
 import {
   FaPhoneAlt,
   FaMapMarkerAlt,
@@ -290,6 +292,9 @@ import {
   FaMailBulk,
   FaLandmark,
 } from "react-icons/fa";
+
+import { useGetUserByEmail, useUpdateUser } from "@/src/hooks/user.hook";
+import { useUser } from "@/src/context/User.context";
 import { useUpdateAddress } from "@/src/hooks/address.hook";
 
 type FormValues = {
@@ -314,8 +319,8 @@ export default function AdminProfilePage() {
   const [previewImage, setPreviewImage] = useState<string>("");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
- const {mutate,isPending} = useUpdateUser()
- const {mutate:handleUpdateAddress} = useUpdateAddress()
+  const { mutate, isPending } = useUpdateUser();
+  const { mutate: handleUpdateAddress } = useUpdateAddress();
   const { handleSubmit, control, reset, watch } = useForm<FormValues>({
     defaultValues: {
       name: "",
@@ -338,6 +343,7 @@ export default function AdminProfilePage() {
     if (userData?.data) {
       const u = userData.data;
       const addr = u.addresses?.[0] || null;
+
       reset({
         name: addr?.fullName || u?.name || "",
         email: u.email || "",
@@ -358,26 +364,26 @@ export default function AdminProfilePage() {
   }, [userData, reset]);
 
   /** Submit only text profile info */
- const onSubmit = (data: FormValues) => {
-  // data এর মধ্যে সব ফর্মের মান থাকবে
-  console.log("Profile Info Updated:", data);
+  const onSubmit = (data: FormValues) => {
+    // data এর মধ্যে সব ফর্মের মান থাকবে
+    console.log("Profile Info Updated:", data);
 
-  const addressData = {
-    id: userData?.data?.addresses?.[0]?.id || null, // existing address থাকলে update
-    fullName: data.name,
-    phone: data.phone,
-    street: data.street,
-    city: data.city,
-    district: data.district,
-    state: data.state,
-    postalCode: data.postalCode,
-    country: data.country,
-    landmark: data.landmark,
-    type: data.type,
+    const addressData = {
+      id: userData?.data?.addresses?.[0]?.id || null, // existing address থাকলে update
+      fullName: data.name,
+      phone: data.phone,
+      street: data.street,
+      city: data.city,
+      district: data.district,
+      state: data.state,
+      postalCode: data.postalCode,
+      country: data.country,
+      landmark: data.landmark,
+      type: data.type,
+    };
+
+    handleUpdateAddress(addressData);
   };
-
-  handleUpdateAddress(addressData);
-};
 
   /** Separate image upload handler */
   const handleImageUpload = async (file: File) => {
@@ -386,16 +392,17 @@ export default function AdminProfilePage() {
 
     // optional preview immediately
     const reader = new FileReader();
+
     reader.onloadend = () => setPreviewImage(reader.result as string);
     reader.readAsDataURL(file);
 
     try {
       const formData = new FormData();
+
       formData.append("file", file);
 
       // call backend endpoint for image update
-     mutate(formData)
-      
+      mutate(formData);
     } catch (err) {
       console.error("Image upload failed:", err);
     } finally {
@@ -405,6 +412,7 @@ export default function AdminProfilePage() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) handleImageUpload(file);
   };
 
@@ -416,31 +424,29 @@ export default function AdminProfilePage() {
       <div className="flex flex-col items-center bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
         {/* ==== Profile Image ==== */}
         <Avatar
+          className="mb-4 w-[150px] h-[150px] cursor-pointer hover:ring-2 hover:ring-amber-500 transition"
           src={
             previewImage ||
             userData?.data?.image ||
             "https://i.pravatar.cc/150?img=12"
           }
-          
-          className="mb-4 w-[150px] h-[150px] cursor-pointer hover:ring-2 hover:ring-amber-500 transition"
           onClick={() => fileInputRef.current?.click()}
         />
-        <input  
-          type="file"
-          accept="image/*"
+        <input
           ref={fileInputRef}
+          accept="image/*"
           className="hidden"
+          type="file"
           onChange={handleFileChange}
         />
         {uploading && (
           <p className="text-sm text-gray-500 mb-2">Uploading image...</p>
         )}
 
-
         {/* ==== Basic Info Display ==== */}
         <Controller
-          name="name"
           control={control}
+          name="name"
           render={({ field }) => (
             <h2 className="text-2xl font-bold mb-2 text-amber-500 dark:text-gray-200">
               {field.value}
@@ -448,8 +454,8 @@ export default function AdminProfilePage() {
           )}
         />
         <Controller
-          name="email"
           control={control}
+          name="email"
           render={({ field }) => (
             <p className="mb-4 text-gray-600 dark:text-gray-400">
               {field.value}
@@ -458,8 +464,8 @@ export default function AdminProfilePage() {
         />
 
         <Button
-          size="sm"
           className="mb-4 bg-amber-500 hover:bg-amber-600"
+          size="sm"
           onClick={toggleEdit}
         >
           {watch("isEditing") ? "Cancel" : "Edit Profile"}
@@ -506,7 +512,7 @@ export default function AdminProfilePage() {
                   label: "Address Type",
                   value: watch("type"),
                 },
-                
+
                 {
                   icon: <FaLandmark />,
                   label: "Landmark",
@@ -536,36 +542,81 @@ export default function AdminProfilePage() {
         {/* ==== Edit Mode ==== */}
         {watch("isEditing") && (
           <form
-            onSubmit={handleSubmit(onSubmit)}
             className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4"
+            onSubmit={handleSubmit(onSubmit)}
           >
-            <Controller name="name" control={control} render={({ field }) => <Input label="Full Name" {...field} />} />
-            <Controller name="email" control={control} render={({ field }) => <Input label="Email" readOnly {...field} />} />
-            <Controller name="phone" control={control} render={({ field }) => <Input label="Phone" {...field} />} />
-            <Controller name="street" control={control} render={({ field }) => <Textarea label="Street / Address" {...field} />} />
-            <Controller name="city" control={control} render={({ field }) => <Input label="City" {...field} />} />
-            <Controller name="district" control={control} render={({ field }) => <Input label="District" {...field} />} />
-            <Controller name="state" control={control} render={({ field }) => <Input label="State" {...field} />} />
-            <Controller name="postalCode" control={control} render={({ field }) => <Input label="Postal Code" {...field} />} />
-            <Controller name="country" control={control} render={({ field }) => <Input label="Country" {...field} />} />
             <Controller
-  name="type"
-  control={control}
-  render={({ field }) => (
-    <Select
-      label="Address Type"
-      value={field.value}
-      onChange={(val) => field.onChange(val)}
-    >
-      <SelectItem key="SHIPPING">Shipping</SelectItem>
-      <SelectItem key="BILLING">Billing</SelectItem>
-      <SelectItem key="BOTH">Both</SelectItem>
-    </Select>
-  )}
-/>
+              control={control}
+              name="name"
+              render={({ field }) => <Input label="Full Name" {...field} />}
+            />
+            <Controller
+              control={control}
+              name="email"
+              render={({ field }) => (
+                <Input readOnly label="Email" {...field} />
+              )}
+            />
+            <Controller
+              control={control}
+              name="phone"
+              render={({ field }) => <Input label="Phone" {...field} />}
+            />
+            <Controller
+              control={control}
+              name="street"
+              render={({ field }) => (
+                <Textarea label="Street / Address" {...field} />
+              )}
+            />
+            <Controller
+              control={control}
+              name="city"
+              render={({ field }) => <Input label="City" {...field} />}
+            />
+            <Controller
+              control={control}
+              name="district"
+              render={({ field }) => <Input label="District" {...field} />}
+            />
+            <Controller
+              control={control}
+              name="state"
+              render={({ field }) => <Input label="State" {...field} />}
+            />
+            <Controller
+              control={control}
+              name="postalCode"
+              render={({ field }) => <Input label="Postal Code" {...field} />}
+            />
+            <Controller
+              control={control}
+              name="country"
+              render={({ field }) => <Input label="Country" {...field} />}
+            />
+            <Controller
+              control={control}
+              name="type"
+              render={({ field }) => (
+                <Select
+                  label="Address Type"
+                  value={field.value}
+                  onChange={(val) => field.onChange(val)}
+                >
+                  <SelectItem key="SHIPPING">Shipping</SelectItem>
+                  <SelectItem key="BILLING">Billing</SelectItem>
+                  <SelectItem key="BOTH">Both</SelectItem>
+                </Select>
+              )}
+            />
 
-
-            <Controller name="landmark" control={control} render={({ field }) => <Input label="Landmark / Reference" {...field} />} />
+            <Controller
+              control={control}
+              name="landmark"
+              render={({ field }) => (
+                <Input label="Landmark / Reference" {...field} />
+              )}
+            />
 
             <div className="sm:col-span-2 flex justify-end mt-2">
               <Button type="submit">Save Changes</Button>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -12,19 +12,18 @@ import { Link } from "@heroui/link";
 import { Input } from "@heroui/input";
 import NextLink from "next/link";
 import clsx from "clsx";
-
-import { siteConfig } from "@/src/config/site";
-import { ThemeSwitch } from "@/src/components/theme-switch";
-import { GithubIcon, SearchIcon, Logo } from "@/src/components/icons";
 import { FaCartPlus } from "react-icons/fa";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Avatar } from "@heroui/react";
-import NavbarDropdown from "./NavbarDropdown";
+
 import { useUser } from "../context/User.context";
 import { useGetCart } from "../hooks/cart.hook";
+
+import NavbarDropdown from "./NavbarDropdown";
+
+import { GithubIcon, SearchIcon, Logo } from "@/src/components/icons";
+import { ThemeSwitch } from "@/src/components/theme-switch";
+import { siteConfig } from "@/src/config/site";
 
 interface SearchForm {
   searchTerm: string;
@@ -32,12 +31,14 @@ interface SearchForm {
 
 export const Navbar = () => {
   const router = useRouter();
-   const { data, isLoading } = useGetCart();
-   console.log(data)
-    const cartItems =  data?.items ?? [];
-    console.log(cartItems)
+  const { data } = useGetCart();
+
+  console.log(data);
+  const cartItems = (data as { items: any[] })?.items ?? [];
+
+  console.log(cartItems);
   const cartCount = cartItems.length;
-const {user} =useUser()
+  const { user } = useUser();
   const { register, handleSubmit } = useForm<SearchForm>();
 
   const onSubmit = (data: SearchForm) => {
@@ -49,36 +50,41 @@ const {user} =useUser()
   };
 
   const searchInput = (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex items-center w-full">
+    <form
+      className="flex items-center w-full"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Input
         {...register("searchTerm")}
-        type="search"
-        placeholder="Search products..."
         className="text-black dark:text-white"
         endContent={
           <button
-            type="submit"
             className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300"
+            type="submit"
           >
             <SearchIcon />
           </button>
         }
+        placeholder="Search products..."
+        type="search"
       />
     </form>
   );
 
   return (
     <HeroUINavbar
+      className="bg-amber-500 text-white dark:bg-gray-900 dark:text-gray-100 shadow-md container mx-auto transition-colors duration-300"
       maxWidth="xl"
       position="sticky"
-      className="bg-amber-500 text-white dark:bg-gray-900 dark:text-gray-100 shadow-md container mx-auto transition-colors duration-300"
     >
       {/* Left side - Logo & Menu */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            <p className="font-bold text-white dark:text-amber-400">ElectroShop</p>
+            <p className="font-bold text-white dark:text-amber-400">
+              ElectroShop
+            </p>
           </NextLink>
         </NavbarBrand>
 
@@ -88,7 +94,7 @@ const {user} =useUser()
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
-                  "font-medium text-white hover:text-amber-200 dark:text-gray-200 dark:hover:text-amber-400 transition-colors"
+                  "font-medium text-white hover:text-amber-200 dark:text-gray-200 dark:hover:text-amber-400 transition-colors",
                 )}
                 href={item.href}
               >
@@ -109,27 +115,27 @@ const {user} =useUser()
         </NavbarItem>
 
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-<NavbarItem className="hidden sm:flex gap-2">
-         {user?.email ? (
-          <div className="">
-            <NavbarDropdown />
-          </div>
-        ) : (
-          <Link
-            href="/login"
-            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-white font-semibold"
-          >
-            Login
-          </Link>
-        )}
+        <NavbarItem className="hidden sm:flex gap-2">
+          {user?.email ? (
+            <div className="">
+              <NavbarDropdown />
+            </div>
+          ) : (
+            <Link
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-white font-semibold"
+              href="/login"
+            >
+              Login
+            </Link>
+          )}
         </NavbarItem>
         <Link href="/cart">
           <NavbarItem className="hidden md:flex relative">
             <FaCartPlus className="text-white dark:text-gray-200 text-xl hover:text-amber-200 dark:hover:text-amber-400 transition-colors" />
             {cartCount > 0 && (
               <span
-                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold"
                 aria-label={`${cartCount} items in cart`}
+                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold"
               >
                 {cartCount}
               </span>

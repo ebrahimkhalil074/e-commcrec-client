@@ -1,9 +1,18 @@
-import { 
-  FaList, FaPlus, FaUsers, FaChartBar, FaCog, 
-  FaBoxOpen, FaMoneyBill, FaUserShield, FaTags, 
-  FaStore, FaStar, FaChartPie , FaUser, FaHistory, FaHeart
+import {
+  FaList,
+  FaPlus,
+  FaUsers,
+  FaChartBar,
+  FaBoxOpen,
+  FaMoneyBill,
+  FaUserShield,
+  FaTags,
+  FaStore,
+  FaStar,
+  FaUser,
+  FaHistory,
+  FaHeart,
 } from "react-icons/fa";
-
 
 export const adminLinks = [
   {
@@ -15,16 +24,52 @@ export const adminLinks = [
     label: "Products",
     icon: <FaBoxOpen size={16} />,
     children: [
-      { href: "/admin/products", label: "All Products", icon: <FaList size={16} /> },
-      { href: "/admin/products/create", label: "Create Product", icon: <FaPlus size={16} /> },
-      { href: "/admin/categories", label: "Categories", icon: <FaList size={16} /> },
-      { href: "/admin/categories/create", label: " Create Category", icon: <FaList size={16} /> },
-      { href: "/admin/subcategories", label: "SubCategories", icon: <FaList size={16} /> },
-      { href: "/admin/subcategories/create", label: " Create SubCategories", icon: <FaList size={16} /> },
+      {
+        href: "/admin/products",
+        label: "All Products",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/products/create",
+        label: "Create Product",
+        icon: <FaPlus size={16} />,
+      },
+      {
+        href: "/admin/categories",
+        label: "Categories",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/categories/create",
+        label: " Create Category",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/subcategories",
+        label: "SubCategories",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/subcategories/create",
+        label: " Create SubCategories",
+        icon: <FaList size={16} />,
+      },
       { href: "/admin/brands", label: "Brands", icon: <FaList size={16} /> },
-      { href: "/admin/brands/create", label: " Create Brands", icon: <FaList size={16} /> },
-      { href: "/admin/flash-sales", label: "Flash Sales", icon: <FaTags size={16} /> },
-      { href: "/admin/flash-sales/create", label: " Create Flash Sales", icon: <FaTags size={16} /> },
+      {
+        href: "/admin/brands/create",
+        label: " Create Brands",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/flash-sales",
+        label: "Flash Sales",
+        icon: <FaTags size={16} />,
+      },
+      {
+        href: "/admin/flash-sales/create",
+        label: " Create Flash Sales",
+        icon: <FaTags size={16} />,
+      },
     ],
   },
   {
@@ -32,33 +77,72 @@ export const adminLinks = [
     icon: <FaUsers size={16} />,
     children: [
       { href: "/admin/users", label: "All Users", icon: <FaList size={16} /> },
-      { href: "/admin/users/admins", label: "Admins", icon: <FaUserShield size={16} /> },
-      { href: "/admin/users/sellers", label: "Sellers", icon: <FaStore size={16} /> },
-      { href: "/admin/users/customers", label: "Customers", icon: <FaUsers size={16} /> },
+      {
+        href: "/admin/users/admins",
+        label: "Admins",
+        icon: <FaUserShield size={16} />,
+      },
+      {
+        href: "/admin/users/sellers",
+        label: "Sellers",
+        icon: <FaStore size={16} />,
+      },
+      {
+        href: "/admin/users/customers",
+        label: "Customers",
+        icon: <FaUsers size={16} />,
+      },
     ],
   },
   {
     label: "Orders",
     icon: <FaMoneyBill size={16} />,
     children: [
-      { href: "/admin/orders", label: "All Orders", icon: <FaList size={16} /> },
-      { href: "/admin/orders/pending", label: "Pending Orders", icon: <FaList size={16} /> },
-      { href: "/admin/orders/shipped", label: "Shipped Orders", icon: <FaList size={16} /> },
-      { href: "/admin/orders/completed", label: "Completed Orders", icon: <FaList size={16} /> },
-      
+      {
+        href: "/admin/orders",
+        label: "All Orders",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/orders/pending",
+        label: "Pending Orders",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/orders/shipped",
+        label: "Shipped Orders",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/orders/completed",
+        label: "Completed Orders",
+        icon: <FaList size={16} />,
+      },
     ],
   },
   {
     label: "Payments",
     icon: <FaMoneyBill size={16} />,
     children: [
-      { href: "/admin/payments", label: "All Payments", icon: <FaList size={16} /> },
-      { href: "/admin/payments/due", label: "Due Payments", icon: <FaList size={16} /> },
-      { href: "/admin/payments/completed", label: "Completed Payments", icon: <FaList size={16} /> },
+      {
+        href: "/admin/payments",
+        label: "All Payments",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/payments/due",
+        label: "Due Payments",
+        icon: <FaList size={16} />,
+      },
+      {
+        href: "/admin/payments/completed",
+        label: "Completed Payments",
+        icon: <FaList size={16} />,
+      },
     ],
   },
-  
-   {
+
+  {
     label: "Profile",
     href: "/admin/profile",
     icon: <FaUser size={16} />,
@@ -69,14 +153,13 @@ export const adminLinks = [
   },
 ];
 
-
 export const sellerLinks = [
   {
     label: "Dashboard",
     href: "/seller/overview",
     icon: <FaBoxOpen size={16} />,
   },
-  
+
   {
     label: "Orders",
     href: "/seller/orders",
@@ -101,8 +184,16 @@ export const sellerLinks = [
     label: "Reviews",
     icon: <FaStar size={16} />,
     children: [
-      { href: "/seller/reviews", label: "All Reviews", icon: <FaStar size={16} /> },
-      { href: "/seller/reviews/negative", label: "Negative Reviews", icon: <FaStar size={16} /> },
+      {
+        href: "/seller/reviews",
+        label: "All Reviews",
+        icon: <FaStar size={16} />,
+      },
+      {
+        href: "/seller/reviews/negative",
+        label: "Negative Reviews",
+        icon: <FaStar size={16} />,
+      },
     ],
   },
   {
@@ -115,7 +206,6 @@ export const sellerLinks = [
     // ],
   },
 ];
-
 
 export const customerLinks = [
   {
@@ -132,13 +222,11 @@ export const customerLinks = [
     label: "Payments",
     icon: <FaMoneyBill size={16} />,
     href: "/customer/payments",
-    
   },
   {
     label: "Reviews",
     icon: <FaStar size={16} />,
     href: "/customer/reviews",
-   
   },
   {
     label: "Viewed Products",
@@ -153,8 +241,7 @@ export const customerLinks = [
   {
     label: "Profile",
     icon: <FaUser size={16} />,
-     href: "/customer/profile",
-    
+    href: "/customer/profile",
   },
 ];
 export const delivaryBoyLinks = [
@@ -168,12 +255,10 @@ export const delivaryBoyLinks = [
     icon: <FaHistory size={16} />,
     href: "/delivaryboy/tasks",
   },
-  
-  
+
   {
     label: "Profile",
     icon: <FaUser size={16} />,
-     href: "/customer/profile",
-    
+    href: "/customer/profile",
   },
 ];

@@ -19,7 +19,8 @@ interface FlexCardProps {
 
 const FlexCard: FC<FlexCardProps> = ({ product }) => {
   const { price, discount = 0 } = product;
-  const discountedPrice = discount > 0 ? price - (price * discount) / 100 : price;
+  const discountedPrice =
+    discount > 0 ? price - (price * discount) / 100 : price;
 
   return (
     <div className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-300">
@@ -27,10 +28,10 @@ const FlexCard: FC<FlexCardProps> = ({ product }) => {
       <div className="h-48 bg-gray-100 relative">
         {product.images?.[0]?.url ? (
           <Image
-            src={product.images[0].url}
-            alt={product.name}
             fill
+            alt={product.name}
             className="object-cover hover:scale-105 transition-transform duration-300"
+            src={product.images[0].url}
           />
         ) : (
           <span className="absolute inset-0 flex items-center justify-center text-gray-400">
@@ -41,12 +42,16 @@ const FlexCard: FC<FlexCardProps> = ({ product }) => {
 
       {/* Info */}
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-800 truncate">{product.name}</h3>
+        <h3 className="text-lg font-semibold text-gray-800 truncate">
+          {product.name}
+        </h3>
         {product.description && (
-          <p className="text-gray-500 text-sm mt-1 line-clamp-2">{product.description}</p>
+          <p className="text-gray-500 text-sm mt-1 line-clamp-2">
+            {product.description}
+          </p>
         )}
 
-         {/* Price */}
+        {/* Price */}
         <div className="text-sm text-gray-600 dark:text-gray-300">
           <span className="font-bold text-lg text-amber-600">
             ${discountedPrice.toFixed(2)}

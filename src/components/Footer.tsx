@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -25,10 +24,38 @@ export default function Footer() {
             Customer Care
           </h3>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/help" className="hover:text-amber-600 dark:hover:text-amber-400">Help Center</Link></li>
-            <li><Link href="/track" className="hover:text-amber-600 dark:hover:text-amber-400">Track Order</Link></li>
-            <li><Link href="/returns" className="hover:text-amber-600 dark:hover:text-amber-400">Returns & Refunds</Link></li>
-            <li><Link href="/faq" className="hover:text-amber-600 dark:hover:text-amber-400">FAQ</Link></li>
+            <li>
+              <Link
+                className="hover:text-amber-600 dark:hover:text-amber-400"
+                href="/help"
+              >
+                Help Center
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="hover:text-amber-600 dark:hover:text-amber-400"
+                href="/track"
+              >
+                Track Order
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="hover:text-amber-600 dark:hover:text-amber-400"
+                href="/returns"
+              >
+                Returns & Refunds
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="hover:text-amber-600 dark:hover:text-amber-400"
+                href="/faq"
+              >
+                FAQ
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -38,13 +65,40 @@ export default function Footer() {
             About Us
           </h3>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/about" className="hover:text-amber-600 dark:hover:text-amber-400">Company Info</Link></li>
-            <li><Link href="/careers" className="hover:text-amber-600 dark:hover:text-amber-400">Careers</Link></li>
-            <li><Link href="/privacy" className="hover:text-amber-600 dark:hover:text-amber-400">Privacy Policy</Link></li>
-            <li><Link href="/terms" className="hover:text-amber-600 dark:hover:text-amber-400">Terms & Conditions</Link></li>
+            <li>
+              <Link
+                className="hover:text-amber-600 dark:hover:text-amber-400"
+                href="/about"
+              >
+                Company Info
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="hover:text-amber-600 dark:hover:text-amber-400"
+                href="/careers"
+              >
+                Careers
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="hover:text-amber-600 dark:hover:text-amber-400"
+                href="/privacy"
+              >
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="hover:text-amber-600 dark:hover:text-amber-400"
+                href="/terms"
+              >
+                Terms & Conditions
+              </Link>
+            </li>
           </ul>
         </div>
-
 
         {/* App Download */}
         <div>
@@ -53,18 +107,18 @@ export default function Footer() {
           </h3>
           <div className="flex flex-col gap-3">
             <a
-              href="https://play.google.com"
-              target="_blank"
-              rel="noopener noreferrer"
               className="flex items-center gap-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600 text-white px-4 py-2 rounded-md"
+              href="https://play.google.com"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               <FaGooglePlay /> Google Play
             </a>
             <a
-              href="https://apple.com/app-store/"
-              target="_blank"
-              rel="noopener noreferrer"
               className="flex items-center gap-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600 text-white px-4 py-2 rounded-md"
+              href="https://apple.com/app-store/"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               <FaApple /> App Store
             </a>
@@ -77,16 +131,32 @@ export default function Footer() {
             Follow Us
           </h3>
           <div className="flex gap-4 text-xl">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://facebook.com"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               <FaFacebookF className="hover:text-amber-600 dark:hover:text-amber-400" />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://twitter.com"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               <FaTwitter className="hover:text-amber-600 dark:hover:text-amber-400" />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://instagram.com"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               <FaInstagram className="hover:text-amber-600 dark:hover:text-amber-400" />
             </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://youtube.com"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               <FaYoutube className="hover:text-amber-600 dark:hover:text-amber-400" />
             </a>
           </div>

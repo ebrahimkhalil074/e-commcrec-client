@@ -162,15 +162,16 @@ import {
   FaShoppingCart,
   FaCheck,
 } from "react-icons/fa";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import {
   useGetCart,
   useUpdateCartItem,
   useRemoveCartItem,
   useClearCart,
 } from "@/src/hooks/cart.hook";
-import Link from "next/link";
 import EmptyCart from "@/src/components/EmptyCartComponent";
-import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const { data, isLoading } = useGetCart();
@@ -181,10 +182,11 @@ export default function CartPage() {
 
   if (isLoading) return <p className="text-center mt-8">Loading...</p>;
 
-  const items = data?.items ?? [];
+  const items = (data as { items: any[] })?.items ?? [];
+
   const totalPrice = items.reduce(
     (sum: number, item: any) => sum + item.price * item.quantity,
-    0
+    0,
   );
 
   return (
@@ -193,9 +195,7 @@ export default function CartPage() {
         <FaShoppingCart className="text-amber-500" /> Your Cart
       </h1>
 
-      {!items.length && (
-  <EmptyCart onShopNow={() => router.push('/product')} />
-)}
+      {!items.length && <EmptyCart onShopNow={() => router.push("/product")} />}
 
       <div className="space-y-4">
         {items.map((item: any) => (
@@ -206,21 +206,19 @@ export default function CartPage() {
             {/* Product Info */}
             <div className="flex items-center gap-4 w-full md:w-1/3">
               <img
+                alt={item.product.name}
+                className="w-20 h-20 object-cover rounded-md border border-amber-200"
                 src={
                   item.product.category.image ||
                   "https://via.placeholder.com/80"
                 }
-                alt={item.product.name}
-                className="w-20 h-20 object-cover rounded-md border border-amber-200"
               />
               <div>
                 <h2 className="font-semibold text-lg text-amber-700">
                   {item.product.name}
                 </h2>
                 <p className="text-sm text-gray-500">
-                  {item.variant?.color && (
-                    <>Color: {item.variant.color}, </>
-                  )}
+                  {item.variant?.color && <>Color: {item.variant.color}, </>}
                   Size: {item.sizeStock?.size}
                 </p>
                 <p className="text-sm text-gray-700 font-medium">
@@ -232,20 +230,20 @@ export default function CartPage() {
             {/* Quantity Controls */}
             <div className="flex items-center gap-4 mt-4 md:mt-0">
               <button
+                className="p-2 border border-amber-300 rounded-full hover:bg-amber-100 disabled:opacity-50"
+                disabled={item.quantity <= 1}
                 onClick={() =>
                   updateQty({ id: item.id, quantity: item.quantity - 1 })
                 }
-                disabled={item.quantity <= 1}
-                className="p-2 border border-amber-300 rounded-full hover:bg-amber-100 disabled:opacity-50"
               >
                 <FaMinus />
               </button>
               <span className="text-lg font-semibold">{item.quantity}</span>
               <button
+                className="p-2 border border-amber-300 rounded-full hover:bg-amber-100"
                 onClick={() =>
                   updateQty({ id: item.id, quantity: item.quantity + 1 })
                 }
-                className="p-2 border border-amber-300 rounded-full hover:bg-amber-100"
               >
                 <FaPlus />
               </button>
@@ -257,9 +255,9 @@ export default function CartPage() {
                 ৳{(item.price * item.quantity).toFixed(2)}
               </span>
               <button
-                onClick={() => removeItem(item.id)}
                 className="text-amber-600 hover:text-amber-800"
                 title="Remove Item"
+                onClick={() => removeItem(item.id)}
               >
                 <FaTrashAlt size={18} />
               </button>
@@ -272,29 +270,23 @@ export default function CartPage() {
         <div className="mt-6 flex flex-col md:flex-row justify-between items-center border-t pt-4">
           <p className="text-xl font-bold">
             Total:{" "}
-            <span className="text-amber-700">
-              ৳{totalPrice.toFixed(2)}
-            </span>
+            <span className="text-amber-700">৳{totalPrice.toFixed(2)}</span>
           </p>
           <div className="flex gap-4 flex-col md:flex-row w-full md:w-auto">
             <button
-            onClick={() => clearAll()}
-            className="mt-4 md:mt-0 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full flex items-center gap-2 shadow-md"
-          >
-            <FaTrashAlt /> Clear Cart
-          </button>
-         <Link  href='/checkout'>
-          <button
-            
-            className="mt-4 md:mt-0 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full flex items-center gap-2 shadow-md"
-          >
-            <FaCheck /> Checkout
-          </button>
-          </Link>
+              className="mt-4 md:mt-0 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full flex items-center gap-2 shadow-md"
+              onClick={() => clearAll()}
+            >
+              <FaTrashAlt /> Clear Cart
+            </button>
+            <Link href="/checkout">
+              <button className="mt-4 md:mt-0 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full flex items-center gap-2 shadow-md">
+                <FaCheck /> Checkout
+              </button>
+            </Link>
           </div>
         </div>
       )}
     </div>
-
   );
 }

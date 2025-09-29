@@ -1,6 +1,3 @@
-import { Navbar } from "@/src/components/navbar";
-
-
 export default function UserLayout({
   children,
 }: {
@@ -8,10 +5,7 @@ export default function UserLayout({
 }) {
   return (
     <>
-     
-      <div>
-        {children}
-      </div>
+      <div>{children}</div>
     </>
   );
 }

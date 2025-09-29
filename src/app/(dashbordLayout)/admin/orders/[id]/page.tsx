@@ -3,7 +3,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Card, CardHeader, CardBody } from "@heroui/card";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/table";
 import { Chip } from "@heroui/chip";
 import { Image } from "@heroui/image";
 import { Button } from "@heroui/button";
@@ -67,6 +74,7 @@ export default function OrderDetailsPage() {
       try {
         const res = await fetch(`http://localhost:5000/api/v1/order/${id}`);
         const data = await res.json();
+
         setOrder(data?.data);
       } catch (error) {
         console.error("Failed to fetch order details", error);
@@ -74,6 +82,7 @@ export default function OrderDetailsPage() {
         setLoading(false);
       }
     };
+
     if (id) fetchOrder();
   }, [id]);
 
@@ -92,7 +101,8 @@ export default function OrderDetailsPage() {
       </div>
     );
   }
-console.log(order);
+  console.log(order);
+
   return (
     <Card className="p-6">
       {/* Header */}
@@ -100,8 +110,8 @@ console.log(order);
         <h1 className="text-xl font-bold">Order Details</h1>
         <Button
           as={Link}
-          href="/admin/orders"
           className="bg-white text-amber-600 font-semibold rounded-xl shadow"
+          href="/admin/orders"
         >
           Back to Orders
         </Button>
@@ -110,38 +120,78 @@ console.log(order);
       <CardBody className="space-y-8">
         {/* Order Summary */}
         <section>
-          <h2 className="text-lg font-bold text-amber-600 mb-3">Order Summary</h2>
+          <h2 className="text-lg font-bold text-amber-600 mb-3">
+            Order Summary
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <p><strong>Order ID:</strong> {order.id}</p>
-            <p><strong>User:</strong> {order.user?.name} ({order.user?.email})</p>
-            <p><strong>Total:</strong> ${order.total.toFixed(2)}</p>
+            <p>
+              <strong>Order ID:</strong> {order.id}
+            </p>
+            <p>
+              <strong>User:</strong> {order.user?.name} ({order.user?.email})
+            </p>
+            <p>
+              <strong>Total:</strong> ${order.total.toFixed(2)}
+            </p>
             <p>
               <strong>Status:</strong>{" "}
               {order.isPaid ? (
-                <Chip color="success" variant="flat">Paid</Chip>
+                <Chip color="success" variant="flat">
+                  Paid
+                </Chip>
               ) : (
-                <Chip color="danger" variant="flat">Unpaid</Chip>
+                <Chip color="danger" variant="flat">
+                  Unpaid
+                </Chip>
               )}
             </p>
-            <p><strong>Created:</strong> {new Date(order.createdAt).toLocaleString()}</p>
-            <p><strong>Updated:</strong> {new Date(order.updatedAt).toLocaleString()}</p>
+            <p>
+              <strong>Created:</strong>{" "}
+              {new Date(order.createdAt).toLocaleString()}
+            </p>
+            <p>
+              <strong>Updated:</strong>{" "}
+              {new Date(order.updatedAt).toLocaleString()}
+            </p>
           </div>
         </section>
- {order.userAddress && (
+        {order.userAddress && (
           <section>
-            <h2 className="text-lg font-bold text-amber-600 mb-3">Delivery Address</h2>
+            <h2 className="text-lg font-bold text-amber-600 mb-3">
+              Delivery Address
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <p><strong>Name:</strong> {order.userAddress.fullName}</p>
-              <p><strong>Phone:</strong> {order.userAddress.phone}</p>
-              <p><strong>Email:</strong> {order.userAddress.email}</p>
-              <p><strong>Country:</strong> {order.userAddress.country}</p>
-              <p><strong>State:</strong> {order.userAddress.state}</p>
-              <p><strong>District:</strong> {order.userAddress.district}</p>
-              <p><strong>City:</strong> {order.userAddress.city}</p>
-              <p><strong>Street:</strong> {order.userAddress.street}</p>
-              <p><strong>Postal Code:</strong> {order.userAddress.postalCode}</p>
+              <p>
+                <strong>Name:</strong> {order.userAddress.fullName}
+              </p>
+              <p>
+                <strong>Phone:</strong> {order.userAddress.phone}
+              </p>
+              <p>
+                <strong>Email:</strong> {order.userAddress.email}
+              </p>
+              <p>
+                <strong>Country:</strong> {order.userAddress.country}
+              </p>
+              <p>
+                <strong>State:</strong> {order.userAddress.state}
+              </p>
+              <p>
+                <strong>District:</strong> {order.userAddress.district}
+              </p>
+              <p>
+                <strong>City:</strong> {order.userAddress.city}
+              </p>
+              <p>
+                <strong>Street:</strong> {order.userAddress.street}
+              </p>
+              <p>
+                <strong>Postal Code:</strong> {order.userAddress.postalCode}
+              </p>
               {order.userAddress.landmark && (
-                <p><strong>Landmark:</strong> {order.userAddress.landmark}</p>
+                <p>
+                  <strong>Landmark:</strong> {order.userAddress.landmark}
+                </p>
               )}
             </div>
           </section>
@@ -150,26 +200,43 @@ console.log(order);
         {/* Payment Info */}
         {order.payment && (
           <section>
-            <h2 className="text-lg font-bold text-amber-600 mb-3">Payment Information</h2>
+            <h2 className="text-lg font-bold text-amber-600 mb-3">
+              Payment Information
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <p><strong>Payment ID:</strong> {order.payment.id}</p>
+              <p>
+                <strong>Payment ID:</strong> {order.payment.id}
+              </p>
               {order.payment.transactionId && (
-                <p><strong>Transaction ID:</strong> {order.payment.transactionId}</p>
+                <p>
+                  <strong>Transaction ID:</strong> {order.payment.transactionId}
+                </p>
               )}
-              <p><strong>Method:</strong> {order.payment.method || "N/A"}</p>
+              <p>
+                <strong>Method:</strong> {order.payment.method || "N/A"}
+              </p>
               {order.payment.amount && (
-                <p><strong>Amount:</strong> ${order.payment.amount}</p>
+                <p>
+                  <strong>Amount:</strong> ${order.payment.amount}
+                </p>
               )}
               <p>
                 <strong>Status:</strong>{" "}
                 {order.payment.isDue ? (
-                  <Chip color="warning" variant="flat">Due</Chip>
+                  <Chip color="warning" variant="flat">
+                    Due
+                  </Chip>
                 ) : (
-                  <Chip color="success" variant="flat">{order.payment.status}</Chip>
+                  <Chip color="success" variant="flat">
+                    {order.payment.status}
+                  </Chip>
                 )}
               </p>
               {order.payment.createdAt && (
-                <p><strong>Payment Created:</strong> {new Date(order.payment.createdAt).toLocaleString()}</p>
+                <p>
+                  <strong>Payment Created:</strong>{" "}
+                  {new Date(order.payment.createdAt).toLocaleString()}
+                </p>
               )}
             </div>
           </section>
@@ -179,8 +246,8 @@ console.log(order);
         <section>
           <h2 className="text-lg font-bold text-amber-600 mb-3">Order Items</h2>
           <Table
-            aria-label="Order Items Table"
             removeWrapper
+            aria-label="Order Items Table"
             className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
           >
             <TableHeader>
@@ -196,18 +263,22 @@ console.log(order);
                 <TableRow key={item.id}>
                   <TableCell>
                     <Image
-                      src={item.product?.images?.[0]?.url || "/placeholder.png"}
                       alt={item.product?.name}
-                      width={60}
-                      height={60}
                       className="rounded-lg object-cover"
+                      height={60}
+                      src={item.product?.images?.[0]?.url || "/placeholder.png"}
+                      width={60}
                     />
                   </TableCell>
                   <TableCell>{item.product?.name}</TableCell>
-                  <TableCell>{item.variant?.name || item.sizeStock?.size || "-"}</TableCell>
+                  <TableCell>
+                    {item.variant?.name || item.sizeStock?.size || "-"}
+                  </TableCell>
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell>${item.price.toFixed(2)}</TableCell>
-                  <TableCell>${(item.price * item.quantity).toFixed(2)}</TableCell>
+                  <TableCell>
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

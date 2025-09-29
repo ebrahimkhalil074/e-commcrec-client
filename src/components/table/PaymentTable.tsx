@@ -139,8 +139,7 @@
 
 // export default PaymentTable;
 
-
-'use client';
+"use client";
 
 import { useState, useMemo } from "react";
 import {
@@ -152,7 +151,14 @@ import {
   TableCell,
 } from "@heroui/table";
 import { Input } from "@heroui/input";
-import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem } from "@heroui/react";
+import {
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+} from "@heroui/react";
 import { FiShoppingCart, FiDollarSign, FiUser, FiClock } from "react-icons/fi";
 
 interface ProductItem {
@@ -193,9 +199,9 @@ interface Payment {
   createdAt: string;
   user: User;
   order: Order;
-  due:{
-    amount:number
-  }
+  due: {
+    amount: number;
+  };
 }
 
 interface PaymentTableProps {
@@ -207,11 +213,12 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ payments }) => {
 
   const filteredPayments = useMemo(() => {
     if (!search) return payments;
+
     return payments.filter(
       (p) =>
         p.transactionId.toLowerCase().includes(search.toLowerCase()) ||
         p.user.email.toLowerCase().includes(search.toLowerCase()) ||
-        p.user.name.toLowerCase().includes(search.toLowerCase())
+        p.user.name.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, payments]);
 
@@ -227,61 +234,97 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ payments }) => {
       </div>
 
       {/* Payment Table */}
-     <div className=" w-full overflow-x-auto">
-         <Table className="">
-        <TableHeader>
-          <TableColumn><FiDollarSign className="inline mr-1 text-amber-500" /> Transaction ID</TableColumn>
-          <TableColumn><FiUser className="inline mr-1 text-amber-500" /> Name</TableColumn>
-          <TableColumn><FiUser className="inline mr-1 text-amber-500" /> Email</TableColumn>
-          <TableColumn><FiUser className="inline mr-1 text-amber-500" /> Role</TableColumn>
-          <TableColumn><FiDollarSign className="inline mr-1 text-amber-500" /> Amount</TableColumn>
-          <TableColumn><FiDollarSign className="inline mr-1 text-amber-500" /> Due Amount</TableColumn>
-          <TableColumn><FiClock className="inline mr-1 text-amber-500" /> Status</TableColumn>
-          <TableColumn><FiShoppingCart className="inline mr-1 text-amber-500" /> Products</TableColumn>
-          <TableColumn><FiClock className="inline mr-1 text-amber-500" /> Date</TableColumn>
-        </TableHeader>
+      <div className=" w-full overflow-x-auto">
+        <Table className="">
+          <TableHeader>
+            <TableColumn>
+              <FiDollarSign className="inline mr-1 text-amber-500" />{" "}
+              Transaction ID
+            </TableColumn>
+            <TableColumn>
+              <FiUser className="inline mr-1 text-amber-500" /> Name
+            </TableColumn>
+            <TableColumn>
+              <FiUser className="inline mr-1 text-amber-500" /> Email
+            </TableColumn>
+            <TableColumn>
+              <FiUser className="inline mr-1 text-amber-500" /> Role
+            </TableColumn>
+            <TableColumn>
+              <FiDollarSign className="inline mr-1 text-amber-500" /> Amount
+            </TableColumn>
+            <TableColumn>
+              <FiDollarSign className="inline mr-1 text-amber-500" /> Due Amount
+            </TableColumn>
+            <TableColumn>
+              <FiClock className="inline mr-1 text-amber-500" /> Status
+            </TableColumn>
+            <TableColumn>
+              <FiShoppingCart className="inline mr-1 text-amber-500" /> Products
+            </TableColumn>
+            <TableColumn>
+              <FiClock className="inline mr-1 text-amber-500" /> Date
+            </TableColumn>
+          </TableHeader>
 
-        <TableBody>
-          {filteredPayments?.map((payment) => (
-            <TableRow key={payment.id}>
-              <TableCell>{payment.transactionId}</TableCell>
-              <TableCell>{payment.user.name}</TableCell>
-              <TableCell>{payment.user.email}</TableCell>
-              <TableCell>{payment.user.role}</TableCell>
-              <TableCell>${payment.amount.toFixed(2)}</TableCell>
-              <TableCell>${payment?.due?.amount.toFixed(2)}</TableCell>
-              <TableCell>{payment.isDue ? "Due" : "Paid"}</TableCell>
+          <TableBody>
+            {filteredPayments?.map((payment) => (
+              <TableRow key={payment.id}>
+                <TableCell>{payment.transactionId}</TableCell>
+                <TableCell>{payment.user.name}</TableCell>
+                <TableCell>{payment.user.email}</TableCell>
+                <TableCell>{payment.user.role}</TableCell>
+                <TableCell>${payment.amount.toFixed(2)}</TableCell>
+                <TableCell>${payment?.due?.amount.toFixed(2)}</TableCell>
+                <TableCell>{payment.isDue ? "Due" : "Paid"}</TableCell>
 
-              {/* Products Dropdown */}
-              <TableCell>
-                <Dropdown placement="bottom" className="overflow-scroll">
-                  <DropdownTrigger>
-                    <Button size="sm" color="warning" variant="flat" className="text-amber-500">
-                      View Products ({payment.order.items.length})
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu closeOnSelect={false} aria-label="Products" color="default" variant="flat">
-                    <DropdownSection title="Order Items">
-                      {payment.order.items.map((item) => (
-                        <DropdownItem key={item.id} className="p-2 text-amber-500">
-                          <div className="flex justify-between w-full p-2">
-                            <span className="font-semibold">{item.product.name}</span>
-                            <span>Qty: {item.quantity}</span>
-                            <span>Price: ${item.price.toFixed(2)}</span>
-                          </div>
-                        </DropdownItem>
-                      ))}
-                    </DropdownSection>
-                  </DropdownMenu>
-                </Dropdown>
-              </TableCell>
+                {/* Products Dropdown */}
+                <TableCell>
+                  <Dropdown className="overflow-scroll" placement="bottom">
+                    <DropdownTrigger>
+                      <Button
+                        className="text-amber-500"
+                        color="warning"
+                        size="sm"
+                        variant="flat"
+                      >
+                        View Products ({payment.order.items.length})
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      aria-label="Products"
+                      closeOnSelect={false}
+                      color="default"
+                      variant="flat"
+                    >
+                      <DropdownSection title="Order Items">
+                        {payment.order.items.map((item) => (
+                          <DropdownItem
+                            key={item.id}
+                            className="p-2 text-amber-500"
+                          >
+                            <div className="flex justify-between w-full p-2">
+                              <span className="font-semibold">
+                                {item.product.name}
+                              </span>
+                              <span>Qty: {item.quantity}</span>
+                              <span>Price: ${item.price.toFixed(2)}</span>
+                            </div>
+                          </DropdownItem>
+                        ))}
+                      </DropdownSection>
+                    </DropdownMenu>
+                  </Dropdown>
+                </TableCell>
 
-              <TableCell>{new Date(payment.createdAt).toLocaleDateString()}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-     </div>
+                <TableCell>
+                  {new Date(payment.createdAt).toLocaleDateString()}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

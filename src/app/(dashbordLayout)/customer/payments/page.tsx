@@ -278,7 +278,7 @@
 //     </div>
 //   );
 // }
-  
+
 // "use client";
 
 // import React, { useState, useMemo } from "react";
@@ -542,7 +542,6 @@
 //   </Button>
 // )}
 
-
 //                       </TableCell>
 //                     </TableRow>
 //                   ))}
@@ -666,7 +665,6 @@
 //   );
 // }
 
-
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -680,7 +678,6 @@ import {
   TableCell,
 } from "@heroui/table";
 import { Card, CardHeader } from "@heroui/card";
-import { Chip } from "@heroui/chip";
 import { Spinner } from "@heroui/spinner";
 import { Pagination } from "@heroui/pagination";
 import {
@@ -690,6 +687,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@heroui/modal";
+
 import { useUser } from "@/src/context/User.context";
 import { useGetMyAllPayments } from "@/src/hooks/payment.hook";
 
@@ -727,7 +725,8 @@ export default function CustomerPaymentsPage() {
 
   const payments: Payment[] = data?.data ?? [];
   const meta = data?.meta ?? { total: 0, page, limit };
-console.log(payments)
+
+  console.log(payments);
   // --- Summary Stats (শুধু Total Paid Count) ---
   const totalPaid = useMemo(() => payments.length, [payments]);
 
@@ -770,12 +769,14 @@ console.log(payments)
               Failed to load payments. Please try again.
             </div>
           ) : payments.length === 0 ? (
-            <div className="p-6 text-center text-gray-600">No payments found.</div>
+            <div className="p-6 text-center text-gray-600">
+              No payments found.
+            </div>
           ) : (
             <>
               <Table
-                aria-label="My Payments"
                 removeWrapper
+                aria-label="My Payments"
                 className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
               >
                 <TableHeader>
@@ -789,7 +790,9 @@ console.log(payments)
                 <TableBody>
                   {payments.map((p) => (
                     <TableRow key={p.id}>
-                      <TableCell className="font-mono">{p.transactionId}</TableCell>
+                      <TableCell className="font-mono">
+                        {p.transactionId}
+                      </TableCell>
                       <TableCell className="font-semibold">
                         ${p.amount.toFixed(2)}
                       </TableCell>
@@ -799,8 +802,8 @@ console.log(payments)
                       </TableCell>
                       <TableCell>
                         <Button
-                          size="sm"
                           color="primary"
+                          size="sm"
                           onPress={() => setSelectedPayment(p)}
                         >
                           View
@@ -816,13 +819,13 @@ console.log(payments)
                 <div className="flex items-center gap-2 text-gray-700">
                   <span className="font-medium">Items per page:</span>
                   <select
+                    className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     value={limit}
                     onChange={(e) => {
                       setLimit(parseInt(e.target.value));
                       setPage(1);
                       setTimeout(() => refetch(), 0);
                     }}
-                    className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   >
                     <option value={5}>5</option>
                     <option value={10}>10</option>
@@ -831,15 +834,14 @@ console.log(payments)
                 </div>
 
                 <Pagination
+                  showControls
+                  className="bg-white rounded-lg shadow px-4 py-2"
                   page={meta.page}
                   total={Math.max(1, Math.ceil(meta.total / limit))}
                   onChange={(p) => {
                     setPage(p);
                     setTimeout(() => refetch(), 0);
                   }}
-                  className="bg-white rounded-lg shadow px-4 py-2"
-                  prevLabel="«"
-                  nextLabel="»"
                 />
               </div>
             </>
@@ -850,8 +852,8 @@ console.log(payments)
       {/* Modal for Payment Details */}
       <Modal
         isOpen={!!selectedPayment}
-        onOpenChange={() => setSelectedPayment(null)}
         size="lg"
+        onOpenChange={() => setSelectedPayment(null)}
       >
         <ModalContent>
           {(onClose) => (

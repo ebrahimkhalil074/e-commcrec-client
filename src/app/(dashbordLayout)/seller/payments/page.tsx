@@ -278,7 +278,7 @@
 //     </div>
 //   );
 // }
-  
+
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -302,6 +302,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@heroui/modal";
+
 import { useUser } from "@/src/context/User.context";
 import { useGetMyAllPayments } from "@/src/hooks/payment.hook";
 
@@ -312,8 +313,7 @@ type Payment = {
   amount: number;
   method: string;
   isDue: boolean;
-  due:{
-
+  due: {
     amount: number;
   };
   createdAt: string;
@@ -353,8 +353,8 @@ export default function CustomerPaymentsPage() {
     activeTab === "ALL"
       ? { page, limit }
       : activeTab === "PAID"
-      ? { isDue: false, page, limit }
-      : { isDue: true, page, limit };
+        ? { isDue: false, page, limit }
+        : { isDue: true, page, limit };
 
   const { data, isLoading, isError, refetch } = useGetMyAllPayments(query);
 
@@ -407,16 +407,16 @@ export default function CustomerPaymentsPage() {
             {TABS.map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => {
-                  setActiveTab(tab.key);
-                  setPage(1);
-                  setTimeout(() => refetch(), 0);
-                }}
                 className={`px-3 py-1 rounded-md font-medium ${
                   activeTab === tab.key
                     ? "bg-white text-amber-600"
                     : "bg-white/20 text-white hover:bg-white/30"
                 }`}
+                onClick={() => {
+                  setActiveTab(tab.key);
+                  setPage(1);
+                  setTimeout(() => refetch(), 0);
+                }}
               >
                 {tab.label}
               </button>
@@ -457,8 +457,8 @@ export default function CustomerPaymentsPage() {
           ) : (
             <>
               <Table
-                aria-label="My Payments"
                 removeWrapper
+                aria-label="My Payments"
                 className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
               >
                 <TableHeader>
@@ -483,10 +483,7 @@ export default function CustomerPaymentsPage() {
                       </TableCell>
                       <TableCell>{p.method || "-"}</TableCell>
                       <TableCell>
-                        <Chip
-                          size="sm"
-                          color={p.isDue ? "warning" : "success"}
-                        >
+                        <Chip color={p.isDue ? "warning" : "success"} size="sm">
                           {p.isDue ? "UNPAID" : "PAID"}
                         </Chip>
                       </TableCell>
@@ -501,48 +498,51 @@ export default function CustomerPaymentsPage() {
                           </Chip>
                         )}
                       </TableCell>
-                       <TableCell>
-                    {p.due ? `$${p.due.amount.toFixed(2)}` : "-"}
-                    </TableCell>
+                      <TableCell>
+                        {p.due ? `$${p.due.amount.toFixed(2)}` : "-"}
+                      </TableCell>
                       <TableCell>
                         {new Date(p.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="flex gap-2">
                         <Button
-                          size="sm"
                           color="primary"
+                          size="sm"
                           onPress={() => setSelectedPayment(p)}
                         >
                           View
                         </Button>
 
                         {p.isDue && (
-  <Button
-    size="sm"
-    className="bg-amber-500 text-white hover:bg-amber-600"
-    onPress={() => {
-      fetch("http://localhost:5000/api/v1/payment/initiate-due", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ paymentId: p.id }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("Frontend fetch response:", data); // ✅ এখানে payment_url দেখাবে
-          if (data?.payment_url) {
-            window.location.href = data.payment_url; // AmarPay পেইজে redirect
-          } else {
-            alert("Something went wrong!");
-          }
-        })
-        .catch(() => alert("Payment failed!"));
-    }}
-  >
-    Pay Now
-  </Button>
-)}
-
-
+                          <Button
+                            className="bg-amber-500 text-white hover:bg-amber-600"
+                            size="sm"
+                            onPress={() => {
+                              fetch(
+                                "http://localhost:5000/api/v1/payment/initiate-due",
+                                {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify({ paymentId: p.id }),
+                                },
+                              )
+                                .then((res) => res.json())
+                                .then((data) => {
+                                  console.log("Frontend fetch response:", data); // ✅ এখানে payment_url দেখাবে
+                                  if (data?.payment_url) {
+                                    window.location.href = data.payment_url; // AmarPay পেইজে redirect
+                                  } else {
+                                    alert("Something went wrong!");
+                                  }
+                                })
+                                .catch(() => alert("Payment failed!"));
+                            }}
+                          >
+                            Pay Now
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -554,13 +554,13 @@ export default function CustomerPaymentsPage() {
                 <div className="flex items-center gap-2 text-gray-700">
                   <span className="font-medium">Items per page:</span>
                   <select
+                    className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     value={limit}
                     onChange={(e) => {
                       setLimit(parseInt(e.target.value));
                       setPage(1);
                       setTimeout(() => refetch(), 0);
                     }}
-                    className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   >
                     <option value={5}>5</option>
                     <option value={10}>10</option>
@@ -569,15 +569,14 @@ export default function CustomerPaymentsPage() {
                 </div>
 
                 <Pagination
+                  showControls
+                  className="bg-white rounded-lg shadow px-4 py-2"
                   page={meta.page}
                   total={Math.max(1, Math.ceil(meta.total / limit))}
                   onChange={(p) => {
                     setPage(p);
                     setTimeout(() => refetch(), 0);
                   }}
-                  className="bg-white rounded-lg shadow px-4 py-2"
-                  prevLabel="«"
-                  nextLabel="»"
                 />
               </div>
             </>
@@ -588,8 +587,8 @@ export default function CustomerPaymentsPage() {
       {/* Modal for Payment Details */}
       <Modal
         isOpen={!!selectedPayment}
-        onOpenChange={() => setSelectedPayment(null)}
         size="lg"
+        onOpenChange={() => setSelectedPayment(null)}
       >
         <ModalContent>
           {(onClose) => (
@@ -609,8 +608,7 @@ export default function CustomerPaymentsPage() {
                       {selectedPayment.amount.toFixed(2)}
                     </p>
                     <p>
-                      <strong>Method:</strong>{" "}
-                      {selectedPayment.method || "-"}
+                      <strong>Method:</strong> {selectedPayment.method || "-"}
                     </p>
                     <p>
                       <strong>Status:</strong>{" "}
@@ -647,7 +645,7 @@ export default function CustomerPaymentsPage() {
                     className="bg-amber-500 text-white"
                     onPress={() =>
                       alert(
-                        `Proceed to pay for ${selectedPayment.transactionId}`
+                        `Proceed to pay for ${selectedPayment.transactionId}`,
                       )
                     }
                   >

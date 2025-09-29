@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { IconSvgProps } from "@/src/types";
-export const EyeIcon = (props:any) => {
+export const EyeIcon = (props: any) => {
   return (
     <svg
       aria-hidden="true"
@@ -31,7 +31,7 @@ export const EyeIcon = (props:any) => {
   );
 };
 
-export const DeleteIcon = (props:any) => {
+export const DeleteIcon = (props: any) => {
   return (
     <svg
       aria-hidden="true"
@@ -82,7 +82,7 @@ export const DeleteIcon = (props:any) => {
   );
 };
 
-export const EditIcon = (props:any) => {
+export const EditIcon = (props: any) => {
   return (
     <svg
       aria-hidden="true"

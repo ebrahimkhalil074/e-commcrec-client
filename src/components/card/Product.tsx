@@ -94,35 +94,21 @@ import { FaStar } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 
-interface ProductCardProps {
-  product: {
-    id: string;
-    name: string;
-    price: number;
-    discount?: number;
-    stock: number;
-    rating?: number;
-    brand: {
-      name: string;
-    };
-    images: { url: string }[];
-  };
-}
-
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product }: { product: any }) => {
   const { price, discount = 0 } = product;
-  const discountedPrice = discount > 0 ? price - (price * discount) / 100 : price;
+  const discountedPrice =
+    discount > 0 ? price - (price * discount) / 100 : price;
 
   return (
     <div className="bg-white dark:bg-gray-900 border border-amber-100 rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 ">
       {/* Product Image */}
-     
+
       <div className="relative  h-[250px]">
         <Image
-          src={product.images?.[0]?.url || "/placeholder.jpg"}
-          alt={product.name}
           fill
+          alt={product.name}
           className="object-cover "
+          src={product.images?.[0]?.url || "/placeholder.jpg"}
         />
 
         {/* Discount Badge */}
@@ -168,8 +154,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Action Button */}
         <div className="pt-3">
           <Link
-            href={`/product/${product.id}`}
             className="block text-center bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-full transition"
+            href={`/product/${product.id}`}
           >
             View Details
           </Link>
@@ -180,4 +166,3 @@ const ProductCard = ({ product }: ProductCardProps) => {
 };
 
 export default ProductCard;
-

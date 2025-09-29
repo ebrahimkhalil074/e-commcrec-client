@@ -15,6 +15,7 @@ const UserContext = createContext<IUserProviderValues | undefined>(undefined);
 export interface IUser {
   role: string;
   email: string;
+  image?: string;
 }
 
 interface IUserProviderValues {
@@ -28,11 +29,12 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleUser = async () => { 
+  const handleUser = async () => {
     try {
       const user = await getCurrentUser();
-       setUser(user ?? null); 
-       setIsLoading(false);
+
+      setUser(user ?? null);
+      setIsLoading(false);
     } catch (err) {
       console.error("Failed to fetch user:", err);
     } finally {

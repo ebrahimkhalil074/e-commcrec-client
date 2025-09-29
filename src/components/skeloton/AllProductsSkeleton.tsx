@@ -1,7 +1,14 @@
 "use client";
 
 import { Skeleton } from "@heroui/skeleton";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/table";
 
 export default function AllProductsSkeleton() {
   return (
@@ -9,8 +16,8 @@ export default function AllProductsSkeleton() {
       <h1 className="text-2xl font-bold mb-4 text-amber-600">All Products</h1>
 
       <Table
-        aria-label="Products Loading Skeleton"
         removeWrapper
+        aria-label="Products Loading Skeleton"
         className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
       >
         <TableHeader>

@@ -1,4 +1,3 @@
-
 import Brand from "../../components/home/Brand";
 import Category from "../../components/home/Category";
 import FeaturedProducts from "../../components/home/FeaturedProducts";
@@ -8,43 +7,46 @@ import Slider from "../../components/home/Slider";
 import JastForYouProducts from "../../components/home/JastForYou";
 import PromoCards from "../../components/home/PromoCards";
 export default function Home() {
-  const slideData =[
+  const slideData = [
     {
       title: "Welcome to Our Site",
       description: "Explore our features and offerings.",
-      image: "https://i.ibb.co.com/5hSW5ZJP/alfred-kenneally-lxw7-Dqi-RF2s-unsplash.jpg",
-      link: "/features"
+      image:
+        "https://i.ibb.co.com/5hSW5ZJP/alfred-kenneally-lxw7-Dqi-RF2s-unsplash.jpg",
+      link: "/features",
     },
     {
       title: "Join Our Community",
       description: "Connect with like-minded individuals.",
-      image: "https://i.ibb.co.com/5hSW5ZJP/alfred-kenneally-lxw7-Dqi-RF2s-unsplash.jpg",
-      link: "/community"
+      image:
+        "https://i.ibb.co.com/5hSW5ZJP/alfred-kenneally-lxw7-Dqi-RF2s-unsplash.jpg",
+      link: "/community",
     },
     {
       title: "Learn More",
       description: "Discover more about what we do.",
-      image: "https://i.ibb.co.com/5hSW5ZJP/alfred-kenneally-lxw7-Dqi-RF2s-unsplash.jpg",
-      link: "/learn"
-    }
-  ]
+      image:
+        "https://i.ibb.co.com/5hSW5ZJP/alfred-kenneally-lxw7-Dqi-RF2s-unsplash.jpg",
+      link: "/learn",
+    },
+  ];
+
   return (
     <>
-    <Hero />
-    <Slider slideData={slideData} />
-    <PromoCards />
-    <FeaturedProducts />
-    <Category />
-    <FlashSale />
-    <Brand />
-    <JastForYouProducts />
-    {/* <Newsletter /> */}
-    {/* <Testimonials /> */}
-    {/* <PromoCards /> */}
+      <Hero />
+      <Slider slideData={slideData} />
+      <PromoCards />
+      <FeaturedProducts />
+      <Category />
+      <FlashSale />
+      <Brand />
+      <JastForYouProducts />
+      {/* <Newsletter /> */}
+      {/* <Testimonials /> */}
+      {/* <PromoCards /> */}
     </>
   );
 }
-
 
 // "use client";
 
@@ -128,21 +130,21 @@ export default function Home() {
 //   return (
 //     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
 
-      // {/* Promo Cards */}
-      // <section className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 max-w-6xl mx-auto">
-      //   <div className="bg-white p-6 rounded shadow text-center">
-      //     <h3 className="font-semibold mb-2">Free Shipping</h3>
-      //     <p>On orders over $50</p>
-      //   </div>
-      //   <div className="bg-white p-6 rounded shadow text-center">
-      //     <h3 className="font-semibold mb-2">Easy Returns</h3>
-      //     <p>30-day money-back guarantee</p>
-      //   </div>
-      //   <div className="bg-white p-6 rounded shadow text-center">
-      //     <h3 className="font-semibold mb-2">Secure Payments</h3>
-      //     <p>100% secure checkout</p>
-      //   </div>
-      // </section>
+// {/* Promo Cards */}
+// <section className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 max-w-6xl mx-auto">
+//   <div className="bg-white p-6 rounded shadow text-center">
+//     <h3 className="font-semibold mb-2">Free Shipping</h3>
+//     <p>On orders over $50</p>
+//   </div>
+//   <div className="bg-white p-6 rounded shadow text-center">
+//     <h3 className="font-semibold mb-2">Easy Returns</h3>
+//     <p>30-day money-back guarantee</p>
+//   </div>
+//   <div className="bg-white p-6 rounded shadow text-center">
+//     <h3 className="font-semibold mb-2">Secure Payments</h3>
+//     <p>100% secure checkout</p>
+//   </div>
+// </section>
 
 //       {/* Categories */}
 //       <section className="p-6 max-w-6xl mx-auto">

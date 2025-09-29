@@ -14,13 +14,18 @@
 
 // export default CompletedPaymentPage;
 
-
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardBody } from "@heroui/card";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/table";
 import { Spinner } from "@heroui/spinner";
 
 export default function PaidPaymentsPage() {
@@ -30,8 +35,11 @@ export default function PaidPaymentsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/v1/payment/paid-summary");
+        const res = await fetch(
+          "http://localhost:5000/api/v1/payment/paid-summary",
+        );
         const result = await res.json();
+
         setData(result);
       } catch (err) {
         console.error("Error fetching paid summary:", err);
@@ -39,6 +47,7 @@ export default function PaidPaymentsPage() {
         setLoading(false);
       }
     };
+
     fetchData();
   }, []);
 
@@ -48,7 +57,8 @@ export default function PaidPaymentsPage() {
         <Spinner label="Loading Paid Payments..." />
       </div>
     );
-  } 
+  }
+
   return (
     <div className="p-6 space-y-6">
       {/* Summary Section */}
@@ -77,7 +87,9 @@ export default function PaidPaymentsPage() {
 
       {/* Paid Payments Table */}
       <Card>
-        <CardHeader className="text-lg font-semibold">Paid Payments (User-wise)</CardHeader>
+        <CardHeader className="text-lg font-semibold">
+          Paid Payments (User-wise)
+        </CardHeader>
         <CardBody>
           <Table aria-label="Paid Payments Table">
             <TableHeader>

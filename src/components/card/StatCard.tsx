@@ -14,7 +14,9 @@ const StatCard: FC<Props> = ({ title, value, icon }) => {
       </div>
       <div>
         <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
-        <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">{value}</p>
+        <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+          {value}
+        </p>
       </div>
     </div>
   );

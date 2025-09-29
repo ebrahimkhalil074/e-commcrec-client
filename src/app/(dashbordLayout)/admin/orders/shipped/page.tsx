@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardHeader } from "@heroui/card";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/table";
 import { Chip } from "@heroui/chip";
 import { Spinner } from "@heroui/spinner";
 
@@ -23,8 +30,12 @@ export default function ShippedOrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/v1/order?status=SHIPPED", { cache: "no-store" });
+        const res = await fetch(
+          "http://localhost:5000/api/v1/order?status=SHIPPED",
+          { cache: "no-store" },
+        );
         const data = await res.json();
+
         setOrders(data.data || []);
       } catch (err) {
         console.error(err);
@@ -32,10 +43,16 @@ export default function ShippedOrdersPage() {
         setLoading(false);
       }
     };
+
     fetchOrders();
   }, []);
 
-  if (loading) return <div className="flex justify-center py-10"><Spinner size="lg" /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center py-10">
+        <Spinner size="lg" />
+      </div>
+    );
 
   return (
     <Card className="p-6">
@@ -44,8 +61,8 @@ export default function ShippedOrdersPage() {
       </CardHeader>
 
       <Table
-        aria-label="Shipped Orders Table"
         removeWrapper
+        aria-label="Shipped Orders Table"
         className="border border-amber-200 rounded-xl shadow-md overflow-x-auto mt-4"
       >
         <TableHeader>
@@ -62,26 +79,35 @@ export default function ShippedOrdersPage() {
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.id}>
-              <TableCell className="font-mono">{order.id.slice(0, 8)}...</TableCell>
+              <TableCell className="font-mono">
+                {order.id.slice(0, 8)}...
+              </TableCell>
               <TableCell>{order.user.name}</TableCell>
               <TableCell>{order.user.email}</TableCell>
-              <TableCell className="font-semibold">${order.total.toFixed(2)}</TableCell>
+              <TableCell className="font-semibold">
+                ${order.total.toFixed(2)}
+              </TableCell>
               <TableCell>
                 {order.payment ? (
-                  <Chip size="sm" color="success" variant="flat">
-                    {order.payment.method} ({order.payment.transactionId.slice(0, 8)}...)
+                  <Chip color="success" size="sm" variant="flat">
+                    {order.payment.method} (
+                    {order.payment.transactionId.slice(0, 8)}...)
                   </Chip>
                 ) : (
-                  <Chip size="sm" color="danger" variant="flat">
+                  <Chip color="danger" size="sm" variant="flat">
                     No Payment
                   </Chip>
                 )}
               </TableCell>
               <TableCell>
-                <Chip size="sm"  variant="flat">{order.status}</Chip>
+                <Chip size="sm" variant="flat">
+                  {order.status}
+                </Chip>
               </TableCell>
               <TableCell>{order.deliveryBoy?.name || "-"}</TableCell>
-              <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+              <TableCell>
+                {new Date(order.createdAt).toLocaleDateString()}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

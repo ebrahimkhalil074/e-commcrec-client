@@ -6,10 +6,11 @@ import { Button } from "@heroui/button";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Divider } from "@heroui/divider";
 import { Select, SelectItem } from "@heroui/select";
+import { ChangeEvent, useState } from "react";
+
 import { useGetAllCategory } from "@/src/hooks/category.hook";
 import { useGetAllBrands } from "@/src/hooks/brand.hook";
 import { useCreateProduct } from "@/src/hooks/product.hook";
-import { ChangeEvent, useState } from "react";
 
 type ProductForm = {
   name: string;
@@ -64,11 +65,13 @@ export default function CreateProductPage() {
   // Image Change
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (!file) return;
 
     setImageFiles((prev) => [...prev, file]);
 
     const reader = new FileReader();
+
     reader.onloadend = () => {
       setImagePreviews((prev) => [...prev, reader.result as string]);
     };
@@ -76,50 +79,57 @@ export default function CreateProductPage() {
   };
 
   // Handle submit
- // Handle submit
-const onSubmit = (data: ProductForm) => {
-  // Convert string -> number where needed
-  const productData = {
-    ...data,
-    price: Number(data.price),
-    stock: Number(data.stock),
-    discount: Number(data.discount),
-    variants: data.variants.map((variant) => ({
-      ...variant,
-      price: variant.price ? Number(variant.price) : 0,
-      sizes: variant.sizes.map((s) => ({
-        ...s,
-        size: isNaN(Number(s.size)) ? s.size : Number(s.size), // size = number or string
-        stock: Number(s.stock), // 🔹 ensure stock is number
+  // Handle submit
+  const onSubmit = (data: ProductForm) => {
+    // Convert string -> number where needed
+    const productData = {
+      ...data,
+      price: Number(data.price),
+      stock: Number(data.stock),
+      discount: Number(data.discount),
+      variants: data.variants.map((variant) => ({
+        ...variant,
+        price: variant.price ? Number(variant.price) : 0,
+        sizes: variant.sizes.map((s) => ({
+          ...s,
+          size: isNaN(Number(s.size)) ? s.size : Number(s.size), // size = number or string
+          stock: Number(s.stock), // 🔹 ensure stock is number
+        })),
       })),
-    })),
-  };
-console.log({productData})
-  const formData = new FormData();
-  formData.append("data", JSON.stringify(productData));
-  for (let image of imageFiles) {
+    };
+
+    console.log({ productData });
+    const formData = new FormData();
+
+    formData.append("data", JSON.stringify(productData));
+    for (let image of imageFiles) {
       formData.append("file", image);
     }
 
-  mutate(formData);
-  setImagePreviews([]);
-  reset();
-};
-
+    mutate(formData);
+    setImagePreviews([]);
+    reset();
+  };
 
   // Images array
-  const { fields: imageFields, append: addImage, remove: removeImage } =
-    useFieldArray({
-      control,
-      name: "images",
-    });
+  const {
+    fields: imageFields,
+    append: addImage,
+    remove: removeImage,
+  } = useFieldArray({
+    control,
+    name: "images",
+  });
 
   // Variants array
-  const { fields: variantFields, append: addVariant, remove: removeVariant } =
-    useFieldArray({
-      control,
-      name: "variants",
-    });
+  const {
+    fields: variantFields,
+    append: addVariant,
+    remove: removeVariant,
+  } = useFieldArray({
+    control,
+    name: "variants",
+  });
 
   // Filtered SubCategories
   const subCategories =
@@ -128,29 +138,29 @@ console.log({productData})
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <Card shadow="lg" className="rounded-2xl border-amber-500 border">
+      <Card className="rounded-2xl border-amber-500 border" shadow="lg">
         <CardHeader className="bg-amber-500 text-white font-bold text-xl">
           Create Product
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             {/* Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input label="Product Name" {...register("name")} isRequired />
               <Input
-                type="number"
                 label="Price"
+                type="number"
                 {...register("price", { setValueAs: (v) => Number(v) })}
                 isRequired
               />
               <Input
-                type="number"
                 label="Discount"
+                type="number"
                 {...register("discount", { setValueAs: (v) => Number(v) })}
               />
               <Input
-                type="number"
                 label="Stock"
+                type="number"
                 {...register("stock", { setValueAs: (v) => Number(v) })}
               />
               <Input label="Warranty" {...register("warranty")} />
@@ -197,11 +207,11 @@ console.log({productData})
                 {imageFields.map((field, index) => (
                   <div key={field.id} className="flex gap-3 items-center">
                     <input
-                      type="file"
                       multiple
                       accept="image/*"
-                      onChange={handleImageChange}
                       className="border rounded-md p-2 flex-1"
+                      type="file"
+                      onChange={handleImageChange}
                     />
                     <Button
                       className="bg-amber-500 hover:bg-red-500 text-white"
@@ -249,8 +259,8 @@ console.log({productData})
                       {...register(`variants.${vIndex}.color`)}
                     />
                     <Input
-                      type="number"
                       label="Variant Price"
+                      type="number"
                       {...register(`variants.${vIndex}.price`, {
                         setValueAs: (v) => (v === "" ? 0 : Number(v)),
                       })}
@@ -261,27 +271,31 @@ console.log({productData})
                     <h4 className="text-amber-500 font-medium">Sizes</h4>
                     <VariantSizes
                       control={control}
-                      vIndex={vIndex}
                       register={register}
+                      vIndex={vIndex}
                     />
                   </div>
                 </Card>
               ))}
               <div className="flex justify-between items-center mt-3">
                 <Button
-                  variant="flat"
                   className="bg-amber-500 hover:bg-green-500 text-white"
+                  variant="flat"
                   onPress={() =>
-                    addVariant({ color: "", price: 0, sizes: [{ size: "", stock: 0 }] })
+                    addVariant({
+                      color: "",
+                      price: 0,
+                      sizes: [{ size: "", stock: 0 }],
+                    })
                   }
                 >
                   + Add Variant
                 </Button>
                 <Button
-                  variant="flat"
                   className="bg-amber-500 hover:bg-red-500 text-white"
-                  onPress={() => removeVariant(variantFields.length - 1)}
                   isDisabled={variantFields.length === 0}
+                  variant="flat"
+                  onPress={() => removeVariant(variantFields.length - 1)}
                 >
                   - Remove Variant
                 </Button>
@@ -290,7 +304,7 @@ console.log({productData})
 
             <Divider className="my-4" />
 
-            <Button type="submit" className="w-full font-bold">
+            <Button className="w-full font-bold" type="submit">
               Create Product
             </Button>
           </form>
@@ -314,17 +328,17 @@ function VariantSizes({ control, vIndex, register }: any) {
           <Input
             label="Size"
             {...register(`variants.${vIndex}.sizes.${sIndex}.size`, {
-              setValueAs: (v) => {
+              setValueAs: (v: any) => {
                 // convert to number if possible
                 return v !== "" && !isNaN(Number(v)) ? Number(v) : v;
               },
             })}
           />
           <Input
-            type="number"
             label="Stock"
+            type="number"
             {...register(`variants.${vIndex}.sizes.${sIndex}.stock`, {
-              setValueAs: (v) => Number(v),
+              setValueAs: (v: any) => Number(v),
             })}
           />
         </div>

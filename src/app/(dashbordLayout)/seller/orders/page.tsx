@@ -158,7 +158,6 @@
 //   );
 // }
 
-
 "use client";
 
 import React, { useState } from "react";
@@ -176,9 +175,10 @@ import { Chip } from "@heroui/chip";
 import { Spinner } from "@heroui/spinner";
 import { Pagination } from "@heroui/pagination";
 import { FaEye, FaUndo } from "react-icons/fa";
+import Link from "next/link";
+
 import { useGetMyAllOrders } from "@/src/hooks/order.hook";
 import { useUser } from "@/src/context/User.context";
-import Link from "next/link";
 
 // --- Order typings (adjust to match your API) ---
 type OrderItem = {
@@ -223,13 +223,12 @@ export default function SellerOrdersPage() {
     status: statusParam,
     page,
     limit,
- 
   });
   // adapt to your hook's response shape
   const orders: Order[] = data?.data?.data ?? [];
-  const meta = data?.data?.meta ;
-  
-console.log(meta)
+  const meta = data?.data?.meta;
+
+  console.log(meta);
   // When tab changes reset page
   const onChangeTab = (key: string) => {
     setActiveTab(key);
@@ -255,19 +254,21 @@ console.log(meta)
         <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-amber-500 text-white rounded-t-2xl px-6 py-4">
           <div>
             <h1 className="text-2xl font-bold">My Orders</h1>
-            <p className="text-sm opacity-90">Track, cancel or request returns here.</p>
+            <p className="text-sm opacity-90">
+              Track, cancel or request returns here.
+            </p>
           </div>
 
           <div className="flex gap-2 flex-wrap">
             {TABS.map((t) => (
               <button
                 key={t.key}
-                onClick={() => onChangeTab(t.key)}
                 className={`px-3 py-1 rounded-md font-medium ${
                   activeTab === t.key
                     ? "bg-white text-amber-600"
                     : "bg-white/10 text-white hover:bg-white/20"
                 }`}
+                onClick={() => onChangeTab(t.key)}
               >
                 {t.label}
               </button>
@@ -281,14 +282,18 @@ console.log(meta)
               <Spinner size="lg" />
             </div>
           ) : isError ? (
-            <div className="text-red-600 p-4">Failed to load orders. Please try again.</div>
+            <div className="text-red-600 p-4">
+              Failed to load orders. Please try again.
+            </div>
           ) : orders.length === 0 ? (
-            <div className="p-6 text-center text-gray-600">No orders found.</div>
+            <div className="p-6 text-center text-gray-600">
+              No orders found.
+            </div>
           ) : (
             <>
               <Table
-                aria-label="My Orders"
                 removeWrapper
+                aria-label="My Orders"
                 className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
               >
                 <TableHeader>
@@ -304,21 +309,25 @@ console.log(meta)
                 <TableBody>
                   {orders?.map((order) => (
                     <TableRow key={order.id}>
-                      <TableCell className="font-mono">{order.id.slice(0, 8)}...</TableCell>
-                      <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+                      <TableCell className="font-mono">
+                        {order.id.slice(0, 8)}...
+                      </TableCell>
+                      <TableCell>
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </TableCell>
 
                       <TableCell>
                         <Chip
-                          size="sm"
                           color={
                             order.status === "DELIVERED"
                               ? "success"
                               : order.status === "CANCELLED"
-                              ? "danger"
-                              : order.status === "SHIPPED"
-                              ? "primary"
-                              : "warning"
+                                ? "danger"
+                                : order.status === "SHIPPED"
+                                  ? "primary"
+                                  : "warning"
                           }
+                          size="sm"
                         >
                           {order.status}
                         </Chip>
@@ -326,35 +335,49 @@ console.log(meta)
 
                       <TableCell>
                         {order.isPaid ? (
-                          <Chip size="sm" color="success" variant="flat">Paid</Chip>
+                          <Chip color="success" size="sm" variant="flat">
+                            Paid
+                          </Chip>
                         ) : (
-                          <Chip size="sm" color="warning" variant="flat">Pending</Chip>
+                          <Chip color="warning" size="sm" variant="flat">
+                            Pending
+                          </Chip>
                         )}
                       </TableCell>
 
-                      <TableCell className="font-semibold">${order.total.toFixed(2)}</TableCell>
+                      <TableCell className="font-semibold">
+                        ${order.total.toFixed(2)}
+                      </TableCell>
 
                       <TableCell>
                         <div className="flex flex-col items-start">
                           {order.items.slice(0, 2).map((it) => (
                             <div key={it.id} className="text-sm">
                               {it.product.name}
-                              {it.variant?.color ? ` - ${it.variant.color}` : ""}
-                              {it.sizeStock?.size ? ` (${it.sizeStock.size})` : ""}
+                              {it.variant?.color
+                                ? ` - ${it.variant.color}`
+                                : ""}
+                              {it.sizeStock?.size
+                                ? ` (${it.sizeStock.size})`
+                                : ""}
                               x{it.quantity}
                             </div>
                           ))}
-                          {order.items.length > 2 && <div className="text-xs text-gray-500">+{order.items.length - 2} more</div>}
+                          {order.items.length > 2 && (
+                            <div className="text-xs text-gray-500">
+                              +{order.items.length - 2} more
+                            </div>
+                          )}
                         </div>
                       </TableCell>
 
                       <TableCell className="flex gap-2">
                         <Button
                           isIconOnly
-                          size="sm"
-                          className="bg-amber-500 text-white hover:bg-amber-600"
-                          onPress={() => setSelectedOrder(order)}
                           aria-label="View"
+                          className="bg-amber-500 text-white hover:bg-amber-600"
+                          size="sm"
+                          onPress={() => setSelectedOrder(order)}
                         >
                           <FaEye />
                         </Button>
@@ -363,18 +386,22 @@ console.log(meta)
                         {order.status === "DELIVERED" && (
                           <Button
                             isIconOnly
+                            aria-label="Return"
+                            className="border-amber-500 text-amber-600 hover:bg-amber-50"
                             size="sm"
                             variant="bordered"
-                            className="border-amber-500 text-amber-600 hover:bg-amber-50"
                             onPress={() => alert("Open return flow")}
-                            aria-label="Return"
                           >
                             <FaUndo />
                           </Button>
                         )}
 
                         <Link href={`/orders/${order.id}`}>
-                          <Button size="sm" variant="bordered" className="border-amber-500 text-amber-600">
+                          <Button
+                            className="border-amber-500 text-amber-600"
+                            size="sm"
+                            variant="bordered"
+                          >
                             Open
                           </Button>
                         </Link>
@@ -386,39 +413,37 @@ console.log(meta)
 
               {/* Pagination */}
               <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-4">
-  {/* Items per page selector */}
-  <div className="flex items-center gap-2 text-gray-700">
-    <span className="font-medium">Items per page:</span>
-    <select
-      value={limit}
-      onChange={(e) => {
-        setLimit(parseInt(e.target.value));
-        setPage(1); // reset page
-        setTimeout(() => refetch(), 0);
-      }}
-      className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-    >
-      <option value={5}>5</option>
-      <option value={8}>8</option>
-      <option value={10}>10</option>
-      <option value={20}>20</option>
-    </select>
-  </div>
+                {/* Items per page selector */}
+                <div className="flex items-center gap-2 text-gray-700">
+                  <span className="font-medium">Items per page:</span>
+                  <select
+                    className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                    value={limit}
+                    onChange={(e) => {
+                      setLimit(parseInt(e.target.value));
+                      setPage(1); // reset page
+                      setTimeout(() => refetch(), 0);
+                    }}
+                  >
+                    <option value={5}>5</option>
+                    <option value={8}>8</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                  </select>
+                </div>
 
-  {/* Pagination */}
-  <Pagination
-    page={meta.page}
-    total={Math.max(1, Math.ceil(meta.total / limit))}
-    onChange={(p) => {
-      setPage(p);
-      setTimeout(() => refetch(), 0);
-    }}
-    className="bg-white rounded-lg shadow-md px-4 py-2"
-    prevLabel="«"
-    nextLabel="»"
-  />
-</div>
-
+                {/* Pagination */}
+                <Pagination
+                  showControls
+                  className="bg-white rounded-lg shadow-md px-4 py-2"
+                  page={meta.page}
+                  total={Math.max(1, Math.ceil(meta.total / limit))}
+                  onChange={(p) => {
+                    setPage(p);
+                    setTimeout(() => refetch(), 0);
+                  }}
+                />
+              </div>
             </>
           )}
         </div>
@@ -426,7 +451,10 @@ console.log(meta)
 
       {/* Order details modal */}
       {selectedOrder && (
-        <OrderDetailsModal order={selectedOrder} onClose={() => setSelectedOrder(null)} />
+        <OrderDetailsModal
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+        />
       )}
     </div>
   );
@@ -435,7 +463,13 @@ console.log(meta)
 /* -------------------------
    OrderDetailsModal component
    ------------------------- */
-function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => void }) {
+function OrderDetailsModal({
+  order,
+  onClose,
+}: {
+  order: Order;
+  onClose: () => void;
+}) {
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-md max-w-2xl w-full p-6">
@@ -443,7 +477,9 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
           <h2 className="text-xl font-bold">Order {order.id.slice(0, 8)}</h2>
           <div className="flex gap-2 items-center">
             <Chip size="sm">{order.status}</Chip>
-            <button onClick={onClose} className="text-sm text-gray-600">Close</button>
+            <button className="text-sm text-gray-600" onClick={onClose}>
+              Close
+            </button>
           </div>
         </div>
 
@@ -456,18 +492,27 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
                   <div className="w-12 h-12 bg-gray-100 rounded overflow-hidden flex-shrink-0">
                     {it.product.images?.[0] ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={it.product.images[0]} alt={it.product.name} className="w-full h-full object-cover" />
+                      <img
+                        alt={it.product.name}
+                        className="w-full h-full object-cover"
+                        src={it.product.images[0]}
+                      />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">No Image</div>
+                      <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">
+                        No Image
+                      </div>
                     )}
                   </div>
 
                   <div>
                     <div className="font-medium">{it.product.name}</div>
                     <div className="text-sm text-gray-600">
-                      {it.variant?.color ?? ""} {it.sizeStock?.size ? `• ${it.sizeStock.size}` : ""}
+                      {it.variant?.color ?? ""}{" "}
+                      {it.sizeStock?.size ? `• ${it.sizeStock.size}` : ""}
                     </div>
-                    <div className="text-sm">Qty: {it.quantity} • ${it.price.toFixed(2)}</div>
+                    <div className="text-sm">
+                      Qty: {it.quantity} • ${it.price.toFixed(2)}
+                    </div>
                   </div>
                 </li>
               ))}
@@ -477,10 +522,21 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
           <div>
             <h3 className="font-semibold">Summary</h3>
             <div className="mt-2 text-sm space-y-2">
-              <div><strong>Total:</strong> ${order.total.toFixed(2)}</div>
-              <div><strong>Payment:</strong> {order.isPaid ? "Paid" : "Pending"}</div>
-              <div><strong>Placed:</strong> {new Date(order.createdAt).toLocaleString()}</div>
-              {order.payment?.transactionId && <div><strong>Txn:</strong> {order.payment.transactionId}</div>}
+              <div>
+                <strong>Total:</strong> ${order.total.toFixed(2)}
+              </div>
+              <div>
+                <strong>Payment:</strong> {order.isPaid ? "Paid" : "Pending"}
+              </div>
+              <div>
+                <strong>Placed:</strong>{" "}
+                {new Date(order.createdAt).toLocaleString()}
+              </div>
+              {order.payment?.transactionId && (
+                <div>
+                  <strong>Txn:</strong> {order.payment.transactionId}
+                </div>
+              )}
             </div>
 
             <div className="mt-4">
@@ -493,9 +549,16 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
             </div>
 
             <div className="mt-6 flex gap-2">
-              <Button className="bg-amber-500 text-white" onPress={onClose}>Close</Button>
+              <Button className="bg-amber-500 text-white" onPress={onClose}>
+                Close
+              </Button>
               <Link href={`/orders/${order.id}`}>
-                <Button variant="bordered" className="border-amber-500 text-amber-600">Open Order Page</Button>
+                <Button
+                  className="border-amber-500 text-amber-600"
+                  variant="bordered"
+                >
+                  Open Order Page
+                </Button>
               </Link>
             </div>
           </div>

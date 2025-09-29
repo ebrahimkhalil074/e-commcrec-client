@@ -1,4 +1,3 @@
-
 // "use client";
 
 // import Link from "next/link";
@@ -15,7 +14,6 @@
 //   const { mutate: handleDelete } = useSoftDeleteProduct();
 
 //   const products = data?.data || []; // API যদি {data: [...]} রিটার্ন করে
-
 
 //   return (
 //    <>
@@ -97,7 +95,7 @@
 //                   variant="bordered"
 //                   className="border-amber-500 text-amber-600 hover:bg-amber-50"
 //                   aria-label="Delete"
-                  
+
 //                   onPress={() => handleDelete(product.id)}
 //                 >
 //                   <FaTrash />
@@ -113,30 +111,38 @@
 //   );
 // }
 
-
-
 "use client";
 
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@heroui/button";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/table";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useSoftDeleteProduct, useGetAllProducts } from "@/src/hooks/product.hook";
+import { Card, CardHeader } from "@heroui/card";
+
+import { useSoftDeleteProduct } from "@/src/hooks/product.hook";
 import AllProductsSkeleton from "@/src/components/skeloton/AllProductsSkeleton";
 import DeleteModal from "@/src/components/modal/DeleteModal";
-import { Card, CardHeader } from "@heroui/card";
 import { useGetAllFlashSale } from "@/src/hooks/flashSale.hook";
 
-
 export default function FlashSalePage() {
-  const { data:fsData, isLoading } = useGetAllFlashSale();
+  const { data: fsData, isLoading } = useGetAllFlashSale();
   const { mutate: handleDelete } = useSoftDeleteProduct();
   const flashSales = fsData?.data || [];
-  console.log({flashSales})
+
+  console.log({ flashSales });
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedFlashSaliId, setSelectedFlashSaliId] = useState<string | null>(null);
+  const [selectedFlashSaliId, setSelectedFlashSaliId] = useState<string | null>(
+    null,
+  );
 
   const openDeleteModal = (id: string) => {
     setSelectedFlashSaliId(id);
@@ -158,24 +164,22 @@ export default function FlashSalePage() {
   return (
     <Card className="p-6">
       <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
-                <h1 className="text-xl font-bold">All Flash Sales</h1>
-              
-                <Button
+        <h1 className="text-xl font-bold">All Flash Sales</h1>
+
+        <Button
           as={Link}
-          href="/admin/flash-sales/create"
           className="bg-white text-amber-600 font-semibold rounded-xl shadow"
+          href="/admin/flash-sales/create"
         >
           + Add New
         </Button>
-            
-              </CardHeader>
+      </CardHeader>
       <Table
-        aria-label="FlashSale Table"
         removeWrapper
+        aria-label="FlashSale Table"
         className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
       >
         <TableHeader>
-          
           <TableColumn className="text-amber-600">Name</TableColumn>
           <TableColumn className="text-amber-600">Discount</TableColumn>
           <TableColumn className="text-amber-600">Start</TableColumn>
@@ -186,35 +190,36 @@ export default function FlashSalePage() {
         <TableBody>
           {flashSales.map((sale: any) => (
             <TableRow key={sale.id}>
-              
               <TableCell>{sale.name}</TableCell>
-                  <TableCell>{sale.discount}%</TableCell>
-                  <TableCell>{new Date(sale.startAt).toLocaleDateString()}</TableCell>
-                  <TableCell>{new Date(sale.endAt).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    {new Date(sale.startAt) > new Date()
-                      ? "Upcoming"
-                      : new Date(sale.endAt) < new Date()
-                      ? "Expired"
-                      : "Active"}
-                  </TableCell>
+              <TableCell>{sale.discount}%</TableCell>
+              <TableCell>
+                {new Date(sale.startAt).toLocaleDateString()}
+              </TableCell>
+              <TableCell>{new Date(sale.endAt).toLocaleDateString()}</TableCell>
+              <TableCell>
+                {new Date(sale.startAt) > new Date()
+                  ? "Upcoming"
+                  : new Date(sale.endAt) < new Date()
+                    ? "Expired"
+                    : "Active"}
+              </TableCell>
               <TableCell className="flex gap-2">
                 <Link href={`/admin/flash-sales/update/${sale.id}`}>
                   <Button
                     isIconOnly
-                    size="sm"
-                    className="bg-amber-500 text-white hover:bg-amber-600"
                     aria-label="Edit"
+                    className="bg-amber-500 text-white hover:bg-amber-600"
+                    size="sm"
                   >
                     <FaEdit />
                   </Button>
                 </Link>
                 <Button
                   isIconOnly
+                  aria-label="Delete"
+                  className="border-amber-500 text-amber-600 hover:bg-amber-50"
                   size="sm"
                   variant="bordered"
-                  className="border-amber-500 text-amber-600 hover:bg-amber-50"
-                  aria-label="Delete"
                   onPress={() => openDeleteModal(sale.id)}
                 >
                   <FaTrash />
@@ -228,10 +233,10 @@ export default function FlashSalePage() {
       {/* Delete Modal */}
       <DeleteModal
         isOpen={modalOpen}
+        message="Are you sure you want to delete this flashSales? This cannot be undone."
+        title="Delete FlashSale"
         onClose={cancelDelete}
         onConfirm={confirmDelete}
-        title="Delete FlashSale"
-        message="Are you sure you want to delete this flashSales? This cannot be undone."
       />
     </Card>
   );

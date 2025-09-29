@@ -1,25 +1,33 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
-import { differenceInHours, differenceInMinutes, differenceInSeconds, isBefore } from "date-fns";
+import {
+  differenceInHours,
+  differenceInMinutes,
+  differenceInSeconds,
+  isBefore,
+} from "date-fns";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
 import Link from "next/link";
-import { useGetAllFlashSale } from "@/src/hooks/flashSale.hook";
 import { FaArrowRight } from "react-icons/fa";
 import Image from "next/image";
 
+import { useGetAllFlashSale } from "@/src/hooks/flashSale.hook";
+
 export default function FlashSale() {
- 
-  const { data: flashSaleData, isLoading: flashSaleLoading } = useGetAllFlashSale();
+  const { data: flashSaleData, isLoading: flashSaleLoading } =
+    useGetAllFlashSale();
   const flashSales = flashSaleData?.data || [];
 
   // Countdown state for each flash sale
   const [timeLefts, setTimeLefts] = useState<
-    Record<string, { hours: number; minutes: number; seconds: number; ended: boolean }>
+    Record<
+      string,
+      { hours: number; minutes: number; seconds: number; ended: boolean }
+    >
   >({});
 
   useEffect(() => {
@@ -32,13 +40,19 @@ export default function FlashSale() {
         { hours: number; minutes: number; seconds: number; ended: boolean }
       > = {};
 
-      flashSales.forEach((flash:any) => {
+      flashSales.forEach((flash: any) => {
         const offerEndTime = new Date(flash.endAt);
         const ended = isBefore(offerEndTime, now); // true if time already passed
 
         const hours = Math.max(differenceInHours(offerEndTime, now), 0);
-        const minutes = Math.max(differenceInMinutes(offerEndTime, now) % 60, 0);
-        const seconds = Math.max(differenceInSeconds(offerEndTime, now) % 60, 0);
+        const minutes = Math.max(
+          differenceInMinutes(offerEndTime, now) % 60,
+          0,
+        );
+        const seconds = Math.max(
+          differenceInSeconds(offerEndTime, now) % 60,
+          0,
+        );
 
         updatedTimeLefts[flash.id] = { hours, minutes, seconds, ended };
       });
@@ -60,7 +74,7 @@ export default function FlashSale() {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-        {flashSales.map((flash:any) => {
+        {flashSales.map((flash: any) => {
           const isEnded = timeLefts[flash.id]?.ended ?? false;
 
           return (
@@ -71,18 +85,31 @@ export default function FlashSale() {
                   <h2 className="text-2xl md:text-3xl font-bold mb-2 text-amber-600">
                     {flash.name} 🔥
                   </h2>
-                  <p className="text-gray-700 font-medium">{flash.description}</p>
+                  <p className="text-gray-700 font-medium">
+                    {flash.description}
+                  </p>
                 </div>
 
                 {isEnded ? (
-                  <div className="text-red-600 font-bold text-xl">Sale Ended</div>
+                  <div className="text-red-600 font-bold text-xl">
+                    Sale Ended
+                  </div>
                 ) : (
                   <div className="flex gap-2 mt-4 md:mt-0">
-                    <TimeBox value={timeLefts[flash.id]?.hours ?? 0} label="ঘণ্টা" />
+                    <TimeBox
+                      label="ঘণ্টা"
+                      value={timeLefts[flash.id]?.hours ?? 0}
+                    />
                     <span className="text-amber-600 font-bold text-lg">:</span>
-                    <TimeBox value={timeLefts[flash.id]?.minutes ?? 0} label="মিনিট" />
+                    <TimeBox
+                      label="মিনিট"
+                      value={timeLefts[flash.id]?.minutes ?? 0}
+                    />
                     <span className="text-amber-600 font-bold text-lg">:</span>
-                    <TimeBox value={timeLefts[flash.id]?.seconds ?? 0} label="সেকেন্ড" />
+                    <TimeBox
+                      label="সেকেন্ড"
+                      value={timeLefts[flash.id]?.seconds ?? 0}
+                    />
                   </div>
                 )}
               </div>
@@ -90,18 +117,18 @@ export default function FlashSale() {
               {/* Product Carousel */}
               <div className="max-w-7xl mx-auto">
                 <Swiper
-                  slidesPerView={2}
-                  spaceBetween={16}
                   navigation
-                  modules={[Navigation, Autoplay]}
                   autoplay={{ delay: 2500, disableOnInteraction: false }}
                   breakpoints={{
                     640: { slidesPerView: 3 },
                     768: { slidesPerView: 3 },
                     1024: { slidesPerView: 3 },
                   }}
+                  modules={[Navigation, Autoplay]}
+                  slidesPerView={2}
+                  spaceBetween={16}
                 >
-                  {flash.products?.map((product:any) => {
+                  {flash.products?.map((product: any) => {
                     const discountedPrice =
                       product.price - (product.discount / 100) * product.price;
 
@@ -122,53 +149,55 @@ export default function FlashSale() {
                             </div>
                           )}
 
-                        <div className="h-[330px] bg-gray-100 dark:bg-gray-800 flex flex-col">
-  {/* Image Section */}
-  <div className="h-[200px] rounded-t-lg overflow-hidden flex items-center justify-center">
-    <Image
-      width={1000}
-      height={150}
-      src={product?.images?.[0]?.url || "/placeholder-image.png"}
-      alt={product?.name}
-      className="object-contain h-full"
-    />
-  </div>
+                          <div className="h-[330px] bg-gray-100 dark:bg-gray-800 flex flex-col">
+                            {/* Image Section */}
+                            <div className="h-[200px] rounded-t-lg overflow-hidden flex items-center justify-center">
+                              <Image
+                                alt={product?.name}
+                                className="object-contain h-full"
+                                height={150}
+                                src={
+                                  product?.images?.[0]?.url ||
+                                  "/placeholder-image.png"
+                                }
+                                width={1000}
+                              />
+                            </div>
 
-  {/* Content Section */}
-  <div className="p-3 flex-1 flex flex-col justify-between">
-    {/* Fixed height name with line clamp */}
-    <p className="font-medium text-sm line-clamp-2 min-h-[32px]">
-      {product.name}
-    </p>
+                            {/* Content Section */}
+                            <div className="p-3 flex-1 flex flex-col justify-between">
+                              {/* Fixed height name with line clamp */}
+                              <p className="font-medium text-sm line-clamp-2 min-h-[32px]">
+                                {product.name}
+                              </p>
 
-    {/* Price */}
-    <div className="flex items-center gap-2 mt-1">
-      <p className="text-amber-600 font-bold">
-        ${discountedPrice.toFixed(2)}
-      </p>
-      {product.discount > 0 && (
-        <p className="text-gray-400 line-through text-xs">
-          ${product.price}
-        </p>
-      )}
-    </div>
+                              {/* Price */}
+                              <div className="flex items-center gap-2 mt-1">
+                                <p className="text-amber-600 font-bold">
+                                  ${discountedPrice.toFixed(2)}
+                                </p>
+                                {product.discount > 0 && (
+                                  <p className="text-gray-400 line-through text-xs">
+                                    ${product.price}
+                                  </p>
+                                )}
+                              </div>
 
-    {/* Button */}
-    <Link href={`/product/${product.id}`}>
-      <button
-        disabled={product.stock === 0 || isEnded}
-        className={`mt-2 w-full py-2 rounded text-sm font-medium transition ${
-          product.stock === 0 || isEnded
-            ? "bg-gray-400 text-white cursor-not-allowed"
-            : "bg-amber-600 text-white hover:bg-amber-700"
-        }`}
-      >
-        {isEnded ? "Sale Ended" : "Details"}
-      </button>
-    </Link>
-  </div>
-</div>
-
+                              {/* Button */}
+                              <Link href={`/product/${product.id}`}>
+                                <button
+                                  className={`mt-2 w-full py-2 rounded text-sm font-medium transition ${
+                                    product.stock === 0 || isEnded
+                                      ? "bg-gray-400 text-white cursor-not-allowed"
+                                      : "bg-amber-600 text-white hover:bg-amber-700"
+                                  }`}
+                                  disabled={product.stock === 0 || isEnded}
+                                >
+                                  {isEnded ? "Sale Ended" : "Details"}
+                                </button>
+                              </Link>
+                            </div>
+                          </div>
                         </div>
                       </SwiperSlide>
                     );

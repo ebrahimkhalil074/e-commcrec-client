@@ -1,12 +1,10 @@
-
 "use server";
 
-import { axiosInstance } from "@/src/lib/axiosInatance";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
 
-
+import { axiosInstance } from "@/src/lib/axiosInatance";
 
 export const userRegister = async (userData: FieldValues) => {
   try {
@@ -26,7 +24,7 @@ export const userLogin = async (userData: FieldValues) => {
   try {
     const { data } = await axiosInstance.post("/auth/login", userData);
 
-console.log(data)
+    console.log(data);
 
     if (data.success) {
       (await cookies()).set("accessToken", data?.data?.accessToken);
@@ -42,7 +40,6 @@ export const Logout = async () => {
   try {
     (await cookies()).delete("accessToken");
     (await cookies()).delete("refreshToken");
-   
   } catch (error: any) {
     throw new Error(error);
   }
@@ -51,12 +48,11 @@ export const Logout = async () => {
 export const getCurrentUser = async () => {
   const accessToken = (await cookies()).get("accessToken")?.value;
 
-
   let decodedToken = null;
 
   if (accessToken) {
     decodedToken = await jwtDecode(accessToken);
-console.log(decodedToken)
+    console.log(decodedToken);
 
     return {
       email: decodedToken.email,
@@ -84,6 +80,6 @@ export const getNewRefreshToken = async () => {
 
     return res?.data;
   } catch (error) {
-    throw new Error("failed to get new refresh token",);
+    throw new Error("failed to get new refresh token");
   }
 };

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+
 import Sidebar from "@/src/components/sitebar";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
@@ -13,7 +14,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           sidebarOpen ? "w-64" : "w-16"
         }`}
       >
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Sidebar setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
       </div>
 
       {/* Main Content */}

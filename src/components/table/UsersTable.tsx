@@ -20,10 +20,6 @@
 //   {name: "ACTIONS", uid: "actions"},
 // ];
 
-
-
-
-
 // const statusColorMap = {
 //   active: "success",
 //   paused: "danger",
@@ -103,7 +99,7 @@
 //   );
 // }
 
-'use client'
+"use client";
 import React from "react";
 import {
   Table,
@@ -116,24 +112,41 @@ import {
   Chip,
   Tooltip,
 } from "@heroui/react";
-import { FiEye, FiEdit, FiTrash2, FiUser, FiBriefcase, FiCheckCircle } from "react-icons/fi";
-import clsx from "clsx";
+import {
+  FiEye,
+  FiEdit,
+  FiTrash2,
+  FiUser,
+  FiBriefcase,
+  FiCheckCircle,
+} from "react-icons/fi";
 
 export const columns = [
   { name: "NAME", uid: "name", icon: <FiUser className="inline mr-1" /> },
   { name: "ROLE", uid: "role", icon: <FiBriefcase className="inline mr-1" /> },
-  { name: "STATUS", uid: "status", icon: <FiCheckCircle className="inline mr-1" /> },
+  {
+    name: "STATUS",
+    uid: "status",
+    icon: <FiCheckCircle className="inline mr-1" />,
+  },
   { name: "ACTIONS", uid: "actions", icon: <FiEye className="inline mr-1" /> },
 ];
+type ChipColor =
+  | "success"
+  | "danger"
+  | "warning"
+  | "default"
+  | "primary"
+  | "secondary";
 
-const statusColorMap = {
+const statusColorMap: Record<"active" | "paused" | "vacation", ChipColor> = {
   active: "success",
-  paused: "danger",
-  vacation: "warning",
+  paused: "warning",
+  vacation: "secondary",
 };
 
-export default function AllUsersTable({ user }) {
-  const renderCell = React.useCallback((user, columnKey) => {
+export default function AllUsersTable({ user }: { user: any }) {
+  const renderCell = React.useCallback((user: any, columnKey: any) => {
     const cellValue = user[columnKey];
 
     switch (columnKey) {
@@ -152,13 +165,20 @@ export default function AllUsersTable({ user }) {
         return (
           <div className="flex flex-col">
             <p className="font-bold text-sm capitalize">{cellValue}</p>
-            <p className="font-bold text-sm capitalize text-default-400">{user.team}</p>
+            <p className="font-bold text-sm capitalize text-default-400">
+              {user.team}
+            </p>
           </div>
         );
 
       case "status":
         return (
-          <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+          <Chip
+            className="capitalize"
+            color={statusColorMap[user?.status as keyof typeof statusColorMap]}
+            size="sm"
+            variant="flat"
+          >
             {cellValue}
           </Chip>
         );
@@ -205,9 +225,11 @@ export default function AllUsersTable({ user }) {
       </TableHeader>
 
       <TableBody items={user}>
-        {(item) => (
+        {(item: any) => (
           <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
           </TableRow>
         )}
       </TableBody>

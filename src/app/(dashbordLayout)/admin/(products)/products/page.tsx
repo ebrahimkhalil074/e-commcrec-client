@@ -1,4 +1,3 @@
-
 // "use client";
 
 // import Link from "next/link";
@@ -15,7 +14,6 @@
 //   const { mutate: handleDelete } = useSoftDeleteProduct();
 
 //   const products = data?.data || []; // API যদি {data: [...]} রিটার্ন করে
-
 
 //   return (
 //    <>
@@ -97,7 +95,7 @@
 //                   variant="bordered"
 //                   className="border-amber-500 text-amber-600 hover:bg-amber-50"
 //                   aria-label="Delete"
-                  
+
 //                   onPress={() => handleDelete(product.id)}
 //                 >
 //                   <FaTrash />
@@ -113,8 +111,6 @@
 //   );
 // }
 
-
-
 "use client";
 
 import Link from "next/link";
@@ -122,13 +118,23 @@ import { useState } from "react";
 import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
 import { Chip } from "@heroui/chip";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/table";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useSoftDeleteProduct, useGetAllProducts } from "@/src/hooks/product.hook";
-import AllProductsSkeleton from "@/src/components/skeloton/AllProductsSkeleton";
-import DeleteModal from "@/src/components/modal/DeleteModal";
 import { Card, CardHeader } from "@heroui/card";
 
+import {
+  useSoftDeleteProduct,
+  useGetAllProducts,
+} from "@/src/hooks/product.hook";
+import AllProductsSkeleton from "@/src/components/skeloton/AllProductsSkeleton";
+import DeleteModal from "@/src/components/modal/DeleteModal";
 
 export default function ProductsTable() {
   const { data, isLoading } = useGetAllProducts();
@@ -136,7 +142,9 @@ export default function ProductsTable() {
   const products = data?.data || [];
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null,
+  );
 
   const openDeleteModal = (id: string) => {
     setSelectedProductId(id);
@@ -158,20 +166,19 @@ export default function ProductsTable() {
   return (
     <Card className="p-6">
       <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
-                <h1 className="text-xl font-bold">All Products</h1>
-              
-                <Button
+        <h1 className="text-xl font-bold">All Products</h1>
+
+        <Button
           as={Link}
-          href="/admin/products/create"
           className="bg-white text-amber-600 font-semibold rounded-xl shadow"
+          href="/admin/products/create"
         >
           + Add New
         </Button>
-            
-              </CardHeader>
+      </CardHeader>
       <Table
-        aria-label="Products Table"
         removeWrapper
+        aria-label="Products Table"
         className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
       >
         <TableHeader>
@@ -190,17 +197,19 @@ export default function ProductsTable() {
             <TableRow key={product.id}>
               <TableCell>
                 <Image
-                  src={product.images[0]?.url || "/placeholder.png"}
                   alt={product.name}
-                  width={60}
-                  height={60}
                   className="rounded-lg object-cover"
+                  height={60}
+                  src={product.images[0]?.url || "/placeholder.png"}
+                  width={60}
                 />
               </TableCell>
               <TableCell className="font-semibold">{product.name}</TableCell>
               <TableCell>
                 {product.category?.name} /{" "}
-                <span className="text-gray-500">{product.subCategory?.name}</span>
+                <span className="text-gray-500">
+                  {product.subCategory?.name}
+                </span>
               </TableCell>
               <TableCell>{product.brand?.name}</TableCell>
               <TableCell>
@@ -208,10 +217,10 @@ export default function ProductsTable() {
                   <span className="font-semibold">${product.price}</span>
                   {product.discount > 0 && (
                     <Chip
-                      size="sm"
-                      color="warning"
-                      variant="flat"
                       className="ml-2 bg-amber-100 text-amber-700"
+                      color="warning"
+                      size="sm"
+                      variant="flat"
                     >
                       -{product.discount}%
                     </Chip>
@@ -222,24 +231,26 @@ export default function ProductsTable() {
               <TableCell>
                 ⭐ {product.rating} ({product.reviewCount})
               </TableCell>
-              <TableCell>{new Date(product.createdAt).toLocaleDateString()}</TableCell>
+              <TableCell>
+                {new Date(product.createdAt).toLocaleDateString()}
+              </TableCell>
               <TableCell className="flex gap-2">
                 <Link href={`/admin/products/update/${product.id}`}>
                   <Button
                     isIconOnly
-                    size="sm"
-                    className="bg-amber-500 text-white hover:bg-amber-600"
                     aria-label="Edit"
+                    className="bg-amber-500 text-white hover:bg-amber-600"
+                    size="sm"
                   >
                     <FaEdit />
                   </Button>
                 </Link>
                 <Button
                   isIconOnly
+                  aria-label="Delete"
+                  className="border-amber-500 text-amber-600 hover:bg-amber-50"
                   size="sm"
                   variant="bordered"
-                  className="border-amber-500 text-amber-600 hover:bg-amber-50"
-                  aria-label="Delete"
                   onPress={() => openDeleteModal(product.id)}
                 >
                   <FaTrash />
@@ -253,10 +264,10 @@ export default function ProductsTable() {
       {/* Delete Modal */}
       <DeleteModal
         isOpen={modalOpen}
+        message="Are you sure you want to delete this product? This cannot be undone."
+        title="Delete Product"
         onClose={cancelDelete}
         onConfirm={confirmDelete}
-        title="Delete Product"
-        message="Are you sure you want to delete this product? This cannot be undone."
       />
     </Card>
   );

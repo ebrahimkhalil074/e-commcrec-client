@@ -1,33 +1,48 @@
 "use client";
 
 import React from "react";
-import {
-  Card, CardHeader, CardBody
-} from "@heroui/react";
+import { Card, CardHeader, CardBody } from "@heroui/react";
 import {
   ResponsiveContainer,
-  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip,
-  BarChart, Bar,
-  PieChart, Pie, Cell, Legend
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
+import { FaShoppingCart } from "react-icons/fa";
+
 import { useGetDelivaryOverviewData } from "@/src/hooks/dashboard.hook";
 import StatCard from "@/src/components/card/StatCard";
-import { FaShoppingCart } from "react-icons/fa";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A855F7"];
 
 export default function DeliveryOverviewPage() {
-  const { data: delivaryOverviewData, isError, isLoading, error } =
-    useGetDelivaryOverviewData();
+  const {
+    data: delivaryOverviewData,
+    isError,
+    isLoading,
+    error,
+  } = useGetDelivaryOverviewData();
 
   if (isLoading) return <p className="p-6">Loading...</p>;
-  if (isError) return <p className="p-6 text-red-500">{(error as Error).message}</p>;
+  if (isError)
+    return <p className="p-6 text-red-500">{(error as Error).message}</p>;
 
   // যদি API রেসপন্স nested থাকে যেমন { success:true, data:{ ... } }
   const apiData = delivaryOverviewData?.data;
+
   if (!apiData) return <p className="p-6 text-gray-500">No data found</p>;
 
-  const { summary, weekStats, monthlyTrend, statusBreakdown, paymentMethods } = apiData;
+  const { summary, weekStats, monthlyTrend, statusBreakdown, paymentMethods } =
+    apiData;
 
   const summaryCards = [
     { label: "Total Tasks", value: summary.totalTasks },
@@ -46,39 +61,39 @@ export default function DeliveryOverviewPage() {
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         <StatCard
+          icon={<FaShoppingCart className="text-amber-500" />}
           title="Total Tasks"
           value={summary.totalTasks}
-          icon={<FaShoppingCart className="text-amber-500" />}
         />
         <StatCard
+          icon={<FaShoppingCart className="text-amber-500" />}
           title="Completed"
           value={summary.completed}
-          icon={<FaShoppingCart className="text-amber-500" />}
         />
         <StatCard
+          icon={<FaShoppingCart className="text-amber-500" />}
           title="Pending"
           value={summary.pending}
-          icon={<FaShoppingCart className="text-amber-500" />}
         />
         <StatCard
+          icon={<FaShoppingCart className="text-amber-500" />}
           title="Cancelled"
           value={summary.cancelled}
-          icon={<FaShoppingCart className="text-amber-500" />}
         />
         <StatCard
+          icon={<FaShoppingCart className="text-amber-500" />}
           title="Avg Delivery (min)"
           value={summary.avgDeliveryMinutes}
-          icon={<FaShoppingCart className="text-amber-500" />}
         />
         <StatCard
+          icon={<FaShoppingCart className="text-amber-500" />}
           title="Earnings Today"
           value={summary.earningsToday}
-          icon={<FaShoppingCart className="text-amber-500" />}
         />
         <StatCard
+          icon={<FaShoppingCart className="text-amber-500" />}
           title="Cash Collected"
           value={summary.cashCollectedToday}
-          icon={<FaShoppingCart className="text-amber-500" />}
         />
       </div>
 
@@ -86,7 +101,7 @@ export default function DeliveryOverviewPage() {
       <Card className="shadow-md">
         <CardHeader>Weekly Stats (Completed vs Pending)</CardHeader>
         <CardBody>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer height={300} width="100%">
             <BarChart data={weekStats}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
@@ -104,15 +119,25 @@ export default function DeliveryOverviewPage() {
       <Card className="shadow-md">
         <CardHeader>Monthly Trend (Completed Deliveries & Earnings)</CardHeader>
         <CardBody>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer height={300} width="100%">
             <LineChart data={monthlyTrend}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="completed" stroke="#3b82f6" name="Completed" />
-              <Line type="monotone" dataKey="earnings" stroke="#f59e0b" name="Earnings" />
+              <Line
+                dataKey="completed"
+                name="Completed"
+                stroke="#3b82f6"
+                type="monotone"
+              />
+              <Line
+                dataKey="earnings"
+                name="Earnings"
+                stroke="#f59e0b"
+                type="monotone"
+              />
             </LineChart>
           </ResponsiveContainer>
         </CardBody>
@@ -122,19 +147,22 @@ export default function DeliveryOverviewPage() {
       <Card className="shadow-md">
         <CardHeader>Status Breakdown</CardHeader>
         <CardBody className="flex justify-center">
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer height={300} width="100%">
             <PieChart>
               <Pie
+                label
+                cx="50%"
+                cy="50%"
                 data={statusBreakdown}
                 dataKey="count"
                 nameKey="status"
-                cx="50%"
-                cy="50%"
                 outerRadius={100}
-                label
               >
-                {statusBreakdown.map((entry, index) => (
-                  <Cell key={entry.status} fill={COLORS[index % COLORS.length]} />
+                {statusBreakdown.map((entry: any, index: any) => (
+                  <Cell
+                    key={entry.status}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Legend />
@@ -148,7 +176,7 @@ export default function DeliveryOverviewPage() {
       <Card className="shadow-md">
         <CardHeader>Payment Methods (Amount & Count)</CardHeader>
         <CardBody>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer height={300} width="100%">
             <BarChart data={paymentMethods}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="method" />
