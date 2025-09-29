@@ -9,40 +9,10 @@ import Image from "next/image";
 import { useGetAllFlashSale } from "@/src/hooks/flashSale.hook";
 
 // Example offers data – replace with API or database content
-const demoOffers = [
-  {
-    id: 1,
-    title: "Smartphone Mega Sale",
-    description:
-      "Up to 30% off on latest smartphones from Apple, Samsung, Xiaomi.",
-    image:
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80",
-    expires: "Sept 30, 2025",
-    discount: "30% OFF",
-  },
-  {
-    id: 2,
-    title: "Weekend Fashion Deals",
-    description: "Flat 40% off on all men’s and women’s clothing collections.",
-    image:
-      "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?auto=format&fit=crop&w=800&q=80",
-    expires: "Oct 15, 2025",
-    discount: "40% OFF",
-  },
-  {
-    id: 3,
-    title: "Home Appliance Bonanza",
-    description: "Save big on refrigerators, washing machines & more.",
-    image:
-      "https://images.unsplash.com/photo-1586201375754-228c43f1add1?auto=format&fit=crop&w=800&q=80",
-    expires: "Oct 31, 2025",
-    discount: "Up to 35% OFF",
-  },
-];
 
 export default function OffersPage() {
-  const { data: flashSaleData, isLoading: flashSaleLoading } =
-    useGetAllFlashSale();
+  const { data: flashSaleData } = useGetAllFlashSale();
+  // isLoading: flashSaleLoading
   const flashSales = flashSaleData?.data || [];
 
   return (

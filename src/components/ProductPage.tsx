@@ -110,7 +110,7 @@ const ProductPage = () => {
     if (sortBy) queryParams.append("sortBy", sortBy);
 
     try {
-      const url = `http://localhost:5000/api/v1/product?${queryParams.toString()}`;
+      const url = `${process.env.NEXT_PUBLIC_BASE_API}?${queryParams.toString()}`;
       const res = await fetch(url);
       const data = await res.json();
 
