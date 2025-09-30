@@ -11,6 +11,7 @@ import { ChangeEvent, useState } from "react";
 import { useGetAllCategory } from "@/src/hooks/category.hook";
 import { useGetAllBrands } from "@/src/hooks/brand.hook";
 import { useCreateProduct } from "@/src/hooks/product.hook";
+import Image from "next/image";
 
 type ProductForm = {
   name: string;
@@ -35,7 +36,7 @@ type ProductForm = {
 export default function CreateProductPage() {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const { mutate } = useCreateProduct();
+  const { mutate, isPending } = useCreateProduct();
 
   const { register, control, handleSubmit, reset } = useForm<ProductForm>({
     defaultValues: {
@@ -228,7 +229,8 @@ export default function CreateProductPage() {
                         key={i}
                         className="relative size-48 rounded-xl border-2 border-dashed border-default-300 p-2"
                       >
-                        <img
+                        <Image
+                          fill
                           alt="item"
                           className="h-full w-full object-cover object-center rounded-md"
                           src={imageDataUrl}
@@ -305,7 +307,7 @@ export default function CreateProductPage() {
             <Divider className="my-4" />
 
             <Button className="w-full font-bold" type="submit">
-              Create Product
+             {isPending ? "Logging in..." : "Login"}
             </Button>
           </form>
         </CardBody>

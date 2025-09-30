@@ -3,7 +3,6 @@
 import { Image } from "@heroui/image";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
-import { useDispatch } from "react-redux";
 
 import { useGetProductById } from "@/src/hooks/product.hook";
 import { useAddCartItem } from "@/src/hooks/cart.hook";
@@ -243,3 +242,168 @@ export default function ProductDetails() {
     </div>
   );
 }
+
+// "use client";
+// import { useState } from "react";
+// import Image from "next/image";
+
+// import { useAddCartItem } from "@/src/hooks/cart.hook";
+
+// export default function ProductDetails({ product }: { product: any }) {
+//   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+//   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+//   const [quantity, setQuantity] = useState(1);
+
+//   // Variant & Size handle
+//   const selectedVariant = product.variants?.find(
+//     (v: any) => v.color === selectedColor,
+//   );
+
+//   const sizes = selectedVariant?.sizes?.map((s: any) => s.size) || [];
+//   const selectedSizeObj = selectedVariant?.sizes?.find(
+//     (s: any) => s.size === selectedSize,
+//   );
+
+//   const stock = selectedSizeObj?.stock ?? product.stock;
+//   const price =
+//     selectedSizeObj?.price ?? selectedVariant?.price ?? product.price;
+
+//   // Mutation for add to cart
+//   const { mutate } = useAddCartItem();
+
+//   // Add to cart handler
+//   const handleAddToCart = () => {
+//     const cartItem = {
+//       id: `${product.id}-${selectedColor || "default"}-${
+//         selectedSize || "default"
+//       }`,
+//       productId: product.id,
+//       name: product.name,
+//       color: selectedColor || null, // optional
+//       size: selectedSize || null, // optional
+//       price,
+//       quantity,
+//       image: product.images[0]?.url,
+//       variantId: selectedVariant?.id || null,
+//       sizeStockId: selectedSizeObj?.id || null,
+//     };
+
+//     mutate(cartItem);
+//   };
+
+//   return (
+//     <div className="grid md:grid-cols-2 gap-10 p-6">
+//       {/* Product Images */}
+//       <div>
+//         <Image
+//           alt={product.name}
+//           className="rounded-lg shadow-md"
+//           height={500}
+//           src={product.images[0]?.url || "/placeholder.png"}
+//           width={500}
+//         />
+//         <div className="flex gap-3 mt-3">
+//           {product.images.map((img: any, i: number) => (
+//             <Image
+//               key={i}
+//               alt="thumbnail"
+//               className="rounded-md border cursor-pointer hover:scale-105 transition"
+//               height={80}
+//               src={img.url}
+//               width={80}
+//             />
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* Product Info */}
+//       <div>
+//         <h1 className="text-2xl font-semibold">{product.name}</h1>
+//         <p className="text-gray-500 mt-2">{product.description}</p>
+
+//         {/* Price */}
+//         <div className="mt-4">
+//           <span className="text-xl font-bold">${price}</span>
+//           {product.discount && (
+//             <span className="ml-2 text-sm text-red-500">
+//               -{product.discount}%
+//             </span>
+//           )}
+//         </div>
+
+//         {/* Colors */}
+//         {product.variants?.length > 0 && (
+//           <div className="mt-6">
+//             <h3 className="font-medium">
+//               Color: <span className="text-sm text-gray-500">(optional)</span>
+//             </h3>
+//             <div className="flex gap-3 mt-2">
+//               {product.variants.map((v: any) => (
+//                 <button
+//                   key={v.color}
+//                   className={`w-8 h-8 rounded-full border-2 transition-transform duration-200 ${
+//                     selectedColor === v.color
+//                       ? "border-black scale-110"
+//                       : "border-gray-300"
+//                   }`}
+//                   style={{ backgroundColor: v.color.toLowerCase() }}
+//                   onClick={() => setSelectedColor(v.color)}
+//                 />
+//               ))}
+//             </div>
+//           </div>
+//         )}
+
+//         {/* Sizes */}
+//         {sizes.length > 0 && (
+//           <div className="mt-6">
+//             <h3 className="font-medium">
+//               Size: <span className="text-sm text-gray-500">(optional)</span>
+//             </h3>
+//             <div className="flex gap-3 mt-2">
+//               {sizes.map((size: any) => (
+//                 <button
+//                   key={size}
+//                   className={`px-4 py-2 rounded border transition-colors duration-200 ${
+//                     selectedSize === size
+//                       ? "bg-black text-white"
+//                       : "bg-white text-black border-gray-300"
+//                   }`}
+//                   onClick={() => setSelectedSize(size)}
+//                 >
+//                   {size}
+//                 </button>
+//               ))}
+//             </div>
+//           </div>
+//         )}
+
+//         {/* Quantity */}
+//         <div className="mt-6 flex items-center gap-3">
+//           <button
+//             className="px-3 py-1 bg-gray-200 rounded"
+//             onClick={() => setQuantity(Math.max(1, quantity - 1))}
+//           >
+//             -
+//           </button>
+//           <span>{quantity}</span>
+//           <button
+//             className="px-3 py-1 bg-gray-200 rounded"
+//             onClick={() => setQuantity(quantity + 1)}
+//           >
+//             +
+//           </button>
+//           <span className="ml-4 text-gray-500">Stock: {stock}</span>
+//         </div>
+
+//         {/* Add to Cart */}
+//         <button
+//           className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
+//           onClick={handleAddToCart}
+//         >
+//           Add to Cart
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }

@@ -110,13 +110,14 @@ const ProductPage = () => {
     if (sortBy) queryParams.append("sortBy", sortBy);
 
     try {
-      const url = `${process.env.NEXT_PUBLIC_BASE_API}?${queryParams.toString()}`;
+      const queryString = queryParams.toString();
+      const url = `${process.env.NEXT_PUBLIC_BASE_API}/product${queryString ? `?${queryString}` : ""}`;
       const res = await fetch(url);
       const data = await res.json();
 
-      setProducts(data.data || []);
+      setProducts(data?.data || []);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Failed to load products", error);
       setProducts([]);
     } finally {
       setLoading(false);
