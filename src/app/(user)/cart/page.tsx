@@ -161,9 +161,11 @@ import {
   FaPlus,
   FaShoppingCart,
   FaCheck,
+  FaShoppingBag,
 } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 import {
   useGetCart,
@@ -191,27 +193,42 @@ export default function CartPage() {
 
   return (
     <div className=" min-h-[70vh] mx-auto p-6 dark:bg-gray-900">
-      <h1 className="  text-2xl font-bold mb-6 flex items-center gap-2 text-amber-600">
-        <FaShoppingCart className="text-amber-500" /> Your Cart
-      </h1>
+      <div className="w-full flex justify-between items-center mb-6">
+        {/* Left: Cart Title */}
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-amber-600">
+          <FaShoppingCart className="text-amber-500" />
+          Your Cart
+        </h1>
+
+        {/* Right: Continue Shopping */}
+        <Link
+          className="flex items-center gap-2 text-lg font-medium text-amber-600 hover:text-amber-700 transition-colors"
+          href="/shop"
+        >
+          <FaShoppingBag className="text-amber-500" />
+          Continue Shopping
+        </Link>
+      </div>
 
       {!items.length && <EmptyCart onShopNow={() => router.push("/product")} />}
 
       <div className="space-y-4">
-        {items.map((item: any) => (
+        {items?.map((item: any) => (
           <div
             key={item.id}
             className="flex flex-col md:flex-row items-center justify-between border border-amber-300  rounded-xl p-4 shadow-sm bg-white"
           >
             {/* Product Info */}
             <div className="flex items-center gap-4 w-full md:w-1/3">
-              <img
-                alt={item.product.name}
-                className="w-20 h-20 object-cover rounded-md border border-amber-200"
+              <Image
+                alt={item?.product?.name}
+                className="w-20 h-20 object-content rounded-md border border-amber-200"
+                height={40}
                 src={
                   item.product.category.image ||
                   "https://via.placeholder.com/80"
                 }
+                width={30}
               />
               <div>
                 <h2 className="font-semibold text-lg text-amber-700">

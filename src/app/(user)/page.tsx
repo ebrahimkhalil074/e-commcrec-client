@@ -3,7 +3,6 @@ import Category from "../../components/home/Category";
 import FeaturedProducts from "../../components/home/FeaturedProducts";
 import FlashSale from "../../components/home/FlashSele";
 import Hero from "../../components/home/Hero";
-import Slider from "../../components/home/Slider";
 import JastForYouProducts from "../../components/home/JastForYou";
 import PromoCards from "../../components/home/PromoCards";
 export default function Home() {
@@ -12,7 +11,7 @@ export default function Home() {
       title: "Welcome to Our Site",
       description: "Explore our features and offerings.",
       image:
-        "https://i.ibb.co.com/5hSW5ZJP/alfred-kenneally-lxw7-Dqi-RF2s-unsplash.jpg",
+        "https://i.ibb.co.com/8gX5V9fP/Sky-Blue-and-White-Modern-Headphone-Sale-Promotion-Instagram-Post.png",
       link: "/features",
     },
     {
@@ -34,7 +33,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Slider slideData={slideData} />
+      {/* <Slider /> */}
       <PromoCards />
       <FeaturedProducts />
       <Category />

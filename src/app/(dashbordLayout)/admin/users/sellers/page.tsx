@@ -1,3 +1,5 @@
+import { Card, CardHeader } from "@heroui/card";
+
 import AllUsersTable from "@/src/components/table/UsersTable";
 
 const SellersPage = async () => {
@@ -6,10 +8,18 @@ const SellersPage = async () => {
   );
   const sellersData = await res.json();
 
-  console.log(sellersData);
   const sellers = sellersData?.data;
 
-  return <div>{<AllUsersTable user={sellers} />}</div>;
+  return (
+    <div>
+      <Card>
+        <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
+          <h1 className="text-xl font-bold">All Sellers</h1>
+        </CardHeader>
+        {<AllUsersTable user={sellers} />}
+      </Card>
+    </div>
+  );
 };
 
 export default SellersPage;

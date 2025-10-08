@@ -88,6 +88,11 @@ export const adminLinks = [
         icon: <FaStore size={16} />,
       },
       {
+        href: "/admin/users/delivaryboys",
+        label: "Delivary Boyes",
+        icon: <FaStore size={16} />,
+      },
+      {
         href: "/admin/users/customers",
         label: "Customers",
         icon: <FaUsers size={16} />,
@@ -119,6 +124,11 @@ export const adminLinks = [
         icon: <FaList size={16} />,
       },
     ],
+  },
+  {
+    label: "Seller Mangement",
+    href: "/admin/sellermanagement",
+    icon: <FaUser size={16} />,
   },
   {
     label: "Payments",

@@ -8,20 +8,20 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import { Link } from "@heroui/link";
 import { Input } from "@heroui/input";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { FaCartPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 
 import { useUser } from "../context/User.context";
 import { useGetCart } from "../hooks/cart.hook";
 
 import NavbarDropdown from "./NavbarDropdown";
 
-import { GithubIcon, SearchIcon, Logo } from "@/src/components/icons";
+import { SearchIcon, Logo } from "@/src/components/icons";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 import { siteConfig } from "@/src/config/site";
 
@@ -111,6 +111,9 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
+          <Link href="/becomeaseller">Become a Seller</Link>
+        </NavbarItem>
+        <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
 
@@ -146,9 +149,6 @@ export const Navbar = () => {
 
       {/* Mobile menu toggle */}
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-          <GithubIcon className="text-white hover:text-amber-200 dark:text-gray-200 dark:hover:text-amber-400" />
-        </Link>
         <ThemeSwitch />
         <NavbarMenuToggle className="text-white dark:text-gray-200" />
       </NavbarContent>
@@ -162,7 +162,6 @@ export const Navbar = () => {
               <Link
                 className="text-white hover:text-amber-200 dark:text-gray-200 dark:hover:text-amber-400"
                 href={item.href}
-                size="lg"
               >
                 {item.label}
               </Link>

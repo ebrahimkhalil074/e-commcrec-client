@@ -122,7 +122,11 @@ import {
 } from "react-icons/fi";
 
 export const columns = [
-  { name: "NAME", uid: "name", icon: <FiUser className="inline mr-1" /> },
+  {
+    name: "NAME",
+    uid: "name",
+    icon: <FiUser className="inline mr-1 text-amber-500" />,
+  },
   { name: "ROLE", uid: "role", icon: <FiBriefcase className="inline mr-1" /> },
   {
     name: "STATUS",
@@ -217,14 +221,21 @@ export default function AllUsersTable({ user }: { user: any }) {
             key={column.uid}
             align={column.uid === "actions" ? "center" : "start"}
           >
-            <span className="flex items-center">
+            <span className="flex items-center     text-amber-500">
               {column.icon} {column.name}
             </span>
           </TableColumn>
         )}
       </TableHeader>
 
-      <TableBody items={user}>
+      <TableBody
+        emptyContent={
+          <div className="text-center text-gray-500 dark:text-gray-400 py-6">
+            No users found
+          </div>
+        }
+        items={user || []}
+      >
         {(item: any) => (
           <TableRow key={item.id}>
             {(columnKey) => (

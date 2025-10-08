@@ -22,6 +22,7 @@ import {
   FaClock,
   FaCreditCard,
 } from "react-icons/fa";
+import Image from "next/image";
 
 import StatCard from "@/src/components/card/StatCard";
 import { useGetCustomerOverviewData } from "@/src/hooks/dashboard.hook";
@@ -72,30 +73,36 @@ export default function CustomerOverviewPage() {
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 ">
       {/* === Profile Info Banner Card === */}
-      <Card className="border-l-8 border-amber-500 bg-amber-50 shadow-lg">
+      <Card className="border-l-8 border-amber-500 bg-amber-50 dark:bg-gray-800 shadow-lg rounded-xl">
         <CardBody>
-          <div className="flex flex-col md:flex-row items-center md:items-start md:justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-center md:items-start md:justify-between gap-6">
+            {/* Profile Section */}
             <div className="flex items-center gap-4">
-              <img
+              <Image
                 alt={customer.profile.name}
-                className="w-20 h-20 rounded-full border-4 border-amber-400 object-cover shadow-md"
+                className="w-20 h-20 rounded-full border-4 border-amber-500 object-cover shadow-md"
+                height={80}
                 src={customer.profile.image}
+                width={80}
               />
               <div>
-                <h2 className="text-xl md:text-2xl font-bold text-amber-700">
+                <h2 className="text-xl md:text-2xl font-bold text-amber-500 dark:text-amber-500">
                   Welcome, {customer.profile.name}!
                 </h2>
-                <p className="text-gray-700">{customer.profile.email}</p>
+                <p className="text-gray-700 dark:text-gray-300">
+                  {customer.profile.email}
+                </p>
               </div>
             </div>
 
-            <div className="bg-amber-100 text-amber-800 px-4 py-3 rounded-xl shadow-md text-center">
+            {/* Message Section */}
+            <div className="bg-amber-100 dark:bg-gray-700 text-amber-800 dark:text-gray-200 px-5 py-4 rounded-xl shadow-md text-center md:text-left">
               <p className="font-semibold text-lg">
                 Thanks for shopping with us!
               </p>
-              <p className="text-sm">
+              <p className="text-sm text-gray-700 dark:text-gray-300">
                 Track your orders and payments from this dashboard.
               </p>
             </div>
@@ -128,7 +135,7 @@ export default function CustomerOverviewPage() {
       </div>
 
       {/* === Orders Over Time === */}
-      <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300">
+      <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
         <CardHeader>Orders Over Time</CardHeader>
         <CardBody>
           <ResponsiveContainer height={250} width="100%">
@@ -150,8 +157,8 @@ export default function CustomerOverviewPage() {
       </Card>
 
       {/* === Payment Methods + Orders Status === */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 dark:bg-gray-800">
+        <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
           <CardHeader>Payment Method Distribution</CardHeader>
           <CardBody>
             <ResponsiveContainer height={250} width="100%">
@@ -174,7 +181,7 @@ export default function CustomerOverviewPage() {
           </CardBody>
         </Card>
 
-        <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300">
+        <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
           <CardHeader>Orders Status</CardHeader>
           <CardBody>
             <ResponsiveContainer height={250} width="100%">
@@ -199,7 +206,7 @@ export default function CustomerOverviewPage() {
       </div>
 
       {/* === Delivery Stats === */}
-      <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300">
+      <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
         <CardHeader>Delivery Stats</CardHeader>
         <CardBody>
           <ResponsiveContainer height={250} width="100%">
@@ -219,7 +226,7 @@ export default function CustomerOverviewPage() {
       </Card>
 
       {/* === Latest Delivery Logs === */}
-      <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300">
+      <Card className="border-t-4 border-b-4 border-amber-500 shadow-md hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
         <CardHeader>Latest Delivery Updates</CardHeader>
         <CardBody>
           {customer.delivery.latestLogs?.length ? (

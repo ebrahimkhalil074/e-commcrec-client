@@ -131,14 +131,12 @@ import { useSoftDeleteProduct } from "@/src/hooks/product.hook";
 import AllProductsSkeleton from "@/src/components/skeloton/AllProductsSkeleton";
 import DeleteModal from "@/src/components/modal/DeleteModal";
 import { useGetAllFlashSale } from "@/src/hooks/flashSale.hook";
+import { SkeletonTable } from "@/src/components/skeloton/SkelotonTable";
 
 export default function FlashSalePage() {
   const { data: fsData, isLoading } = useGetAllFlashSale();
   const { mutate: handleDelete } = useSoftDeleteProduct();
   const flashSales = fsData?.data || [];
-
-  console.log({ flashSales });
-
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedFlashSaliId, setSelectedFlashSaliId] = useState<string | null>(
     null,
@@ -162,82 +160,90 @@ export default function FlashSalePage() {
   if (isLoading) return <AllProductsSkeleton />;
 
   return (
-    <Card className="p-6">
-      <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
-        <h1 className="text-xl font-bold">All Flash Sales</h1>
+    <>
+      {isLoading ? (
+        <SkeletonTable cols={3} rows={5} />
+      ) : (
+        <Card className="p-6">
+          <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
+            <h1 className="text-xl font-bold">All Flash Sales</h1>
 
-        <Button
-          as={Link}
-          className="bg-white text-amber-600 font-semibold rounded-xl shadow"
-          href="/admin/flash-sales/create"
-        >
-          + Add New
-        </Button>
-      </CardHeader>
-      <Table
-        removeWrapper
-        aria-label="FlashSale Table"
-        className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
-      >
-        <TableHeader>
-          <TableColumn className="text-amber-600">Name</TableColumn>
-          <TableColumn className="text-amber-600">Discount</TableColumn>
-          <TableColumn className="text-amber-600">Start</TableColumn>
-          <TableColumn className="text-amber-600">End</TableColumn>
-          <TableColumn className="text-amber-600">Status</TableColumn>
-          <TableColumn className="text-amber-600">Actions</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {flashSales.map((sale: any) => (
-            <TableRow key={sale.id}>
-              <TableCell>{sale.name}</TableCell>
-              <TableCell>{sale.discount}%</TableCell>
-              <TableCell>
-                {new Date(sale.startAt).toLocaleDateString()}
-              </TableCell>
-              <TableCell>{new Date(sale.endAt).toLocaleDateString()}</TableCell>
-              <TableCell>
-                {new Date(sale.startAt) > new Date()
-                  ? "Upcoming"
-                  : new Date(sale.endAt) < new Date()
-                    ? "Expired"
-                    : "Active"}
-              </TableCell>
-              <TableCell className="flex gap-2">
-                <Link href={`/admin/flash-sales/update/${sale.id}`}>
-                  <Button
-                    isIconOnly
-                    aria-label="Edit"
-                    className="bg-amber-500 text-white hover:bg-amber-600"
-                    size="sm"
-                  >
-                    <FaEdit />
-                  </Button>
-                </Link>
-                <Button
-                  isIconOnly
-                  aria-label="Delete"
-                  className="border-amber-500 text-amber-600 hover:bg-amber-50"
-                  size="sm"
-                  variant="bordered"
-                  onPress={() => openDeleteModal(sale.id)}
-                >
-                  <FaTrash />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            <Button
+              as={Link}
+              className="bg-white text-amber-600 font-semibold rounded-xl shadow"
+              href="/admin/flash-sales/create"
+            >
+              + Add New
+            </Button>
+          </CardHeader>
+          <Table
+            removeWrapper
+            aria-label="FlashSale Table"
+            className="border border-amber-200  shadow-md overflow-x-auto"
+          >
+            <TableHeader>
+              <TableColumn className="text-amber-600">Name</TableColumn>
+              <TableColumn className="text-amber-600">Discount</TableColumn>
+              <TableColumn className="text-amber-600">Start</TableColumn>
+              <TableColumn className="text-amber-600">End</TableColumn>
+              <TableColumn className="text-amber-600">Status</TableColumn>
+              <TableColumn className="text-amber-600">Actions</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {flashSales.map((sale: any) => (
+                <TableRow key={sale.id}>
+                  <TableCell>{sale.name}</TableCell>
+                  <TableCell>{sale.discount}%</TableCell>
+                  <TableCell>
+                    {new Date(sale.startAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(sale.endAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(sale.startAt) > new Date()
+                      ? "Upcoming"
+                      : new Date(sale.endAt) < new Date()
+                        ? "Expired"
+                        : "Active"}
+                  </TableCell>
+                  <TableCell className="flex gap-2">
+                    <Link href={`/admin/flash-sales/update/${sale.id}`}>
+                      <Button
+                        isIconOnly
+                        aria-label="Edit"
+                        className="bg-amber-500 text-white hover:bg-amber-600"
+                        size="sm"
+                      >
+                        <FaEdit />
+                      </Button>
+                    </Link>
+                    <Button
+                      isIconOnly
+                      aria-label="Delete"
+                      className="border-amber-500 text-amber-600 hover:bg-amber-50"
+                      size="sm"
+                      variant="bordered"
+                      onPress={() => openDeleteModal(sale.id)}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
 
-      {/* Delete Modal */}
-      <DeleteModal
-        isOpen={modalOpen}
-        message="Are you sure you want to delete this flashSales? This cannot be undone."
-        title="Delete FlashSale"
-        onClose={cancelDelete}
-        onConfirm={confirmDelete}
-      />
-    </Card>
+          {/* Delete Modal */}
+          <DeleteModal
+            isOpen={modalOpen}
+            message="Are you sure you want to delete this flashSales? This cannot be undone."
+            title="Delete FlashSale"
+            onClose={cancelDelete}
+            onConfirm={confirmDelete}
+          />
+        </Card>
+      )}
+    </>
   );
 }

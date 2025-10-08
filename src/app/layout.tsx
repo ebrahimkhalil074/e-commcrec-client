@@ -47,7 +47,7 @@ export default function RootLayout({
               <Navbar />
             </div>
 
-            <main className="container mx-auto max-w-7xl flex-grow dark:bg-gray-900">
+            <main className="container mx-auto dark:bg-gray-900">
               {children}
             </main>
 

@@ -150,7 +150,6 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/table";
-import { Input } from "@heroui/input";
 import {
   Button,
   Dropdown,
@@ -225,13 +224,6 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ payments }) => {
   return (
     <div className="p-4">
       {/* Search */}
-      <div className="mb-4 w-full max-w-sm">
-        <Input
-          placeholder="Search by Transaction ID, Name or Email"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
 
       {/* Payment Table */}
       <div className=" w-full overflow-x-auto">

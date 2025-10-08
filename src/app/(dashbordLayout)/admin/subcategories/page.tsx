@@ -11,6 +11,7 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/table";
+import { FaTags, FaFolderOpen, FaTools } from "react-icons/fa";
 import { Input } from "@heroui/input";
 import { FiEdit, FiTrash2, FiSearch } from "react-icons/fi";
 import Link from "next/link";
@@ -32,18 +33,8 @@ const SubCategoriesPage = () => {
       <Card className="border border-amber-500 rounded-2xl" shadow="lg">
         <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
           <h1 className="text-xl font-bold">Sub Categories</h1>
-
-          <Button
-            as={Link}
-            className="bg-white text-amber-600 font-semibold rounded-xl shadow"
-            href="/admin/subcategories/create"
-          >
-            + Add New
-          </Button>
-        </CardHeader>
-        <CardBody>
           {/* Search */}
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 ">
             <Input
               className="w-72"
               placeholder="Search category..."
@@ -53,7 +44,15 @@ const SubCategoriesPage = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-
+          <Button
+            as={Link}
+            className="bg-white text-amber-600 font-semibold rounded-xl shadow"
+            href="/admin/subcategories/create"
+          >
+            + Add New
+          </Button>
+        </CardHeader>
+        <CardBody>
           {/* Categories Table */}
           <Table
             removeWrapper
@@ -61,40 +60,69 @@ const SubCategoriesPage = () => {
             className="rounded-xl shadow"
           >
             <TableHeader>
-              <TableColumn className="text-amber-600">SubCategory</TableColumn>
-              <TableColumn className="text-amber-600">Category</TableColumn>
-              <TableColumn className="text-amber-600">Actions</TableColumn>
-            </TableHeader>
-            <TableBody>
-              {filtered?.map((cat: any) => (
-                <TableRow key={cat.id}>
-                  <TableCell className="font-semibold">{cat.name}</TableCell>
-                  <TableCell className="font-semibold">
-                    {cat?.category?.name}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-3">
-                      <Button
-                        as={Link}
-                        className="bg-amber-500 text-white rounded-lg hover:bg-amber-600"
-                        href={`/admin/subcategories/update/${cat.id}`}
-                        size="sm"
-                        startContent={<FiEdit />}
-                      >
-                        Edit
-                      </Button>
+              <TableColumn>
+                <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                  <FaTags className="w-4 h-4" />
+                  <span>SubCategory</span>
+                </div>
+              </TableColumn>
 
-                      <Button
-                        className="bg-red-500 text-white rounded-lg hover:bg-red-600"
-                        size="sm"
-                        startContent={<FiTrash2 />}
-                      >
-                        Delete
-                      </Button>
-                    </div>
+              <TableColumn>
+                <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                  <FaFolderOpen className="w-4 h-4" />
+                  <span>Category</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn>
+                <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                  <FaTools className="w-4 h-4" />
+                  <span>Actions</span>
+                </div>
+              </TableColumn>
+            </TableHeader>
+
+            <TableBody>
+              {filtered && filtered.length > 0 ? (
+                filtered?.map((cat: any) => (
+                  <TableRow key={cat.id}>
+                    <TableCell className="font-semibold">{cat.name}</TableCell>
+                    <TableCell className="font-semibold">
+                      {cat?.category?.name}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-3">
+                        <Button
+                          as={Link}
+                          className="bg-amber-500 text-white rounded-lg hover:bg-amber-600"
+                          href={`/admin/subcategories/update/${cat.id}`}
+                          size="sm"
+                          startContent={<FiEdit />}
+                        >
+                          Edit
+                        </Button>
+
+                        <Button
+                          className="bg-red-500 text-white rounded-lg hover:bg-red-600"
+                          size="sm"
+                          startContent={<FiTrash2 />}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    className="text-center py-6 text-gray-500 dark:text-gray-400"
+                    colSpan={3}
+                  >
+                    No categories found
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </CardBody>

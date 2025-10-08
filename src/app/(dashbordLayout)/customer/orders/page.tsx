@@ -1,163 +1,3 @@
-// "use client";
-
-// import Link from "next/link";
-// import { Button } from "@heroui/button";
-// import {
-//   Table,
-//   TableHeader,
-//   TableColumn,
-//   TableBody,
-//   TableRow,
-//   TableCell,
-// } from "@heroui/table";
-// import { Chip } from "@heroui/chip";
-// import { Card, CardHeader } from "@heroui/card";
-// import { Spinner } from "@heroui/spinner";
-// import { FaEye, FaRedoAlt } from "react-icons/fa";
-// import { useGetMyAllOrders } from "@/src/hooks/order.hook"; // তোমার hook
-// import { useState } from "react";
-
-// export default function CustomerOrdersPage() {
-//   const { data: allOrderData, isLoading, isError } = useGetMyAllOrders();
-
-//   const orders = allOrderData?.data || [];
-
-//   const [selectedOrder, setSelectedOrder] = useState<any>(null);
-
-//   if (isLoading) {
-//     return (
-//       <div className="flex justify-center py-10">
-//         <Spinner size="lg" />
-//       </div>
-//     );
-//   }
-
-//   if (isError) {
-//     return <div className="text-red-600 p-6">Failed to load orders</div>;
-//   }
-
-//   return (
-//     <div className="p-6">
-//       <Card>
-//         <CardHeader className="bg-amber-500 text-white rounded-t-2xl px-6 py-4 flex justify-between items-center">
-//           <h1 className="text-xl font-bold">My Orders</h1>
-//         </CardHeader>
-
-//         {orders.length === 0 ? (
-//           <div className="p-6 text-center text-gray-600">
-//             You have no orders yet.
-//           </div>
-//         ) : (
-//           <Table
-//             aria-label="My Orders"
-//             removeWrapper
-//             className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
-//           >
-//             <TableHeader>
-//               <TableColumn className="text-amber-600">Order ID</TableColumn>
-//               <TableColumn className="text-amber-600">Placed</TableColumn>
-//               <TableColumn className="text-amber-600">Status</TableColumn>
-//               <TableColumn className="text-amber-600">Payment</TableColumn>
-//               <TableColumn className="text-amber-600">Total</TableColumn>
-//               <TableColumn className="text-amber-600">Actions</TableColumn>
-//             </TableHeader>
-
-//             <TableBody>
-//               {orders.map((order: any) => (
-//                 <TableRow key={order.id}>
-//                   <TableCell className="font-mono">
-//                     {order.id.slice(0, 8)}...
-//                   </TableCell>
-//                   <TableCell>
-//                     {new Date(order.createdAt).toLocaleDateString()}
-//                   </TableCell>
-//                   <TableCell>
-//                     <Chip
-//                       size="sm"
-//                       color={
-//                         order.status === "DELIVERED"
-//                           ? "success"
-//                           : order.status === "CANCELLED"
-//                           ? "danger"
-//                           : order.status === "SHIPPED"
-//                           ? "primary"
-//                           : "default"
-//                       }
-//                     >
-//                       {order.status}
-//                     </Chip>
-//                   </TableCell>
-//                   <TableCell>
-//                     {order.isPaid ? (
-//                       <Chip size="sm" color="success" variant="flat">
-//                         Paid
-//                       </Chip>
-//                     ) : (
-//                       <Chip size="sm" color="warning" variant="flat">
-//                         Unpaid
-//                       </Chip>
-//                     )}
-//                   </TableCell>
-//                   <TableCell className="font-semibold">
-//                     ${order.total.toFixed(2)}
-//                   </TableCell>
-//                   <TableCell className="flex gap-2">
-//                     <Button
-//                       isIconOnly
-//                       size="sm"
-//                       className="bg-amber-500 text-white hover:bg-amber-600"
-//                       aria-label="View"
-//                       onPress={() => setSelectedOrder(order)}
-//                     >
-//                       <FaEye />
-//                     </Button>
-
-//                     {order.status === "DELIVERED" && (
-//                       <Button
-//                         isIconOnly
-//                         size="sm"
-//                         variant="bordered"
-//                         className="border-amber-500 text-amber-600 hover:bg-amber-50"
-//                         aria-label="Return"
-//                       >
-//                         <FaRedoAlt />
-//                       </Button>
-//                     )}
-//                   </TableCell>
-//                 </TableRow>
-//               ))}
-//             </TableBody>
-//           </Table>
-//         )}
-//       </Card>
-
-//       {/* Order details modal (optional) */}
-//       {selectedOrder && (
-//         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-//           <div className="bg-white p-6 rounded-lg max-w-xl w-full">
-//             <h2 className="text-lg font-bold mb-4">
-//               Order {selectedOrder.id.slice(0, 8)}
-//             </h2>
-//             <p>Status: {selectedOrder.status}</p>
-//             <p>Total: ${selectedOrder.total.toFixed(2)}</p>
-//             <p>
-//               Placed:{" "}
-//               {new Date(selectedOrder.createdAt).toLocaleDateString()}
-//             </p>
-
-//             <Button
-//               className="mt-4 bg-amber-500 text-white"
-//               onPress={() => setSelectedOrder(null)}
-//             >
-//               Close
-//             </Button>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
 "use client";
 
 import React, { useState } from "react";
@@ -176,9 +16,19 @@ import { Spinner } from "@heroui/spinner";
 import { Pagination } from "@heroui/pagination";
 import { FaEye, FaUndo } from "react-icons/fa";
 import Link from "next/link";
+import {
+  FiShoppingCart,
+  FiCalendar,
+  FiCheckCircle,
+  FiCreditCard,
+  FiDollarSign,
+  FiBox,
+  FiSettings,
+} from "react-icons/fi";
 
 import { useGetMyAllOrders } from "@/src/hooks/order.hook";
 import { useUser } from "@/src/context/User.context";
+import { SkeletonTable } from "@/src/components/skeloton/SkelotonTable";
 
 // --- Order typings (adjust to match your API) ---
 type OrderItem = {
@@ -228,7 +78,6 @@ export default function CustomerOrdersPage() {
   const orders: Order[] = data?.data?.data ?? [];
   const meta = data?.data?.meta;
 
-  console.log(meta);
   // When tab changes reset page
   const onChangeTab = (key: string) => {
     setActiveTab(key);
@@ -249,214 +98,261 @@ export default function CustomerOrdersPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <Card>
-        <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-amber-500 text-white rounded-t-2xl px-6 py-4">
-          <div>
-            <h1 className="text-2xl font-bold">My Orders</h1>
-            <p className="text-sm opacity-90">
-              Track, cancel or request returns here.
-            </p>
-          </div>
-
-          <div className="flex gap-2 flex-wrap">
-            {TABS.map((t) => (
-              <button
-                key={t.key}
-                className={`px-3 py-1 rounded-md font-medium ${
-                  activeTab === t.key
-                    ? "bg-white text-amber-600"
-                    : "bg-white/10 text-white hover:bg-white/20"
-                }`}
-                onClick={() => onChangeTab(t.key)}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </CardHeader>
-
-        <div className="p-4">
-          {isLoading ? (
-            <div className="flex justify-center py-10">
-              <Spinner size="lg" />
-            </div>
-          ) : isError ? (
-            <div className="text-red-600 p-4">
-              Failed to load orders. Please try again.
-            </div>
-          ) : orders.length === 0 ? (
-            <div className="p-6 text-center text-gray-600">
-              No orders found.
-            </div>
-          ) : (
-            <>
-              <Table
-                removeWrapper
-                aria-label="My Orders"
-                className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
-              >
-                <TableHeader>
-                  <TableColumn>Order</TableColumn>
-                  <TableColumn>Placed</TableColumn>
-                  <TableColumn>Status</TableColumn>
-                  <TableColumn>Payment</TableColumn>
-                  <TableColumn>Total</TableColumn>
-                  <TableColumn>Items</TableColumn>
-                  <TableColumn>Actions</TableColumn>
-                </TableHeader>
-
-                <TableBody>
-                  {orders?.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell className="font-mono">
-                        {order.id.slice(0, 8)}...
-                      </TableCell>
-                      <TableCell>
-                        {new Date(order.createdAt).toLocaleDateString()}
-                      </TableCell>
-
-                      <TableCell>
-                        <Chip
-                          color={
-                            order.status === "DELIVERED"
-                              ? "success"
-                              : order.status === "CANCELLED"
-                                ? "danger"
-                                : order.status === "SHIPPED"
-                                  ? "primary"
-                                  : "warning"
-                          }
-                          size="sm"
-                        >
-                          {order.status}
-                        </Chip>
-                      </TableCell>
-
-                      <TableCell>
-                        {order.isPaid ? (
-                          <Chip color="success" size="sm" variant="flat">
-                            Paid
-                          </Chip>
-                        ) : (
-                          <Chip color="warning" size="sm" variant="flat">
-                            Pending
-                          </Chip>
-                        )}
-                      </TableCell>
-
-                      <TableCell className="font-semibold">
-                        ${order.total.toFixed(2)}
-                      </TableCell>
-
-                      <TableCell>
-                        <div className="flex flex-col items-start">
-                          {order.items.slice(0, 2).map((it) => (
-                            <div key={it.id} className="text-sm">
-                              {it.product.name}
-                              {it.variant?.color
-                                ? ` - ${it.variant.color}`
-                                : ""}
-                              {it.sizeStock?.size
-                                ? ` (${it.sizeStock.size})`
-                                : ""}
-                              x{it.quantity}
-                            </div>
-                          ))}
-                          {order.items.length > 2 && (
-                            <div className="text-xs text-gray-500">
-                              +{order.items.length - 2} more
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-
-                      <TableCell className="flex gap-2">
-                        <Button
-                          isIconOnly
-                          aria-label="View"
-                          className="bg-amber-500 text-white hover:bg-amber-600"
-                          size="sm"
-                          onPress={() => setSelectedOrder(order)}
-                        >
-                          <FaEye />
-                        </Button>
-
-                        {/* return icon example for delivered */}
-                        {order.status === "DELIVERED" && (
-                          <Button
-                            isIconOnly
-                            aria-label="Return"
-                            className="border-amber-500 text-amber-600 hover:bg-amber-50"
-                            size="sm"
-                            variant="bordered"
-                            onPress={() => alert("Open return flow")}
-                          >
-                            <FaUndo />
-                          </Button>
-                        )}
-
-                        <Link href={`/orders/${order.id}`}>
-                          <Button
-                            className="border-amber-500 text-amber-600"
-                            size="sm"
-                            variant="bordered"
-                          >
-                            Open
-                          </Button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-
-              {/* Pagination */}
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-4">
-                {/* Items per page selector */}
-                <div className="flex items-center gap-2 text-gray-700">
-                  <span className="font-medium">Items per page:</span>
-                  <select
-                    className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-                    value={limit}
-                    onChange={(e) => {
-                      setLimit(parseInt(e.target.value));
-                      setPage(1); // reset page
-                      setTimeout(() => refetch(), 0);
-                    }}
-                  >
-                    <option value={5}>5</option>
-                    <option value={8}>8</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                  </select>
-                </div>
-
-                {/* Pagination */}
-                <Pagination
-                  showControls
-                  className="bg-white rounded-lg shadow-md px-4 py-2"
-                  page={meta.page}
-                  total={Math.max(1, Math.ceil(meta.total / limit))}
-                  onChange={(p) => {
-                    setPage(p);
-                    setTimeout(() => refetch(), 0);
-                  }}
-                />
+    <>
+      {isLoading ? (
+        <SkeletonTable cols={7} rows={6} />
+      ) : (
+        <div className="p-6 space-y-6">
+          <Card>
+            <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-amber-500 text-white rounded-t-2xl px-6 py-4">
+              <div>
+                <h1 className="text-2xl font-bold">My Orders</h1>
+                <p className="text-sm opacity-90">
+                  Track, cancel or request returns here.
+                </p>
               </div>
-            </>
+
+              <div className="flex gap-2 flex-wrap">
+                {TABS.map((t) => (
+                  <button
+                    key={t.key}
+                    className={`px-3 py-1 rounded-md font-medium ${
+                      activeTab === t.key
+                        ? "bg-white text-amber-600"
+                        : "bg-white/10 text-white hover:bg-white/20"
+                    }`}
+                    onClick={() => onChangeTab(t.key)}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </CardHeader>
+
+            <div className="p-4">
+              {isLoading ? (
+                <div className="flex justify-center py-10">
+                  <Spinner size="lg" />
+                </div>
+              ) : isError ? (
+                <div className="text-red-600 p-4">
+                  Failed to load orders. Please try again.
+                </div>
+              ) : orders.length === 0 ? (
+                <div className="p-6 text-center text-gray-600">
+                  No orders found.
+                </div>
+              ) : (
+                <>
+                  <Table
+                    removeWrapper
+                    aria-label="My Orders"
+                    className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
+                  >
+                    <TableHeader>
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiShoppingCart className="text-amber-500 dark:text-amber-400" />
+                          Order
+                        </div>
+                      </TableColumn>
+
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiCalendar className="text-amber-500 dark:text-amber-400" />
+                          Placed
+                        </div>
+                      </TableColumn>
+
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiCheckCircle className="text-amber-500 dark:text-amber-400" />
+                          Status
+                        </div>
+                      </TableColumn>
+
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiCreditCard className="text-amber-500 dark:text-amber-400" />
+                          Payment
+                        </div>
+                      </TableColumn>
+
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiDollarSign className="text-amber-500 dark:text-amber-400" />
+                          Total
+                        </div>
+                      </TableColumn>
+
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiBox className="text-amber-500 dark:text-amber-400" />
+                          Items
+                        </div>
+                      </TableColumn>
+
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiSettings className="text-amber-500 dark:text-amber-400" />
+                          Actions
+                        </div>
+                      </TableColumn>
+                    </TableHeader>
+
+                    <TableBody>
+                      {orders?.map((order) => (
+                        <TableRow key={order.id}>
+                          <TableCell className="font-mono">
+                            {order.id.slice(0, 8)}...
+                          </TableCell>
+                          <TableCell>
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </TableCell>
+
+                          <TableCell>
+                            <Chip
+                              color={
+                                order.status === "DELIVERED"
+                                  ? "success"
+                                  : order.status === "CANCELLED"
+                                    ? "danger"
+                                    : order.status === "SHIPPED"
+                                      ? "primary"
+                                      : "warning"
+                              }
+                              size="sm"
+                            >
+                              {order.status}
+                            </Chip>
+                          </TableCell>
+
+                          <TableCell>
+                            {order.isPaid ? (
+                              <Chip color="success" size="sm" variant="flat">
+                                Paid
+                              </Chip>
+                            ) : (
+                              <Chip color="warning" size="sm" variant="flat">
+                                Pending
+                              </Chip>
+                            )}
+                          </TableCell>
+
+                          <TableCell className="font-semibold">
+                            ${order.total.toFixed(2)}
+                          </TableCell>
+
+                          <TableCell>
+                            <div className="flex flex-col items-start">
+                              {order.items.slice(0, 2).map((it) => (
+                                <div key={it.id} className="text-sm">
+                                  {it.product.name}
+                                  {it.variant?.color
+                                    ? ` - ${it.variant.color}`
+                                    : ""}
+                                  {it.sizeStock?.size
+                                    ? ` (${it.sizeStock.size})`
+                                    : ""}
+                                  x{it.quantity}
+                                </div>
+                              ))}
+                              {order.items.length > 2 && (
+                                <div className="text-xs text-gray-500">
+                                  +{order.items.length - 2} more
+                                </div>
+                              )}
+                            </div>
+                          </TableCell>
+
+                          <TableCell className="flex gap-2">
+                            <Button
+                              isIconOnly
+                              aria-label="View"
+                              className="bg-amber-500 text-white hover:bg-amber-600"
+                              size="sm"
+                              onPress={() => setSelectedOrder(order)}
+                            >
+                              <FaEye />
+                            </Button>
+
+                            {/* return icon example for delivered */}
+                            {order.status === "DELIVERED" && (
+                              <Button
+                                isIconOnly
+                                aria-label="Return"
+                                className="border-amber-500 text-amber-600 hover:bg-amber-50"
+                                size="sm"
+                                variant="bordered"
+                                onPress={() => alert("Open return flow")}
+                              >
+                                <FaUndo />
+                              </Button>
+                            )}
+
+                            <Link href={`/orders/${order.id}`}>
+                              <Button
+                                className="border-amber-500 text-amber-600"
+                                size="sm"
+                                variant="bordered"
+                              >
+                                Open
+                              </Button>
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+
+                  {/* Pagination */}
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-4">
+                    {/* Items per page selector */}
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <span className="font-medium">Items per page:</span>
+                      <select
+                        className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                        value={limit}
+                        onChange={(e) => {
+                          setLimit(parseInt(e.target.value));
+                          setPage(1); // reset page
+                          setTimeout(() => refetch(), 0);
+                        }}
+                      >
+                        <option value={5}>5</option>
+                        <option value={8}>8</option>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                      </select>
+                    </div>
+
+                    {/* Pagination */}
+                    <Pagination
+                      showControls
+                      className="bg-white rounded-lg shadow-md px-4 py-2"
+                      page={meta.page}
+                      total={Math.max(1, Math.ceil(meta.total / limit))}
+                      onChange={(p) => {
+                        setPage(p);
+                        setTimeout(() => refetch(), 0);
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </Card>
+
+          {/* Order details modal */}
+          {selectedOrder && (
+            <OrderDetailsModal
+              order={selectedOrder}
+              onClose={() => setSelectedOrder(null)}
+            />
           )}
         </div>
-      </Card>
-
-      {/* Order details modal */}
-      {selectedOrder && (
-        <OrderDetailsModal
-          order={selectedOrder}
-          onClose={() => setSelectedOrder(null)}
-        />
       )}
-    </div>
+    </>
   );
 }
 

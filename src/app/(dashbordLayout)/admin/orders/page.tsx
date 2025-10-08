@@ -27,10 +27,20 @@ import {
 } from "@heroui/table";
 import { Chip } from "@heroui/chip";
 import { Card, CardHeader } from "@heroui/card";
-import { FaEye, FaTrash } from "react-icons/fa";
+import {
+  FaHashtag,
+  FaUser,
+  FaDollarSign,
+  FaChartLine,
+  FaCalendarAlt,
+  FaTools,
+  FaEye,
+  FaTrash,
+} from "react-icons/fa";
 import { Spinner } from "@heroui/spinner";
 
 import DeleteModal from "@/src/components/modal/DeleteModal";
+import { SkeletonTable } from "@/src/components/skeloton/SkelotonTable";
 
 // Order Type
 type Order = {
@@ -77,7 +87,7 @@ export default function OrdersTable() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/v1/order", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/order`, {
           cache: "no-store",
         });
         const data = await res.json();
@@ -101,93 +111,135 @@ export default function OrdersTable() {
     );
 
   return (
-    <Card className="p-6">
-      {/* Header */}
-      <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
-        <h1 className="text-xl font-bold">All Orders</h1>
-        <Button
-          as={Link}
-          className="bg-white text-amber-600 font-semibold rounded-xl shadow"
-          href="/admin/orders/create"
-        >
-          + Create Order
-        </Button>
-      </CardHeader>
+    <>
+      {loading ? (
+        <SkeletonTable cols={5} rows={5} />
+      ) : (
+        <Card className="p-6">
+          {/* Header */}
+          <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
+            <h1 className="text-xl font-bold">All Orders</h1>
+            <Button
+              as={Link}
+              className="bg-white text-amber-600 font-semibold rounded-xl shadow"
+              href="/admin/orders/create"
+            >
+              + Create Order
+            </Button>
+          </CardHeader>
 
-      {/* Orders Table */}
-      <Table
-        removeWrapper
-        aria-label="Orders Table"
-        className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
-      >
-        <TableHeader>
-          <TableColumn className="text-amber-600">Order ID</TableColumn>
-          <TableColumn className="text-amber-600">User</TableColumn>
-          <TableColumn className="text-amber-600">Total</TableColumn>
-          <TableColumn className="text-amber-600">Status</TableColumn>
-          <TableColumn className="text-amber-600">Created</TableColumn>
-          <TableColumn className="text-amber-600">Actions</TableColumn>
-        </TableHeader>
+          {/* Orders Table */}
+          <Table
+            removeWrapper
+            aria-label="Orders Table"
+            className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
+          >
+            <TableHeader>
+              <TableColumn className="text-amber-600 dark:text-amber-400">
+                <div className="flex items-center gap-2 justify-center">
+                  <FaHashtag className="text-amber-600 dark:text-amber-400 text-sm" />
+                  <span>Order ID</span>
+                </div>
+              </TableColumn>
 
-        <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.id}>
-              <TableCell className="font-mono">
-                {order.id.slice(0, 8)}...
-              </TableCell>
-              <TableCell>{order.user?.name || "Unknown"}</TableCell>
-              <TableCell className="font-semibold">
-                ${order.total.toFixed(2)}
-              </TableCell>
-              <TableCell>
-                {order.isPaid ? (
-                  <Chip color="success" size="sm" variant="flat">
-                    Paid
-                  </Chip>
-                ) : (
-                  <Chip color="danger" size="sm" variant="flat">
-                    Unpaid
-                  </Chip>
-                )}
-              </TableCell>
-              <TableCell>
-                {new Date(order.createdAt).toLocaleDateString()}
-              </TableCell>
-              <TableCell className="flex gap-2">
-                <Link href={`/admin/orders/${order.id}`}>
-                  <Button
-                    isIconOnly
-                    aria-label="View"
-                    className="bg-amber-500 text-white hover:bg-amber-600"
-                    size="sm"
-                  >
-                    <FaEye />
-                  </Button>
-                </Link>
-                <Button
-                  isIconOnly
-                  aria-label="Delete"
-                  className="border-amber-500 text-amber-600 hover:bg-amber-50"
-                  size="sm"
-                  variant="bordered"
-                  onPress={() => openDeleteModal(order.id)}
-                >
-                  <FaTrash />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              <TableColumn className="text-amber-600 dark:text-amber-400">
+                <div className="flex items-center gap-2 justify-center">
+                  <FaUser className="text-amber-600 dark:text-amber-400 text-sm" />
+                  <span>User</span>
+                </div>
+              </TableColumn>
 
-      {/* Delete Modal */}
-      <DeleteModal
-        isOpen={modalOpen}
-        message="Are you sure you want to delete this order? This action cannot be undone."
-        title="Delete Order"
-        onClose={cancelDelete}
-        onConfirm={confirmDelete}
-      />
-    </Card>
+              <TableColumn className="text-amber-600 dark:text-amber-400">
+                <div className="flex items-center gap-2 justify-center">
+                  <FaDollarSign className="text-amber-600 dark:text-amber-400 text-sm" />
+                  <span>Total</span>
+                </div>
+              </TableColumn>
+
+              {/* ✅ Stats icon instead of stopwatch */}
+              <TableColumn className="text-amber-600 dark:text-amber-400">
+                <div className="flex items-center gap-2 justify-center">
+                  <FaChartLine className="text-amber-600 dark:text-amber-400 text-sm" />
+                  <span>Status</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn className="text-amber-600 dark:text-amber-400">
+                <div className="flex items-center gap-2 justify-center">
+                  <FaCalendarAlt className="text-amber-600 dark:text-amber-400 text-sm" />
+                  <span>Created</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn className="text-amber-600 dark:text-amber-400">
+                <div className="flex items-center gap-2 justify-center">
+                  <FaTools className="text-amber-600 dark:text-amber-400 text-sm" />
+                  <span>Actions</span>
+                </div>
+              </TableColumn>
+            </TableHeader>
+
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell className="font-mono">
+                    {order.id.slice(0, 8)}...
+                  </TableCell>
+                  <TableCell>{order.user?.name || "Unknown"}</TableCell>
+                  <TableCell className="font-semibold">
+                    ${order.total.toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                    {order.isPaid ? (
+                      <Chip color="success" size="sm" variant="flat">
+                        Paid
+                      </Chip>
+                    ) : (
+                      <Chip color="danger" size="sm" variant="flat">
+                        Unpaid
+                      </Chip>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="flex gap-2">
+                    <Link href={`/admin/orders/${order.id}`}>
+                      <Button
+                        isIconOnly
+                        aria-label="View"
+                        className="bg-amber-500 text-white hover:bg-amber-600"
+                        size="sm"
+                      >
+                        <FaEye />
+                      </Button>
+                    </Link>
+                    <Button
+                      isIconOnly
+                      aria-label="Delete"
+                      className="border-amber-500 text-amber-600 hover:bg-amber-50"
+                      size="sm"
+                      variant="bordered"
+                      onPress={() => openDeleteModal(order.id)}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          {/* Delete Modal */}
+          <DeleteModal
+            isOpen={modalOpen}
+            message="Are you sure you want to delete this order? This action cannot be undone."
+            title="Delete Order"
+            onClose={cancelDelete}
+            onConfirm={confirmDelete}
+          />
+        </Card>
+      )}
+    </>
   );
 }

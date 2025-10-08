@@ -25,9 +25,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-md border border-amber-200">
-        <h2 className="mb-6 text-center text-2xl font-bold text-amber-600">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors">
+      <div className="w-full max-w-md rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-md border border-amber-200 dark:border-gray-700 transition-colors">
+        <h2 className="mb-6 text-center text-2xl font-bold text-amber-600 dark:text-amber-400">
           Create an Account
         </h2>
 
@@ -39,6 +39,11 @@ export default function RegisterPage() {
             placeholder="Enter your name"
             {...register("name", { required: true })}
             isRequired
+            classNames={{
+              inputWrapper: "dark:bg-gray-900 dark:border-gray-700",
+              input: "dark:text-gray-200",
+              label: "dark:text-gray-300",
+            }}
             variant="bordered"
           />
 
@@ -50,6 +55,11 @@ export default function RegisterPage() {
             type="email"
             {...register("email", { required: true })}
             isRequired
+            classNames={{
+              inputWrapper: "dark:bg-gray-900 dark:border-gray-700",
+              input: "dark:text-gray-200",
+              label: "dark:text-gray-300",
+            }}
             variant="bordered"
           />
 
@@ -61,6 +71,11 @@ export default function RegisterPage() {
             type="password"
             {...register("password", { required: true })}
             isRequired
+            classNames={{
+              inputWrapper: "dark:bg-gray-900 dark:border-gray-700",
+              input: "dark:text-gray-200",
+              label: "dark:text-gray-300",
+            }}
             variant="bordered"
           />
 
@@ -75,10 +90,10 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
           Already have an account?{" "}
           <Link
-            className="text-amber-600 hover:underline font-medium"
+            className="text-amber-600 dark:text-amber-400 hover:underline font-medium"
             href="/login"
           >
             Please Login

@@ -293,7 +293,6 @@ import {
 } from "@heroui/table";
 import { Card, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
-import { Spinner } from "@heroui/spinner";
 import { Pagination } from "@heroui/pagination";
 import {
   Modal,
@@ -302,9 +301,20 @@ import {
   ModalBody,
   ModalFooter,
 } from "@heroui/modal";
+import {
+  FiHash,
+  FiDollarSign,
+  FiCreditCard,
+  FiCheckCircle,
+  FiClock,
+  FiTrendingDown,
+  FiCalendar,
+  FiSettings,
+} from "react-icons/fi";
 
 import { useUser } from "@/src/context/User.context";
 import { useGetMyAllPayments } from "@/src/hooks/payment.hook";
+import { SkeletonTable } from "@/src/components/skeloton/SkelotonTable";
 
 // --- Payment Typings ---
 type Payment = {
@@ -444,7 +454,8 @@ export default function CustomerPaymentsPage() {
         <div className="p-4">
           {isLoading ? (
             <div className="flex justify-center py-10">
-              <Spinner size="lg" />
+              {/* <Spinner size="lg" /> */}
+              <SkeletonTable />
             </div>
           ) : isError ? (
             <div className="text-red-600 p-4">
@@ -462,14 +473,61 @@ export default function CustomerPaymentsPage() {
                 className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
               >
                 <TableHeader>
-                  <TableColumn>Transaction ID</TableColumn>
-                  <TableColumn>Amount</TableColumn>
-                  <TableColumn>Method</TableColumn>
-                  <TableColumn>Status</TableColumn>
-                  <TableColumn>Due</TableColumn>
-                  <TableColumn>Due Amount</TableColumn>
-                  <TableColumn>Date</TableColumn>
-                  <TableColumn>Action</TableColumn>
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiHash className="text-amber-500 dark:text-amber-400" />
+                      Transaction ID
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiDollarSign className="text-amber-500 dark:text-amber-400" />
+                      Amount
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiCreditCard className="text-amber-500 dark:text-amber-400" />
+                      Method
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiCheckCircle className="text-amber-500 dark:text-amber-400" />
+                      Status
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiClock className="text-amber-500 dark:text-amber-400" />
+                      Due
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiTrendingDown className="text-amber-500 dark:text-amber-400" />
+                      Due Amount
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiCalendar className="text-amber-500 dark:text-amber-400" />
+                      Date
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiSettings className="text-amber-500 dark:text-amber-400" />
+                      Action
+                    </div>
+                  </TableColumn>
                 </TableHeader>
 
                 <TableBody>

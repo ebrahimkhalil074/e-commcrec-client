@@ -172,13 +172,22 @@ import {
 } from "@heroui/table";
 import { Card, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
-import { Spinner } from "@heroui/spinner";
 import { Pagination } from "@heroui/pagination";
 import { FaEye, FaUndo } from "react-icons/fa";
 import Link from "next/link";
+import {
+  FiShoppingCart,
+  FiCalendar,
+  FiCheckCircle,
+  FiCreditCard,
+  FiDollarSign,
+  FiBox,
+  FiSettings,
+} from "react-icons/fi";
 
 import { useGetMyAllOrders } from "@/src/hooks/order.hook";
 import { useUser } from "@/src/context/User.context";
+import { SkeletonTable } from "@/src/components/skeloton/SkelotonTable";
 
 // --- Order typings (adjust to match your API) ---
 type OrderItem = {
@@ -279,7 +288,8 @@ export default function SellerOrdersPage() {
         <div className="p-4">
           {isLoading ? (
             <div className="flex justify-center py-10">
-              <Spinner size="lg" />
+              {/* <Spinner size="lg" /> */}
+              <SkeletonTable />
             </div>
           ) : isError ? (
             <div className="text-red-600 p-4">
@@ -297,13 +307,54 @@ export default function SellerOrdersPage() {
                 className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
               >
                 <TableHeader>
-                  <TableColumn>Order</TableColumn>
-                  <TableColumn>Placed</TableColumn>
-                  <TableColumn>Status</TableColumn>
-                  <TableColumn>Payment</TableColumn>
-                  <TableColumn>Total</TableColumn>
-                  <TableColumn>Items</TableColumn>
-                  <TableColumn>Actions</TableColumn>
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiShoppingCart className="text-amber-500 dark:text-amber-400" />
+                      Order
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiCalendar className="text-amber-500 dark:text-amber-400" />
+                      Placed
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiCheckCircle className="text-amber-500 dark:text-amber-400" />
+                      Status
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiCreditCard className="text-amber-500 dark:text-amber-400" />
+                      Payment
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiDollarSign className="text-amber-500 dark:text-amber-400" />
+                      Total
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiBox className="text-amber-500 dark:text-amber-400" />
+                      Items
+                    </div>
+                  </TableColumn>
+
+                  <TableColumn>
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <FiSettings className="text-amber-500 dark:text-amber-400" />
+                      Actions
+                    </div>
+                  </TableColumn>
                 </TableHeader>
 
                 <TableBody>

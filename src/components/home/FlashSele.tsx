@@ -366,6 +366,7 @@ export default function FlashSale() {
   }, [flashSales]);
 
   if (flashSaleLoading) return <p>Loading Flash Sale...</p>;
+  console.log(flashSales);
 
   return (
     <section className="py-10 px-4 border-b border-amber-200">
@@ -375,7 +376,7 @@ export default function FlashSale() {
         <FaArrowRight className="text-amber-500 text-lg" />
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1  mx-auto">
         {flashSales.map((flash: any) => {
           const isEnded = timeLefts[flash.id]?.ended ?? false;
 

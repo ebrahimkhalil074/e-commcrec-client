@@ -16,7 +16,6 @@ import { useForm, useWatch } from "react-hook-form";
 import { useGetAllCategory } from "@/src/hooks/category.hook";
 import { useGetAllBrands } from "@/src/hooks/brand.hook";
 import ProductCard from "@/src/components/card/Product";
-import Heading from "@/src/components/home/Heading";
 
 interface FilterParams {
   searchTerm: string;
@@ -231,11 +230,23 @@ const ProductPage = () => {
 
       {/* --- Products Grid --- */}
       <main className="lg:col-span-9">
-        <Heading
-          bgImage="https://i.ibb.co.com/gMG7x5Hx/glen-carrie-yy-V6-JA-C16w-unsplash.jpg"
-          subtitle="Explore our wide range of products"
-          title="Products"
-        />
+        <div className="relative py-2 text-center">
+          {/* Title */}
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white">
+            All <span className="text-amber-600">Products</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="mt-3 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Browse our wide range of high-quality products. From the latest
+            electronics to everyday essentials, find everything you need in one
+            place.
+          </p>
+
+          {/* Gradient underline */}
+          <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-amber-500 via-pink-400 to-amber-500 rounded-full" />
+        </div>
+
         {loading ? (
           <p>Loading...</p>
         ) : products.length === 0 ? (

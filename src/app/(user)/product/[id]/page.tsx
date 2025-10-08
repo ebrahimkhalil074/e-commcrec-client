@@ -117,8 +117,10 @@ export default function ProductDetails() {
       <div>
         <Image
           alt={product.name}
-          className="w-full rounded-xl border"
+          className="object-contain rounded-xl border"
+          height={400}
           src={selectedImage.length > 0 ? selectedImage : mainImage}
+          width={1000}
         />
         <div className="mt-4 grid grid-cols-3 gap-2">
           {product.images.map((image: any) => (

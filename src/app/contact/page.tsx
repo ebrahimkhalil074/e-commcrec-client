@@ -12,10 +12,10 @@ import {
 
 export default function ContactUs() {
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 py-16 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section className="bg-gradient-to-b from-amber-50 to-white dark:from-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-100">
+      <div className="">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="relative py-15 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white">
             Contact <span className="text-amber-600">E-Shop</span>
           </h1>
@@ -23,10 +23,11 @@ export default function ContactUs() {
             Questions about orders, products, or partnerships? Our support team
             is ready to help you 7 days a week.
           </p>
+          <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-amber-500 via-pink-400 to-amber-500 rounded-full" />
         </div>
 
         {/* Contact info + form */}
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="mt-4 grid md:grid-cols-2 gap-12">
           {/* Info */}
           <div className="space-y-8">
             <InfoItem

@@ -126,6 +126,17 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/table";
+import {
+  FaImage,
+  FaTag,
+  FaList,
+  FaTrademark,
+  FaDollarSign,
+  FaBoxes,
+  FaStar,
+  FaCalendarAlt,
+  FaTools,
+} from "react-icons/fa";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Card, CardHeader } from "@heroui/card";
 
@@ -133,8 +144,8 @@ import {
   useSoftDeleteProduct,
   useGetAllProducts,
 } from "@/src/hooks/product.hook";
-import AllProductsSkeleton from "@/src/components/skeloton/AllProductsSkeleton";
 import DeleteModal from "@/src/components/modal/DeleteModal";
+import { SkeletonTable } from "@/src/components/skeloton/SkelotonTable";
 
 export default function ProductsTable() {
   const { data, isLoading } = useGetAllProducts();
@@ -161,114 +172,176 @@ export default function ProductsTable() {
     setModalOpen(false);
   };
 
-  if (isLoading) return <AllProductsSkeleton />;
-
   return (
-    <Card className="p-6">
-      <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
-        <h1 className="text-xl font-bold">All Products</h1>
+    <>
+      {isLoading ? (
+        <>
+          <SkeletonTable cols={7} rows={10} />
+        </>
+      ) : (
+        <Card className="p-6">
+          <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
+            <h1 className="text-xl font-bold">All Products</h1>
 
-        <Button
-          as={Link}
-          className="bg-white text-amber-600 font-semibold rounded-xl shadow"
-          href="/admin/products/create"
-        >
-          + Add New
-        </Button>
-      </CardHeader>
-      <Table
-        removeWrapper
-        aria-label="Products Table"
-        className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
-      >
-        <TableHeader>
-          <TableColumn className="text-amber-600">Image</TableColumn>
-          <TableColumn className="text-amber-600">Name</TableColumn>
-          <TableColumn className="text-amber-600">Category</TableColumn>
-          <TableColumn className="text-amber-600">Brand</TableColumn>
-          <TableColumn className="text-amber-600"> Price</TableColumn>
-          <TableColumn className="text-amber-600">Stock</TableColumn>
-          <TableColumn className="text-amber-600">Rating</TableColumn>
-          <TableColumn className="text-amber-600">Created</TableColumn>
-          <TableColumn className="text-amber-600">Actions</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {products.map((product: any) => (
-            <TableRow key={product.id}>
-              <TableCell>
-                <Image
-                  alt={product.name}
-                  className="rounded-lg object-cover"
-                  height={60}
-                  src={product.images[0]?.url || "/placeholder.png"}
-                  width={60}
-                />
-              </TableCell>
-              <TableCell className="font-semibold">{product.name}</TableCell>
-              <TableCell>
-                {product.category?.name} /{" "}
-                <span className="text-gray-500">
-                  {product.subCategory?.name}
-                </span>
-              </TableCell>
-              <TableCell>{product.brand?.name}</TableCell>
-              <TableCell>
-                <div>
-                  <span className="font-semibold">${product.price}</span>
-                  {product.discount > 0 && (
-                    <Chip
-                      className="ml-2 bg-amber-100 text-amber-700"
-                      color="warning"
-                      size="sm"
-                      variant="flat"
-                    >
-                      -{product.discount}%
-                    </Chip>
-                  )}
+            <Button
+              as={Link}
+              className="bg-white text-amber-600 font-semibold rounded-xl shadow"
+              href="/admin/products/create"
+            >
+              + Add New
+            </Button>
+          </CardHeader>
+          <Table
+            removeWrapper
+            aria-label="Products Table"
+            className="border border-amber-200  shadow-md overflow-x-auto"
+          >
+            <TableHeader>
+              <TableColumn>
+                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+                  <FaImage className="text-sm" />
+                  <span>Image</span>
                 </div>
-              </TableCell>
-              <TableCell>{product.stock}</TableCell>
-              <TableCell>
-                ⭐ {product.rating} ({product.reviewCount})
-              </TableCell>
-              <TableCell>
-                {new Date(product.createdAt).toLocaleDateString()}
-              </TableCell>
-              <TableCell className="flex gap-2">
-                <Link href={`/admin/products/update/${product.id}`}>
-                  <Button
-                    isIconOnly
-                    aria-label="Edit"
-                    className="bg-amber-500 text-white hover:bg-amber-600"
-                    size="sm"
-                  >
-                    <FaEdit />
-                  </Button>
-                </Link>
-                <Button
-                  isIconOnly
-                  aria-label="Delete"
-                  className="border-amber-500 text-amber-600 hover:bg-amber-50"
-                  size="sm"
-                  variant="bordered"
-                  onPress={() => openDeleteModal(product.id)}
-                >
-                  <FaTrash />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              </TableColumn>
 
-      {/* Delete Modal */}
-      <DeleteModal
-        isOpen={modalOpen}
-        message="Are you sure you want to delete this product? This cannot be undone."
-        title="Delete Product"
-        onClose={cancelDelete}
-        onConfirm={confirmDelete}
-      />
-    </Card>
+              <TableColumn>
+                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+                  <FaTag className="text-sm" />
+                  <span>Name</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn>
+                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+                  <FaList className="text-sm" />
+                  <span>Category</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn>
+                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+                  <FaTrademark className="text-sm" />
+                  <span>Brand</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn>
+                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+                  <FaDollarSign className="text-sm" />
+                  <span>Price</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn>
+                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+                  <FaBoxes className="text-sm" />
+                  <span>Stock</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn>
+                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+                  <FaStar className="text-sm" />
+                  <span>Rating</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn>
+                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+                  <FaCalendarAlt className="text-sm" />
+                  <span>Created</span>
+                </div>
+              </TableColumn>
+
+              <TableColumn>
+                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+                  <FaTools className="text-sm" />
+                  <span>Actions</span>
+                </div>
+              </TableColumn>
+            </TableHeader>
+
+            <TableBody>
+              {products.map((product: any) => (
+                <TableRow key={product.id}>
+                  <TableCell>
+                    <Image
+                      alt={product.name}
+                      className="rounded-lg object-cover"
+                      height={60}
+                      src={product.images[0]?.url || "/placeholder.png"}
+                      width={60}
+                    />
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    {product.name}
+                  </TableCell>
+                  <TableCell>
+                    {product.category?.name} /{" "}
+                    <span className="text-gray-500">
+                      {product.subCategory?.name}
+                    </span>
+                  </TableCell>
+                  <TableCell>{product.brand?.name}</TableCell>
+                  <TableCell>
+                    <div>
+                      <span className="font-semibold">${product.price}</span>
+                      {product.discount > 0 && (
+                        <Chip
+                          className="ml-2 bg-amber-100 text-amber-700"
+                          color="warning"
+                          size="sm"
+                          variant="flat"
+                        >
+                          -{product.discount}%
+                        </Chip>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>{product.stock}</TableCell>
+                  <TableCell>
+                    ⭐ {product.rating} ({product.reviewCount})
+                  </TableCell>
+                  <TableCell>
+                    {new Date(product.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="flex gap-2">
+                    <Link href={`/admin/products/update/${product.id}`}>
+                      <Button
+                        isIconOnly
+                        aria-label="Edit"
+                        className="bg-amber-500 text-white hover:bg-amber-600"
+                        size="sm"
+                      >
+                        <FaEdit />
+                      </Button>
+                    </Link>
+                    <Button
+                      isIconOnly
+                      aria-label="Delete"
+                      className="border-amber-500 text-amber-600 hover:bg-amber-50"
+                      size="sm"
+                      variant="bordered"
+                      onPress={() => openDeleteModal(product.id)}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          {/* Delete Modal */}
+          <DeleteModal
+            isOpen={modalOpen}
+            message="Are you sure you want to delete this product? This cannot be undone."
+            title="Delete Product"
+            onClose={cancelDelete}
+            onConfirm={confirmDelete}
+          />
+        </Card>
+      )}
+    </>
   );
 }

@@ -3,6 +3,9 @@ import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 
 import {
+  approveSellerRequest,
+  createSellerRequest,
+  getAllSellerRequest,
   getAllUsers,
   getUserByEmail,
   getUserById,
@@ -22,9 +25,44 @@ export const useUpdateUser = () => {
     },
   });
 };
+export const useCreateSellerRequest = () => {
+  return useMutation({
+    mutationKey: ["create_seller"],
+    mutationFn: async (sellerData: FieldValues) =>
+      await createSellerRequest(sellerData),
+
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
+export const useApproveSellerRequest = () => {
+  return useMutation({
+    mutationKey: ["approve_seller"],
+    mutationFn: async (sellerData: FieldValues) =>
+      await approveSellerRequest(sellerData),
+
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
+export const useGetAllSellerRequest = (query: any) => {
+  return useQuery({
+    queryKey: ["GET_ALL_SELLERS_REQUEST"],
+    queryFn: async () => await getAllSellerRequest(query),
+  });
+};
+
 export const useGetAllUsers = (query: any) => {
   return useQuery({
-    queryKey: ["GET_ALL_UserS"],
+    queryKey: ["GET_ALL_USERS"],
     queryFn: async () => await getAllUsers(query),
   });
 };

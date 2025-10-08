@@ -1,13 +1,15 @@
-// AboutUsComponent.jsx
-// Production-ready, editable "About Us" component for a demo e‑commerce site.
-// - Drop into a Next.js or Create React App project (client component).
-// - Uses Tailwind CSS classes (v2+/JIT). Replace images with your own or use Next/Image if desired.
-// - Edit the `DEFAULT_DATA` object below to change all visible content.
-
+"use client";
+import Image from "next/image";
 import React from "react";
 import { FaTruck, FaShieldAlt, FaHeadset, FaShoppingBag } from "react-icons/fa";
 
-function Icon({ name, className = "h-6 w-6" }: { name: any; className: any }) {
+function Icon({
+  name,
+  className = "h-6 w-6 text-amber-600",
+}: {
+  name: any;
+  className?: string;
+}) {
   switch (name) {
     case "FaShieldAlt":
       return <FaShieldAlt className={className} />;
@@ -16,7 +18,6 @@ function Icon({ name, className = "h-6 w-6" }: { name: any; className: any }) {
     case "FaHeadset":
       return <FaHeadset className={className} />;
     case "FaShoppingBag":
-      return <FaShoppingBag className={className} />;
     default:
       return <FaShoppingBag className={className} />;
   }
@@ -31,10 +32,7 @@ export default function AboutUs() {
       location: "Dhaka, Bangladesh",
       description:
         "Aurora Marketplace connects local makers and trusted brands with shoppers across the region. We focus on sustainable sourcing, transparent pricing and lightning-fast logistics so you get what you need — without compromise.",
-      cta: {
-        label: "Start Shopping",
-        href: "/shop",
-      },
+      cta: { label: "Start Shopping", href: "/shop" },
     },
     stats: [
       { id: "s1", label: "Products", value: "3,420+" },
@@ -125,43 +123,48 @@ export default function AboutUs() {
       },
     ],
   };
+
   const { company, stats, pillars, team, milestones, testimonials } = data;
 
   return (
-    <section className="py-16 bg-gradient-to-b from-white to-amber-50 dark:from-slate-900 dark:to-slate-950">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          {/* Left: Company intro */}
+    <section className="container mx-auto bg-gradient-to-b from-amber-50 to-white dark:from-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-100">
+      <div className="">
+        {/* Hero */}
+        <div className="relative py-15 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white">
+            About <span className="text-amber-600">{company.name}</span>
+          </h1>
+          <p className="mt-3 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            {company.description}
+          </p>
+          <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-amber-500 via-pink-400 to-amber-500 rounded-full" />
+        </div>
+
+        {/* Company + Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start mt-4">
           <div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">
-              About {company.name}
+            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
+              Our Mission
             </h2>
             <p className="mt-3 text-lg text-slate-600 dark:text-slate-300">
               {company.tagline}
             </p>
-
-            <p className="mt-6 text-slate-700 dark:text-slate-300 leading-relaxed">
-              {company.description}
-            </p>
-
             <div className="mt-6 flex flex-wrap gap-4 items-center">
               <a
-                className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-amber-600 text-white font-medium shadow hover:scale-[1.02] transition-transform"
+                className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-amber-600 text-white font-medium shadow hover:scale-105 transition-transform"
                 href={company.cta.href}
               >
                 {company.cta.label}
               </a>
-
-              <div className="text-sm text-slate-500 dark:text-slate-400">
+              <span className="text-sm text-slate-500 dark:text-slate-400">
                 Founded {company.founded} • {company.location}
-              </div>
+              </span>
             </div>
-
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
               {stats.map((s) => (
                 <div
                   key={s.id}
-                  className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow"
+                  className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow hover:shadow-lg transition"
                 >
                   <div className="text-xl font-bold text-amber-600">
                     {s.value}
@@ -172,14 +175,14 @@ export default function AboutUs() {
             </div>
           </div>
 
-          {/* Right: Pillars + visual */}
+          {/* Pillars + Image + Testimonial */}
           <div className="relative">
             <div className="rounded-2xl bg-gradient-to-tr from-amber-100 to-pink-100 dark:from-amber-700 dark:to-purple-700 p-6 shadow-xl">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {pillars.map((p) => (
                   <div key={p.id} className="flex items-start gap-3">
                     <div className="bg-white/80 dark:bg-slate-900/60 p-3 rounded-lg shadow-sm">
-                      <Icon className="h-5 w-5 text-amber-600" name={p.icon} />
+                      <Icon name={p.icon} />
                     </div>
                     <div>
                       <div className="font-semibold text-slate-800 dark:text-white">
@@ -192,17 +195,14 @@ export default function AboutUs() {
                   </div>
                 ))}
               </div>
-
-              <div className="mt-6">
-                <img
-                  alt="warehouse"
-                  className="w-full rounded-xl object-cover h-44 sm:h-56"
-                  src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80"
-                />
-              </div>
+              <Image
+                alt="warehouse"
+                className="mt-6 w-full h-44 sm:h-56 rounded-xl object-cover"
+                height={44}
+                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80"
+                width={1000}
+              />
             </div>
-
-            {/* Decorative floating card */}
             <div className="absolute -bottom-6 left-6 bg-white dark:bg-slate-900 rounded-xl shadow-lg p-4 w-64">
               <div className="text-xs text-slate-500">Customer feedback</div>
               <div className="mt-2 text-sm text-slate-800 dark:text-white">
@@ -223,7 +223,6 @@ export default function AboutUs() {
           <p className="text-slate-600 dark:text-slate-300 mt-2">
             People who make it happen.
           </p>
-
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
             {team.map((m) => (
               <div
@@ -231,11 +230,14 @@ export default function AboutUs() {
                 className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow hover:shadow-lg transition"
               >
                 <div className="flex items-center gap-4">
-                  <img
-                    alt={m.name}
-                    className="w-16 h-16 rounded-full object-cover border"
-                    src={m.image}
-                  />
+                  <div className="w-20 h-20 relative rounded-full overflow-hidden border border-gray-300">
+                    <Image
+                      fill // fills parent div
+                      alt={m.name}
+                      className="object-cover"
+                      src={m.image}
+                    />
+                  </div>
                   <div>
                     <div className="font-semibold text-slate-800 dark:text-white">
                       {m.name}
@@ -243,6 +245,7 @@ export default function AboutUs() {
                     <div className="text-sm text-slate-500">{m.role}</div>
                   </div>
                 </div>
+
                 <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
                   {m.bio}
                 </p>
@@ -251,7 +254,7 @@ export default function AboutUs() {
           </div>
         </div>
 
-        {/* Timeline / milestones */}
+        {/* Milestones */}
         <div className="mt-16">
           <h4 className="text-xl font-bold text-slate-900 dark:text-white">
             Milestones
@@ -285,7 +288,7 @@ export default function AboutUs() {
             </div>
           </div>
           <a
-            className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white text-amber-700 font-semibold"
+            className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-white text-amber-700 font-semibold hover:scale-105 transition"
             href="/contact"
           >
             Get in touch
@@ -295,22 +298,3 @@ export default function AboutUs() {
     </section>
   );
 }
-
-/*
-HOW TO USE / CUSTOMIZE
-1. Replace DEFAULT_DATA values to change company copy, stats, team, etc.
-2. Swap image URLs for your real team/hero images or use Next.js <Image> for optimization.
-3. This component is intentionally data-driven: pass a `data` prop to override DEFAULT_DATA.
-
-Example:
-<AboutUs data={myCustomAboutData} />
-
-Accessibility notes:
-- Headings are semantic (h2/h3/h4).
-- Images include alt text; replace with descriptive text where appropriate.
-
-Production tips:
-- Use Next/Image with proper sizing and placeholder blur for performance.
-- Move DEFAULT_DATA to a CMS or JSON file for non-developer edits (Sanity, Contentful, Netlify CMS, or a simple JSON served from /public).
-- Add unit/integration tests for presence of core blocks (intro, stats, team).
-*/

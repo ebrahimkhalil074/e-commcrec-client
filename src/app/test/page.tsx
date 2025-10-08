@@ -1,3 +1,145 @@
+// "use client";
+// import React from "react";
+// import {
+//   useReactTable,
+//   getCoreRowModel,
+//   flexRender,
+//   ColumnDef,
+// } from "@tanstack/react-table";
+
+// type User = {
+//   id: number;
+//   name: string;
+//   email: string;
+//   phone: string;
+//   city: string;
+//   country: string;
+//   status: string;
+//   role: string;
+//   createdAt: string;
+//   updatedAt: string;
+// };
+
+// const data: User[] = Array.from({ length: 5 }).map((_, i) => ({
+//   id: i + 1,
+//   name: "John Doe",
+//   email: "john@example.com",
+//   phone: "0123456789",
+//   city: "Dhaka",
+//   country: "Bangladesh",
+//   status: "Active",
+//   role: "Admin",
+//   createdAt: "2025-10-07",
+//   updatedAt: "2025-10-07",
+// }));
+
+// const columns: ColumnDef<User>[] = [
+//   { accessorKey: "id", header: "ID" },
+//   { accessorKey: "name", header: "Name" },
+//   {
+//     accessorKey: "email",
+//     header: "Email",
+//     cell: (info) => (
+//       <span className="hidden sm:inline">{info.getValue() as string}</span>
+//     ),
+//   },
+//   {
+//     accessorKey: "phone",
+//     header: "Phone",
+//     cell: (info) => (
+//       <span className="">{info.getValue() as string}</span>
+//     ),
+//   },
+//   {
+//     accessorKey: "city",
+//     header: "City",
+//     cell: (info) => (
+//       <span className="">{info.getValue() as string}</span>
+//     ),
+//   },
+//   {
+//     accessorKey: "country",
+//     header: "Country",
+//     cell: (info) => (
+//       <span className="">{info.getValue() as string}</span>
+//     ),
+//   },
+//   { accessorKey: "status", header: "Status" },
+//   {
+//     accessorKey: "role",
+//     header: "Role",
+//     cell: (info) => (
+//       <span className="hidden sm:inline">{info.getValue() as string}</span>
+//     ),
+//   },
+//   {
+//     accessorKey: "createdAt",
+//     header: "Created",
+//     cell: (info) => (
+//       <span className="">{info.getValue() as string}</span>
+//     ),
+//   },
+//   {
+//     header: "Action",
+//     cell: () => (
+//       <button className="bg-amber-500 text-white text-xs px-3 py-1 rounded hover:bg-amber-600">
+//         Edit
+//       </button>
+//     ),
+//   },
+// ];
+
+// export default function ResponsiveReactTable() {
+//   const table = useReactTable({
+//     data,
+//     columns,
+//     getCoreRowModel: getCoreRowModel(),
+//   });
+
+//   return (
+//     <div className="w-full overflow-x-auto border border-amber-200 rounded-xl shadow-md">
+//       <table className="w-full min-w-[900px] md:min-w-[1100px] text-xs sm:text-sm">
+//         <thead className="bg-amber-100">
+//           {table.getHeaderGroups().map((headerGroup) => (
+//             <tr key={headerGroup.id}>
+//               {headerGroup.headers.map((header) => (
+//                 <th
+//                   key={header.id}
+//                   className="px-3 py-2 text-left text-amber-700 font-semibold"
+//                 >
+//                   {flexRender(
+//                     header.column.columnDef.header,
+//                     header.getContext(),
+//                   )}
+//                 </th>
+//               ))}
+//             </tr>
+//           ))}
+//         </thead>
+//         <tbody>
+//           {table.getRowModel().rows.map((row) => (
+//             <tr
+//               key={row.id}
+//               className="hover:bg-amber-50 dark:hover:bg-gray-800 transition-colors"
+//             >
+//               {row.getVisibleCells().map((cell) => (
+//                 <td key={cell.id} className="px-3 py-2 border-t">
+//                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
+//                 </td>
+//               ))}
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+
+//       {/* Mobile Swipe Hint */}
+//       <p className="text-center text-xs sm:hidden text-gray-500 py-2">
+//         👉 Swipe left/right to view all columns
+//       </p>
+//     </div>
+//   );
+// }
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -14,16 +156,6 @@ import { Chip } from "@heroui/chip";
 import { Spinner } from "@heroui/spinner";
 import { Button } from "@heroui/button";
 import { toast } from "sonner";
-import {
-  FaHashtag,
-  FaUser,
-  FaEnvelope,
-  FaDollarSign,
-  FaCreditCard,
-  FaChartLine,
-  FaMotorcycle,
-  FaTools,
-} from "react-icons/fa";
 
 import {
   useAssignDeliveryBoyForOrder,
@@ -119,10 +251,10 @@ export default function PendingOrdersPage() {
     );
 
   return (
-    <div className="flex flex-col  ">
+    <div className="flex flex-col ">
       {" "}
       {/* ✅ পুরো পেজ fix height */}
-      <Card className="flex flex-col flex-1 m-2 sm:m-4 shadow-lg">
+      <Card className="flex flex-col flex-1 overflow-hidden m-2 sm:m-4 shadow-lg">
         <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-amber-500 text-white rounded-t-2xl px-4 sm:px-6 py-3 sm:py-4">
           <h1 className="text-lg sm:text-xl font-bold">Pending Orders</h1>
         </CardHeader>
@@ -138,60 +270,29 @@ export default function PendingOrdersPage() {
             }}
           >
             <TableHeader>
-              <TableColumn className="min-w-[120px]">
-                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
-                  <FaHashtag className="text-sm" />
-                  <span>Order ID</span>
-                </div>
+              <TableColumn className="text-amber-600 min-w-[120px]">
+                Order ID
               </TableColumn>
-
-              <TableColumn className="min-w-[150px]">
-                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
-                  <FaUser className="text-sm" />
-                  <span>Customer</span>
-                </div>
+              <TableColumn className="text-amber-600 min-w-[150px]">
+                Customer
               </TableColumn>
-
-              <TableColumn className="min-w-[200px]">
-                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
-                  <FaEnvelope className="text-sm" />
-                  <span>Email</span>
-                </div>
+              <TableColumn className="text-amber-600 min-w-[200px]">
+                Email
               </TableColumn>
-
-              <TableColumn className="min-w-[100px]">
-                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
-                  <FaDollarSign className="text-sm" />
-                  <span>Total</span>
-                </div>
+              <TableColumn className="text-amber-600 min-w-[100px]">
+                Total
               </TableColumn>
-
-              <TableColumn className="min-w-[180px]">
-                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
-                  <FaCreditCard className="text-sm" />
-                  <span>Payment</span>
-                </div>
+              <TableColumn className="text-amber-600 min-w-[180px]">
+                Payment
               </TableColumn>
-
-              <TableColumn className="min-w-[120px]">
-                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
-                  <FaChartLine className="text-sm" />
-                  <span>Status</span>
-                </div>
+              <TableColumn className="text-amber-600 min-w-[120px]">
+                Status
               </TableColumn>
-
-              <TableColumn className="min-w-[160px]">
-                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
-                  <FaMotorcycle className="text-sm" />
-                  <span>Delivery Boy</span>
-                </div>
+              <TableColumn className="text-amber-600 min-w-[160px]">
+                Delivery Boy
               </TableColumn>
-
-              <TableColumn className="min-w-[220px]">
-                <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
-                  <FaTools className="text-sm" />
-                  <span>Action</span>
-                </div>
+              <TableColumn className="text-amber-600 min-w-[220px]">
+                Action
               </TableColumn>
             </TableHeader>
 

@@ -12,8 +12,6 @@ const Brand = () => {
 
   const brands = brandsData?.data || [];
 
-  console.log("brands Data:", brands);
-
   return (
     <section className="py-12 px-6">
       <h2 className="text-3xl font-bold mb-8 text-amber-600 flex items-center gap-2">
@@ -32,7 +30,7 @@ const Brand = () => {
                 <Image
                   fill
                   alt={brand.name}
-                  className=" object-cover group-hover:scale-110 transition-transform duration-300"
+                  className=" object-content group-hover:scale-110 transition-transform duration-300"
                   src={brand.image}
                 />
                 {/* Overlay */}

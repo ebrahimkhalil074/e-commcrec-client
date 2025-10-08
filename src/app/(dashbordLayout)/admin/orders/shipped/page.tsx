@@ -10,6 +10,16 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/table";
+import {
+  FaHashtag,
+  FaUser,
+  FaEnvelope,
+  FaDollarSign,
+  FaCreditCard,
+  FaChartLine,
+  FaMotorcycle,
+  FaTools,
+} from "react-icons/fa";
 import { Chip } from "@heroui/chip";
 import { Spinner } from "@heroui/spinner";
 
@@ -31,7 +41,7 @@ export default function ShippedOrdersPage() {
     const fetchOrders = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/v1/order?status=SHIPPED",
+          `${process.env.NEXT_PUBLIC_BASE_API}/order?status=SHIPPED`,
           { cache: "no-store" },
         );
         const data = await res.json();
@@ -66,14 +76,61 @@ export default function ShippedOrdersPage() {
         className="border border-amber-200 rounded-xl shadow-md overflow-x-auto mt-4"
       >
         <TableHeader>
-          <TableColumn className="text-amber-600">Order ID</TableColumn>
-          <TableColumn className="text-amber-600">Customer</TableColumn>
-          <TableColumn className="text-amber-600">Email</TableColumn>
-          <TableColumn className="text-amber-600">Total</TableColumn>
-          <TableColumn className="text-amber-600">Payment</TableColumn>
-          <TableColumn className="text-amber-600">Status</TableColumn>
-          <TableColumn className="text-amber-600">Delivery Boy</TableColumn>
-          <TableColumn className="text-amber-600">Created</TableColumn>
+          <TableColumn className="min-w-[120px]">
+            <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+              <FaHashtag className="text-sm" />
+              <span>Order ID</span>
+            </div>
+          </TableColumn>
+
+          <TableColumn className="min-w-[150px]">
+            <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+              <FaUser className="text-sm" />
+              <span>Customer</span>
+            </div>
+          </TableColumn>
+
+          <TableColumn className="min-w-[200px]">
+            <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+              <FaEnvelope className="text-sm" />
+              <span>Email</span>
+            </div>
+          </TableColumn>
+
+          <TableColumn className="min-w-[100px]">
+            <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+              <FaDollarSign className="text-sm" />
+              <span>Total</span>
+            </div>
+          </TableColumn>
+
+          <TableColumn className="min-w-[180px]">
+            <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+              <FaCreditCard className="text-sm" />
+              <span>Payment</span>
+            </div>
+          </TableColumn>
+
+          <TableColumn className="min-w-[120px]">
+            <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+              <FaChartLine className="text-sm" />
+              <span>Status</span>
+            </div>
+          </TableColumn>
+
+          <TableColumn className="min-w-[160px]">
+            <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+              <FaMotorcycle className="text-sm" />
+              <span>Delivery Boy</span>
+            </div>
+          </TableColumn>
+
+          <TableColumn className="min-w-[220px]">
+            <div className="flex items-center gap-2 justify-center text-amber-600 dark:text-amber-400">
+              <FaTools className="text-sm" />
+              <span>Action</span>
+            </div>
+          </TableColumn>
         </TableHeader>
 
         <TableBody>

@@ -60,7 +60,10 @@ export default function DuePaymentPage() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/v1/payment/due-summary`,
+          `${process.env.NEXT_PUBLIC_BASE_API}/payment/due-summary`,
+          {
+            cache: "no-store",
+          },
         );
         const json = await res.json();
 

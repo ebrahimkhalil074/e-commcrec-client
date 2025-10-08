@@ -7,11 +7,11 @@ import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Divider } from "@heroui/divider";
 import { Select, SelectItem } from "@heroui/select";
 import { ChangeEvent, useState } from "react";
+import Image from "next/image";
 
 import { useGetAllCategory } from "@/src/hooks/category.hook";
 import { useGetAllBrands } from "@/src/hooks/brand.hook";
 import { useCreateProduct } from "@/src/hooks/product.hook";
-import Image from "next/image";
 
 type ProductForm = {
   name: string;
@@ -307,7 +307,7 @@ export default function CreateProductPage() {
             <Divider className="my-4" />
 
             <Button className="w-full font-bold" type="submit">
-             {isPending ? "Logging in..." : "Login"}
+              {isPending ? "Logging in..." : "Login"}
             </Button>
           </form>
         </CardBody>

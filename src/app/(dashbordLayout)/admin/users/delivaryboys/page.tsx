@@ -2,24 +2,24 @@ import { Card, CardHeader } from "@heroui/card";
 
 import AllUsersTable from "@/src/components/table/UsersTable";
 
-const AdminPage = async () => {
+const DelivaryBoyesPage = async () => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API}/user?role=ADMIN`,
+    `${process.env.NEXT_PUBLIC_BASE_API}/user?role=DELIVERYBOY`,
   );
-  const usersData = await res.json();
+  const delivaryBoyData = await res.json();
 
-  const users = usersData?.data;
+  const delivaryBoys = delivaryBoyData?.data;
 
   return (
     <div>
       <Card>
         <CardHeader className="flex justify-between items-center bg-amber-500 text-white rounded-t-2xl px-6 py-4">
-          <h1 className="text-xl font-bold">All Users</h1>
+          <h1 className="text-xl font-bold">All Delivary Boyes</h1>
         </CardHeader>
-        {<AllUsersTable user={users} />}
+        {<AllUsersTable user={delivaryBoys} />}
       </Card>
     </div>
   );
 };
 
-export default AdminPage;
+export default DelivaryBoyesPage;

@@ -7,35 +7,42 @@ import { FaTag, FaClock } from "react-icons/fa";
 import Image from "next/image";
 
 import { useGetAllFlashSale } from "@/src/hooks/flashSale.hook";
+import { OffersPageSkeleton } from "@/src/components/skeloton/OfferpageSkeleton";
 
 // Example offers data – replace with API or database content
 
 export default function OffersPage() {
-  const { data: flashSaleData } = useGetAllFlashSale();
+  const { data: flashSaleData, isLoading } = useGetAllFlashSale();
   // isLoading: flashSaleLoading
   const flashSales = flashSaleData?.data || [];
 
   return (
-    <section className="bg-gradient-to-b from-amber-50 to-white dark:from-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-100">
-      {/* Hero header */}
-      <div className="relative py-20 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold">
-          Today’s <span className="text-amber-600">Exclusive Offers</span>
-        </h1>
-        <p className="mt-4 max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
-          Grab these limited-time deals before they’re gone. Fresh discounts
-          updated daily!
-        </p>
-        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-amber-500 via-pink-400 to-amber-500 rounded-full" />
-      </div>
+    <>
+      {isLoading ? (
+        <OffersPageSkeleton />
+      ) : (
+        <section className="bg-gradient-to-b from-amber-50 to-white dark:from-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-100">
+          {/* Hero header */}
+          <div className="relative py-15 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold">
+              Today’s <span className="text-amber-600">Exclusive Offers</span>
+            </h1>
+            <p className="mt-4 max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
+              Grab these limited-time deals before they’re gone. Fresh discounts
+              updated daily!
+            </p>
+            <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-amber-500 via-pink-400 to-amber-500 rounded-full" />
+          </div>
 
-      {/* Offers Grid */}
-      <div className="max-w-7xl mx-auto px-6 pb-20 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-        {flashSales.map((offer: any) => (
-          <OfferCard key={offer.id} offer={offer} />
-        ))}
-      </div>
-    </section>
+          {/* Offers Grid */}
+          <div className="mt-4 max-w-7xl mx-auto px-6 pb-20 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {flashSales.map((offer: any) => (
+              <OfferCard key={offer.id} offer={offer} />
+            ))}
+          </div>
+        </section>
+      )}
+    </>
   );
 }
 

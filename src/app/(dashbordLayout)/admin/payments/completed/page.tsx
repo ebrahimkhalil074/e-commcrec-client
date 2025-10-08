@@ -36,7 +36,10 @@ export default function PaidPaymentsPage() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/v1/payment/paid-summary",
+          `${process.env.NEXT_PUBLIC_BASE_API}/payment/paid-summary`,
+          {
+            cache: "no-store",
+          },
         );
         const result = await res.json();
 

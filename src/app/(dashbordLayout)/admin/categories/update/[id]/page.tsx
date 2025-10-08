@@ -67,7 +67,7 @@ export default function UpdateCategoryForm() {
     if (imageFile) {
       formData.append("file", imageFile);
     }
-console.log(Object.fromEntries(formData.entries()))
+    console.log(Object.fromEntries(formData.entries()));
     mutate({ id: category.id, categoryData: formData });
 
     reset();

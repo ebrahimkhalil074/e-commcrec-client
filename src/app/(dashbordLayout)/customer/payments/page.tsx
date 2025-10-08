@@ -677,6 +677,13 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/table";
+import {
+  FiHash,
+  FiDollarSign,
+  FiCreditCard,
+  FiCalendar,
+  FiSettings,
+} from "react-icons/fi";
 import { Card, CardHeader } from "@heroui/card";
 import { Spinner } from "@heroui/spinner";
 import { Pagination } from "@heroui/pagination";
@@ -690,6 +697,7 @@ import {
 
 import { useUser } from "@/src/context/User.context";
 import { useGetMyAllPayments } from "@/src/hooks/payment.hook";
+import { SkeletonTable } from "@/src/components/skeloton/SkelotonTable";
 
 // --- Payment Typings ---
 type Payment = {
@@ -742,173 +750,209 @@ export default function CustomerPaymentsPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <Card>
-        {/* Header */}
-        <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-amber-500 text-white rounded-t-2xl px-6 py-4">
-          <div>
-            <h1 className="text-2xl font-bold">My Payments</h1>
-            <p className="text-sm opacity-90">
-              Track your payment history here.
-            </p>
-          </div>
-          <div className="bg-green-50 text-green-700 rounded-lg px-4 py-2 shadow-sm">
-            <h3 className="text-sm font-medium">Total Payments</h3>
-            <p className="text-xl font-bold">{totalPaid}</p>
-          </div>
-        </CardHeader>
-
-        {/* Table */}
-        <div className="p-4">
-          {isLoading ? (
-            <div className="flex justify-center py-10">
-              <Spinner size="lg" />
-            </div>
-          ) : isError ? (
-            <div className="text-red-600 p-4">
-              Failed to load payments. Please try again.
-            </div>
-          ) : payments.length === 0 ? (
-            <div className="p-6 text-center text-gray-600">
-              No payments found.
-            </div>
-          ) : (
-            <>
-              <Table
-                removeWrapper
-                aria-label="My Payments"
-                className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
-              >
-                <TableHeader>
-                  <TableColumn>Transaction ID</TableColumn>
-                  <TableColumn>Amount</TableColumn>
-                  <TableColumn>Method</TableColumn>
-                  <TableColumn>Date</TableColumn>
-                  <TableColumn>Action</TableColumn>
-                </TableHeader>
-
-                <TableBody>
-                  {payments.map((p) => (
-                    <TableRow key={p.id}>
-                      <TableCell className="font-mono">
-                        {p.transactionId}
-                      </TableCell>
-                      <TableCell className="font-semibold">
-                        ${p.amount.toFixed(2)}
-                      </TableCell>
-                      <TableCell>{p.method || "-"}</TableCell>
-                      <TableCell>
-                        {new Date(p.createdAt).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          color="primary"
-                          size="sm"
-                          onPress={() => setSelectedPayment(p)}
-                        >
-                          View
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-
-              {/* Pagination */}
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4 py-4">
-                <div className="flex items-center gap-2 text-gray-700">
-                  <span className="font-medium">Items per page:</span>
-                  <select
-                    className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-                    value={limit}
-                    onChange={(e) => {
-                      setLimit(parseInt(e.target.value));
-                      setPage(1);
-                      setTimeout(() => refetch(), 0);
-                    }}
-                  >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                  </select>
-                </div>
-
-                <Pagination
-                  showControls
-                  className="bg-white rounded-lg shadow px-4 py-2"
-                  page={meta.page}
-                  total={Math.max(1, Math.ceil(meta.total / limit))}
-                  onChange={(p) => {
-                    setPage(p);
-                    setTimeout(() => refetch(), 0);
-                  }}
-                />
+    <>
+      {isLoading ? (
+        <SkeletonTable />
+      ) : (
+        <div className="p-6 space-y-6">
+          <Card>
+            {/* Header */}
+            <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-amber-500 text-white rounded-t-2xl px-6 py-4">
+              <div>
+                <h1 className="text-2xl font-bold">My Payments</h1>
+                <p className="text-sm opacity-90">
+                  Track your payment history here.
+                </p>
               </div>
-            </>
-          )}
-        </div>
-      </Card>
+              <div className="bg-green-50 text-green-700 rounded-lg px-4 py-2 shadow-sm">
+                <h3 className="text-sm font-medium">Total Payments</h3>
+                <p className="text-xl font-bold">{totalPaid}</p>
+              </div>
+            </CardHeader>
 
-      {/* Modal for Payment Details */}
-      <Modal
-        isOpen={!!selectedPayment}
-        size="lg"
-        onOpenChange={() => setSelectedPayment(null)}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="font-bold text-lg">
-                Payment Details
-              </ModalHeader>
-              <ModalBody className="space-y-4">
-                {selectedPayment && (
-                  <div className="space-y-2">
-                    <p>
-                      <strong>Transaction ID:</strong>{" "}
-                      {selectedPayment.transactionId}
-                    </p>
-                    <p>
-                      <strong>Amount:</strong> $
-                      {selectedPayment.amount.toFixed(2)}
-                    </p>
-                    <p>
-                      <strong>Method:</strong> {selectedPayment.method || "-"}
-                    </p>
-                    <p>
-                      <strong>Created:</strong>{" "}
-                      {new Date(selectedPayment.createdAt).toLocaleString()}
-                    </p>
+            {/* Table */}
+            <div className="p-4">
+              {isLoading ? (
+                <div className="flex justify-center py-10">
+                  <Spinner size="lg" />
+                </div>
+              ) : isError ? (
+                <div className="text-red-600 p-4">
+                  Failed to load payments. Please try again.
+                </div>
+              ) : payments.length === 0 ? (
+                <div className="p-6 text-center text-gray-600">
+                  No payments found.
+                </div>
+              ) : (
+                <>
+                  <Table
+                    removeWrapper
+                    aria-label="My Payments"
+                    className="border border-amber-200 rounded-xl shadow-md overflow-x-auto"
+                  >
+                    <TableHeader>
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiHash className="text-amber-500 dark:text-amber-400" />
+                          Transaction ID
+                        </div>
+                      </TableColumn>
 
-                    {/* Order Items if available */}
-                    {selectedPayment.order && (
-                      <div className="mt-4">
-                        <h3 className="font-semibold">Order Items:</h3>
-                        <ul className="list-disc list-inside space-y-1">
-                          {selectedPayment.order.items.map((item) => (
-                            <li key={item.id}>
-                              {item.product.name} × {item.quantity} = $
-                              {(item.price * item.quantity).toFixed(2)}
-                            </li>
-                          ))}
-                        </ul>
-                        <p className="mt-2 font-bold">
-                          Order Total: ${selectedPayment.order.total}
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiDollarSign className="text-amber-500 dark:text-amber-400" />
+                          Amount
+                        </div>
+                      </TableColumn>
+
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiCreditCard className="text-amber-500 dark:text-amber-400" />
+                          Method
+                        </div>
+                      </TableColumn>
+
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiCalendar className="text-amber-500 dark:text-amber-400" />
+                          Date
+                        </div>
+                      </TableColumn>
+
+                      <TableColumn>
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                          <FiSettings className="text-amber-500 dark:text-amber-400" />
+                          Action
+                        </div>
+                      </TableColumn>
+                    </TableHeader>
+
+                    <TableBody>
+                      {payments.map((p) => (
+                        <TableRow key={p.id}>
+                          <TableCell className="font-mono">
+                            {p.transactionId}
+                          </TableCell>
+                          <TableCell className="font-semibold">
+                            ${p.amount.toFixed(2)}
+                          </TableCell>
+                          <TableCell>{p.method || "-"}</TableCell>
+                          <TableCell>
+                            {new Date(p.createdAt).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              color="primary"
+                              size="sm"
+                              onPress={() => setSelectedPayment(p)}
+                            >
+                              View
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+
+                  {/* Pagination */}
+                  <div className="flex flex-col md:flex-row justify-between items-center gap-4 py-4">
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <span className="font-medium">Items per page:</span>
+                      <select
+                        className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                        value={limit}
+                        onChange={(e) => {
+                          setLimit(parseInt(e.target.value));
+                          setPage(1);
+                          setTimeout(() => refetch(), 0);
+                        }}
+                      >
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                      </select>
+                    </div>
+
+                    <Pagination
+                      showControls
+                      className="bg-white rounded-lg shadow px-4 py-2"
+                      page={meta.page}
+                      total={Math.max(1, Math.ceil(meta.total / limit))}
+                      onChange={(p) => {
+                        setPage(p);
+                        setTimeout(() => refetch(), 0);
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </Card>
+
+          {/* Modal for Payment Details */}
+          <Modal
+            isOpen={!!selectedPayment}
+            size="lg"
+            onOpenChange={() => setSelectedPayment(null)}
+          >
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <ModalHeader className="font-bold text-lg">
+                    Payment Details
+                  </ModalHeader>
+                  <ModalBody className="space-y-4">
+                    {selectedPayment && (
+                      <div className="space-y-2">
+                        <p>
+                          <strong>Transaction ID:</strong>{" "}
+                          {selectedPayment.transactionId}
                         </p>
+                        <p>
+                          <strong>Amount:</strong> $
+                          {selectedPayment.amount.toFixed(2)}
+                        </p>
+                        <p>
+                          <strong>Method:</strong>{" "}
+                          {selectedPayment.method || "-"}
+                        </p>
+                        <p>
+                          <strong>Created:</strong>{" "}
+                          {new Date(selectedPayment.createdAt).toLocaleString()}
+                        </p>
+
+                        {/* Order Items if available */}
+                        {selectedPayment.order && (
+                          <div className="mt-4">
+                            <h3 className="font-semibold">Order Items:</h3>
+                            <ul className="list-disc list-inside space-y-1">
+                              {selectedPayment.order.items.map((item) => (
+                                <li key={item.id}>
+                                  {item.product.name} × {item.quantity} = $
+                                  {(item.price * item.quantity).toFixed(2)}
+                                </li>
+                              ))}
+                            </ul>
+                            <p className="mt-2 font-bold">
+                              Order Total: ${selectedPayment.order.total}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
-                  </div>
-                )}
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </div>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="danger" variant="light" onPress={onClose}>
+                      Close
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
+        </div>
+      )}
+    </>
   );
 }
