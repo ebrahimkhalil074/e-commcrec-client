@@ -110,9 +110,11 @@ export const Navbar = () => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
-          <Link href="/becomeaseller">Become a Seller</Link>
-        </NavbarItem>
+        {user && user.email && user.role === "CUSTOMER" && (
+          <NavbarItem className="hidden sm:flex gap-2">
+            <Link href="/becomeaseller">Become a Seller</Link>
+          </NavbarItem>
+        )}
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>

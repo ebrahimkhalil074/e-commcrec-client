@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { FC } from "react";
 
 interface SmallCardProps {
@@ -23,45 +24,49 @@ const SmallCard: FC<SmallCardProps> = ({ product }) => {
     discount > 0 ? price - (price * discount) / 100 : price;
 
   return (
-    <div className="bg-white shadow rounded-lg flex gap-3 p-3 hover:shadow-lg transition">
-      {/* Image */}
-      <div className="w-20 h-20 bg-gray-100 flex items-center justify-center overflow-hidden rounded-lg">
-        {product.images?.[0] ? (
-          <Image
-            alt={product.name}
-            className="w-full h-full object-cover"
-            height={80}
-            src={product?.images[0]?.url}
-            width={80}
-          />
-        ) : (
-          <span className="text-gray-400 text-xs">No Image</span>
-        )}
-      </div>
+    <>
+      <Link href={`/product/${product.id}`}>
+        <div className="bg-white shadow rounded-lg flex gap-3 p-3 hover:shadow-lg transition">
+          {/* Image */}
+          <div className="w-20 h-20 bg-gray-100 flex items-center justify-center overflow-hidden rounded-lg">
+            {product.images?.[0] ? (
+              <Image
+                alt={product.name}
+                className="w-full h-full object-cover"
+                height={80}
+                src={product?.images[0]?.url}
+                width={80}
+              />
+            ) : (
+              <span className="text-gray-400 text-xs">No Image</span>
+            )}
+          </div>
 
-      {/* Info */}
-      <div className="flex-1 flex flex-col justify-center">
-        <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
-          {product.name}
-        </h3>
-        {/* Price */}
-        <div className="text-sm text-gray-600 dark:text-gray-300">
-          <span className="font-bold text-lg text-amber-600">
-            ${discountedPrice.toFixed(2)}
-          </span>
-          {discount > 0 && (
-            <span className="line-through ml-2 text-red-500 text-sm">
-              ${price.toFixed(2)}
-            </span>
-          )}
-          {discount > 0 && (
-            <span className="ml-2 text-green-500 text-sm">
-              -${product?.discount}
-            </span>
-          )}
+          {/* Info */}
+          <div className="flex-1 flex flex-col justify-center">
+            <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
+              {product.name}
+            </h3>
+            {/* Price */}
+            <div className="text-sm text-gray-600 dark:text-gray-300">
+              <span className="font-bold text-lg text-amber-600">
+                ${discountedPrice.toFixed(2)}
+              </span>
+              {discount > 0 && (
+                <span className="line-through ml-2 text-red-500 text-sm">
+                  ${price.toFixed(2)}
+                </span>
+              )}
+              {discount > 0 && (
+                <span className="ml-2 text-green-500 text-sm">
+                  -${product?.discount}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </Link>
+    </>
   );
 };
 

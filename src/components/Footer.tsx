@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { Link, Divider } from "@heroui/react";
 import {
   FaFacebookF,
@@ -14,94 +15,71 @@ import {
 export default function Footer() {
   const year = new Date().getFullYear();
 
+  // Motion variants for smooth fade-up animation
+  const fadeUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" },
+    }),
+  };
+
   return (
-    <footer className="container mx-auto dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors">
+    <motion.footer
+      className="container mx-auto dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors"
+      initial="hidden"
+      viewport={{ once: false, amount: 0.2 }}
+      whileInView="visible"
+    >
       {/* === Top: Multi-column layout === */}
-      <div className="  grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 px-6 py-12">
-        {/* Customer Care */}
-        <div>
-          <h3 className="font-bold text-lg mb-4 text-amber-600 dark:text-amber-400">
-            Customer Care
-          </h3>
-          <ul className="space-y-2 text-sm">
-            <li>
-              <Link
-                className="hover:text-amber-600 dark:hover:text-amber-400"
-                href="/help"
-              >
-                Help Center
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-amber-600 dark:hover:text-amber-400"
-                href="/track"
-              >
-                Track Order
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-amber-600 dark:hover:text-amber-400"
-                href="/returns"
-              >
-                Returns & Refunds
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-amber-600 dark:hover:text-amber-400"
-                href="/faq"
-              >
-                FAQ
-              </Link>
-            </li>
-          </ul>
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 px-6 py-12">
+        {[
+          {
+            title: "Customer Care",
+            items: [
+              { name: "Help Center", href: "/help" },
+              { name: "Track Order", href: "/track" },
+              { name: "Returns & Refunds", href: "/returns" },
+              { name: "FAQ", href: "/faq" },
+            ],
+          },
+          {
+            title: "About Us",
+            items: [
+              { name: "Company Info", href: "/about" },
+              { name: "Careers", href: "/careers" },
+              { name: "Privacy Policy", href: "/privacy" },
+              { name: "Terms & Conditions", href: "/terms" },
+            ],
+          },
+        ].map((section, i) => (
+          <motion.div
+            key={section.title}
+            className="w-full"
+            custom={i}
+            variants={fadeUp}
+          >
+            <h3 className="font-bold text-lg mb-4 text-amber-600 dark:text-amber-400">
+              {section.title}
+            </h3>
+            <ul className="space-y-2 text-sm">
+              {section.items.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    className="hover:text-amber-600 dark:hover:text-amber-400"
+                    href={item.href}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        ))}
 
-        {/* About Us */}
-        <div>
-          <h3 className="font-bold text-lg mb-4 text-amber-600 dark:text-amber-400">
-            About Us
-          </h3>
-          <ul className="space-y-2 text-sm">
-            <li>
-              <Link
-                className="hover:text-amber-600 dark:hover:text-amber-400"
-                href="/about"
-              >
-                Company Info
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-amber-600 dark:hover:text-amber-400"
-                href="/careers"
-              >
-                Careers
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-amber-600 dark:hover:text-amber-400"
-                href="/privacy"
-              >
-                Privacy Policy
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-amber-600 dark:hover:text-amber-400"
-                href="/terms"
-              >
-                Terms & Conditions
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* App Download */}
-        <div>
+        {/* Download App */}
+        <motion.div custom={2} variants={fadeUp}>
           <h3 className="font-bold text-lg mb-4 text-amber-600 dark:text-amber-400">
             Download App
           </h3>
@@ -123,10 +101,10 @@ export default function Footer() {
               <FaApple /> App Store
             </a>
           </div>
-        </div>
+        </motion.div>
 
         {/* Follow Us */}
-        <div>
+        <motion.div custom={3} variants={fadeUp}>
           <h3 className="font-bold text-lg mb-4 text-amber-600 dark:text-amber-400">
             Follow Us
           </h3>
@@ -160,16 +138,20 @@ export default function Footer() {
               <FaYoutube className="hover:text-amber-600 dark:hover:text-amber-400" />
             </a>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <Divider className="bg-amber-200 dark:bg-amber-700" />
 
       {/* === Bottom: Copyright === */}
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-6 text-sm">
+      <motion.div
+        className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-6 text-sm"
+        custom={4}
+        variants={fadeUp}
+      >
         <p>&copy; {year} My E-Commerce. All rights reserved.</p>
         <p className="mt-2 md:mt-0">Built with Next.js & HeroUI</p>
-      </div>
-    </footer>
+      </motion.div>
+    </motion.footer>
   );
 }

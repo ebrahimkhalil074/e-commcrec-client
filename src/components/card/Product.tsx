@@ -107,7 +107,7 @@ const ProductCard = ({ product }: { product: any }) => {
         <Image
           fill
           alt={product.name}
-          className="object-cover "
+          className="object-contain p-4"
           src={product.images?.[0]?.url || "/placeholder.jpg"}
         />
 

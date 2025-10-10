@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { FaTruck, FaUndo, FaLock, FaHeadset } from "react-icons/fa";
 
 const promoItems = [
@@ -29,17 +30,40 @@ const promoItems = [
   },
 ];
 
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2 },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
 export default function PromoCards() {
   return (
-    <section className="py-12 px-6 ">
-      <h2 className="text-3xl  text-amber-500 font-bold py-2">
+    <section className="py-12 px-6">
+      <h2 className="text-3xl text-amber-500 font-bold py-2">
         Why Shop With Us?
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto mt-4">
+
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto mt-4"
+        initial="hidden"
+        variants={containerVariants}
+        viewport={{ once: false, amount: 0.3 }}
+        whileInView="visible"
+      >
         {promoItems.map((item) => (
-          <div
+          <motion.div
             key={item.id}
             className="bg-white flex justify-center items-center gap-4 dark:bg-gray-800 p-4 rounded-2xl shadow-md hover:shadow-lg transition-shadow text-center"
+            variants={cardVariants}
+            whileHover={{ scale: 1.05 }}
           >
             {item.icon}
             <div>
@@ -50,9 +74,9 @@ export default function PromoCards() {
                 {item.description}
               </p>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

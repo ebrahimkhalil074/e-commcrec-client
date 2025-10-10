@@ -174,6 +174,7 @@ import {
   useClearCart,
 } from "@/src/hooks/cart.hook";
 import EmptyCart from "@/src/components/EmptyCartComponent";
+import CartSkeleton from "@/src/components/skeloton/CartPageSkl";
 
 export default function CartPage() {
   const { data, isLoading } = useGetCart();
@@ -181,8 +182,6 @@ export default function CartPage() {
   const { mutate: removeItem } = useRemoveCartItem();
   const router = useRouter();
   const { mutate: clearAll } = useClearCart();
-
-  if (isLoading) return <p className="text-center mt-8">Loading...</p>;
 
   const items = (data as { items: any[] })?.items ?? [];
 
@@ -192,118 +191,128 @@ export default function CartPage() {
   );
 
   return (
-    <div className=" min-h-[70vh] mx-auto p-6 dark:bg-gray-900">
-      <div className="w-full flex justify-between items-center mb-6">
-        {/* Left: Cart Title */}
-        <h1 className="flex items-center gap-2 text-2xl font-bold text-amber-600">
-          <FaShoppingCart className="text-amber-500" />
-          Your Cart
-        </h1>
+    <>
+      {isLoading ? (
+        <CartSkeleton />
+      ) : (
+        <div className=" min-h-[70vh] mx-auto p-6 dark:bg-gray-900">
+          <div className="w-full flex justify-between items-center mb-6">
+            {/* Left: Cart Title */}
+            <h1 className="flex items-center gap-2 text-2xl font-bold text-amber-600">
+              <FaShoppingCart className="text-amber-500" />
+              Your Cart
+            </h1>
 
-        {/* Right: Continue Shopping */}
-        <Link
-          className="flex items-center gap-2 text-lg font-medium text-amber-600 hover:text-amber-700 transition-colors"
-          href="/shop"
-        >
-          <FaShoppingBag className="text-amber-500" />
-          Continue Shopping
-        </Link>
-      </div>
-
-      {!items.length && <EmptyCart onShopNow={() => router.push("/product")} />}
-
-      <div className="space-y-4">
-        {items?.map((item: any) => (
-          <div
-            key={item.id}
-            className="flex flex-col md:flex-row items-center justify-between border border-amber-300  rounded-xl p-4 shadow-sm bg-white"
-          >
-            {/* Product Info */}
-            <div className="flex items-center gap-4 w-full md:w-1/3">
-              <Image
-                alt={item?.product?.name}
-                className="w-20 h-20 object-content rounded-md border border-amber-200"
-                height={40}
-                src={
-                  item.product.category.image ||
-                  "https://via.placeholder.com/80"
-                }
-                width={30}
-              />
-              <div>
-                <h2 className="font-semibold text-lg text-amber-700">
-                  {item.product.name}
-                </h2>
-                <p className="text-sm text-gray-500">
-                  {item.variant?.color && <>Color: {item.variant.color}, </>}
-                  Size: {item.sizeStock?.size}
-                </p>
-                <p className="text-sm text-gray-700 font-medium">
-                  ৳{item.price}
-                </p>
-              </div>
-            </div>
-
-            {/* Quantity Controls */}
-            <div className="flex items-center gap-4 mt-4 md:mt-0">
-              <button
-                className="p-2 border border-amber-300 rounded-full hover:bg-amber-100 disabled:opacity-50"
-                disabled={item.quantity <= 1}
-                onClick={() =>
-                  updateQty({ id: item.id, quantity: item.quantity - 1 })
-                }
-              >
-                <FaMinus />
-              </button>
-              <span className="text-lg font-semibold">{item.quantity}</span>
-              <button
-                className="p-2 border border-amber-300 rounded-full hover:bg-amber-100"
-                onClick={() =>
-                  updateQty({ id: item.id, quantity: item.quantity + 1 })
-                }
-              >
-                <FaPlus />
-              </button>
-            </div>
-
-            {/* Subtotal + Remove */}
-            <div className="flex items-center gap-4 mt-4 md:mt-0">
-              <span className="text-lg font-bold text-amber-700">
-                ৳{(item.price * item.quantity).toFixed(2)}
-              </span>
-              <button
-                className="text-amber-600 hover:text-amber-800"
-                title="Remove Item"
-                onClick={() => removeItem(item.id)}
-              >
-                <FaTrashAlt size={18} />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {!!items.length && (
-        <div className="mt-6 flex flex-col md:flex-row justify-between items-center border-t pt-4">
-          <p className="text-xl font-bold">
-            Total:{" "}
-            <span className="text-amber-700">৳{totalPrice.toFixed(2)}</span>
-          </p>
-          <div className="flex gap-4 flex-col md:flex-row w-full md:w-auto">
-            <button
-              className="mt-4 md:mt-0 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full flex items-center gap-2 shadow-md"
-              onClick={() => clearAll()}
+            {/* Right: Continue Shopping */}
+            <Link
+              className="flex items-center gap-2 text-lg font-medium text-amber-600 hover:text-amber-700 transition-colors"
+              href="/shop"
             >
-              <FaTrashAlt /> Clear Cart
-            </button>
-            <Link href="/checkout">
-              <button className="mt-4 md:mt-0 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full flex items-center gap-2 shadow-md">
-                <FaCheck /> Checkout
-              </button>
+              <FaShoppingBag className="text-amber-500" />
+              Continue Shopping
             </Link>
           </div>
+
+          {!items.length && (
+            <EmptyCart onShopNow={() => router.push("/product")} />
+          )}
+
+          <div className="space-y-4">
+            {items?.map((item: any) => (
+              <div
+                key={item.id}
+                className="flex flex-col md:flex-row items-center justify-between border border-amber-300  rounded-xl p-4 shadow-sm bg-white"
+              >
+                {/* Product Info */}
+                <div className="flex items-center gap-4 w-full md:w-1/3">
+                  <Image
+                    alt={item?.product?.name}
+                    className="w-20 h-20 object-content rounded-md border border-amber-200"
+                    height={40}
+                    src={
+                      item?.product?.category?.image ||
+                      "https://via.placeholder.com/80"
+                    }
+                    width={30}
+                  />
+                  <div>
+                    <h2 className="font-semibold text-lg text-amber-700">
+                      {item.product.name}
+                    </h2>
+                    <p className="text-sm text-gray-500">
+                      {item.variant?.color && (
+                        <>Color: {item.variant.color}, </>
+                      )}
+                      Size: {item.sizeStock?.size}
+                    </p>
+                    <p className="text-sm text-gray-700 font-medium">
+                      ৳{item.price}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Quantity Controls */}
+                <div className="flex items-center gap-4 mt-4 md:mt-0">
+                  <button
+                    className="p-2 border border-amber-300 rounded-full hover:bg-amber-100 disabled:opacity-50"
+                    disabled={item.quantity <= 1}
+                    onClick={() =>
+                      updateQty({ id: item.id, quantity: item.quantity - 1 })
+                    }
+                  >
+                    <FaMinus />
+                  </button>
+                  <span className="text-lg font-semibold">{item.quantity}</span>
+                  <button
+                    className="p-2 border border-amber-300 rounded-full hover:bg-amber-100"
+                    onClick={() =>
+                      updateQty({ id: item.id, quantity: item.quantity + 1 })
+                    }
+                  >
+                    <FaPlus />
+                  </button>
+                </div>
+
+                {/* Subtotal + Remove */}
+                <div className="flex items-center gap-4 mt-4 md:mt-0">
+                  <span className="text-lg font-bold text-amber-700">
+                    ৳{(item.price * item.quantity).toFixed(2)}
+                  </span>
+                  <button
+                    className="text-amber-600 hover:text-amber-800"
+                    title="Remove Item"
+                    onClick={() => removeItem(item.id)}
+                  >
+                    <FaTrashAlt size={18} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {!!items.length && (
+            <div className="mt-6 flex flex-col md:flex-row justify-between items-center border-t pt-4">
+              <p className="text-xl font-bold">
+                Total:{" "}
+                <span className="text-amber-700">৳{totalPrice.toFixed(2)}</span>
+              </p>
+              <div className="flex gap-4 flex-col md:flex-row w-full md:w-auto">
+                <button
+                  className="mt-4 md:mt-0 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full flex items-center gap-2 shadow-md"
+                  onClick={() => clearAll()}
+                >
+                  <FaTrashAlt /> Clear Cart
+                </button>
+                <Link href="/checkout">
+                  <button className="mt-4 md:mt-0 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full flex items-center gap-2 shadow-md">
+                    <FaCheck /> Checkout
+                  </button>
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 }

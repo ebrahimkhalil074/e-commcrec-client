@@ -9,9 +9,13 @@ import {
   SelectItem,
   Button,
 } from "@heroui/react";
+import { motion } from "framer-motion";
 import { FaSort } from "react-icons/fa";
 import { useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
+
+import SidebarSkeleton from "./skeloton/SidebarSkeleton";
+import ProductSkeletonGrid from "./skeloton/ProductSkeletonGrid";
 
 import { useGetAllCategory } from "@/src/hooks/category.hook";
 import { useGetAllBrands } from "@/src/hooks/brand.hook";
@@ -59,7 +63,6 @@ const ProductPage = () => {
     },
   });
 
-  // watch specific fields (not whole object)
   const searchTerm = useWatch({ control, name: "searchTerm" });
   const brandName = useWatch({ control, name: "brandName" });
   const categoryName = useWatch({ control, name: "categoryName" });
@@ -80,12 +83,10 @@ const ProductPage = () => {
     );
   }, [categories, categoryName]);
 
-  // ---update search term from URL ---
   useEffect(() => {
     setValue("searchTerm", searchTermFromUrl);
   }, [searchTermFromUrl, setValue]);
 
-  // --- Clear all filters ---
   const clearFilters = () => {
     reset({
       searchTerm: "",
@@ -115,148 +116,164 @@ const ProductPage = () => {
       const data = await res.json();
 
       setProducts(data?.data || []);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
+    } catch {
       setProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ now only depends on stable primitive values
   useEffect(() => {
     fetchProducts();
   }, [searchTerm, brandName, categoryName, subCategoryName, sortBy]);
 
+  // ---- Animation variants ----
+  const containerVariants = {
+    hidden: {},
+    show: {
+      transition: { staggerChildren: 0.08 },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  };
+
   return (
     <div className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
-      {/* --- Sidebar Filters --- */}
-      <aside className="lg:col-span-3 rounded-lg p-4 space-y-6">
-        {/* Search */}
-        <Input placeholder="Search..." {...register("searchTerm")} />
+      {/* Sidebar */}
+      <aside className="lg:col-span-3 rounded-lg p-4 border border-gray-200 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900">
+        {brandLoading || catLoading ? (
+          <SidebarSkeleton />
+        ) : (
+          <>
+            <Input placeholder="Search..." {...register("searchTerm")} />
 
-        {/* Brand */}
-        <div>
-          <h3 className="font-medium mb-2">Brand</h3>
-          {brandLoading ? (
-            <p>Loading...</p>
-          ) : (
-            <RadioGroup
-              value={brandName}
-              onValueChange={(val) => setValue("brandName", val)}
-            >
-              <Radio value="">All Brands</Radio>
-              {brands.map((brand) => (
-                <Radio key={brand.id} value={brand.name}>
-                  {brand.name}
-                </Radio>
-              ))}
-            </RadioGroup>
-          )}
-        </div>
+            <div>
+              <h3 className="font-medium mb-2">Brand</h3>
+              <RadioGroup
+                value={brandName}
+                onValueChange={(val) => setValue("brandName", val)}
+              >
+                <Radio value="">All Brands</Radio>
+                {brands.map((brand) => (
+                  <Radio key={brand.id} value={brand.name}>
+                    {brand.name}
+                  </Radio>
+                ))}
+              </RadioGroup>
+            </div>
 
-        {/* Category */}
-        <div>
-          <h3 className="font-medium mb-2">Category</h3>
-          {catLoading ? (
-            <p>Loading...</p>
-          ) : (
-            <RadioGroup
-              value={categoryName}
-              onValueChange={(val) => {
-                setValue("categoryName", val);
-                setValue("subCategoryName", ""); // reset subcategory
-              }}
-            >
-              <Radio value="">All Categories</Radio>
-              {categories.map((cat) => (
-                <Radio key={cat.id} value={cat.name}>
-                  {cat.name}
-                </Radio>
-              ))}
-            </RadioGroup>
-          )}
-        </div>
+            <div>
+              <h3 className="font-medium mb-2">Category</h3>
+              <RadioGroup
+                value={categoryName}
+                onValueChange={(val) => {
+                  setValue("categoryName", val);
+                  setValue("subCategoryName", "");
+                }}
+              >
+                <Radio value="">All Categories</Radio>
+                {categories.map((cat) => (
+                  <Radio key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </Radio>
+                ))}
+              </RadioGroup>
+            </div>
 
-        {/* SubCategory */}
-        {categoryName && subCategories.length > 0 && (
-          <div>
-            <h3 className="font-medium mb-2">Sub Category</h3>
-            <RadioGroup
-              value={subCategoryName}
-              onValueChange={(val) => setValue("subCategoryName", val)}
-            >
-              <Radio value="">All SubCategories</Radio>
-              {subCategories.map((sub) => (
-                <Radio key={sub.id} value={sub.name}>
-                  {sub.name}
-                </Radio>
-              ))}
-            </RadioGroup>
-          </div>
+            {categoryName && subCategories.length > 0 && (
+              <div>
+                <h3 className="font-medium mb-2">Sub Category</h3>
+                <RadioGroup
+                  value={subCategoryName}
+                  onValueChange={(val) => setValue("subCategoryName", val)}
+                >
+                  <Radio value="">All SubCategories</Radio>
+                  {subCategories.map((sub) => (
+                    <Radio key={sub.id} value={sub.name}>
+                      {sub.name}
+                    </Radio>
+                  ))}
+                </RadioGroup>
+              </div>
+            )}
+
+            <div>
+              <h3 className="font-medium mb-2 flex items-center gap-2">
+                <FaSort className="text-gray-500 dark:text-gray-300" />
+                Sort By
+              </h3>
+              <Select
+                aria-label="Sort products"
+                className="w-full"
+                placeholder="Select sort option"
+                radius="md"
+                selectedKeys={sortBy ? [sortBy] : []}
+                variant="bordered"
+                onChange={(e) => setValue("sortBy", e.target.value)}
+              >
+                <SelectItem key="price_asc">Price: Low to High</SelectItem>
+                <SelectItem key="price_desc">Price: High to Low</SelectItem>
+                <SelectItem key="newest">Newest</SelectItem>
+              </Select>
+            </div>
+
+            <Button className="w-full mt-2" onPress={clearFilters}>
+              Clear Filters
+            </Button>
+          </>
         )}
-
-        {/* Sort By */}
-        <div>
-          <h3 className="font-medium mb-2 flex items-center gap-2">
-            <FaSort className="text-gray-500 dark:text-gray-300" />
-            Sort By
-          </h3>
-          <Select
-            aria-label="Sort products"
-            className="w-full"
-            classNames={{
-              trigger:
-                "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200",
-              popoverContent:
-                "bg-white dark:bg-gray-800 shadow-lg rounded-lg p-1",
-            }}
-            placeholder="Select sort option"
-            radius="md"
-            selectedKeys={sortBy ? [sortBy] : []}
-            variant="bordered"
-            onChange={(e) => setValue("sortBy", e.target.value)}
-          >
-            <SelectItem key="price_asc">Price: Low to High</SelectItem>
-            <SelectItem key="price_desc">Price: High to Low</SelectItem>
-            <SelectItem key="newest">Newest</SelectItem>
-          </Select>
-        </div>
-        {/* Clear Filters */}
-        <Button className="w-full mt-2" onPress={clearFilters}>
-          Clear Filters
-        </Button>
       </aside>
 
-      {/* --- Products Grid --- */}
+      {/* Product Grid */}
       <main className="lg:col-span-9">
-        <div className="relative py-2 text-center">
-          {/* Title */}
+        <motion.div
+          className="relative py-2 text-center"
+          initial={{ opacity: 0, y: 30 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          viewport={{ once: false, amount: 0.3 }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white">
             All <span className="text-amber-600">Products</span>
           </h1>
-
-          {/* Subtitle */}
           <p className="mt-3 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Browse our wide range of high-quality products. From the latest
             electronics to everyday essentials, find everything you need in one
             place.
           </p>
-
-          {/* Gradient underline */}
           <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-amber-500 via-pink-400 to-amber-500 rounded-full" />
-        </div>
+        </motion.div>
 
         {loading ? (
-          <p>Loading...</p>
+          <ProductSkeletonGrid />
         ) : products.length === 0 ? (
-          <p>No products found</p>
+          <p className="text-center mt-10 text-gray-500">No products found</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+            initial="hidden"
+            variants={containerVariants}
+            viewport={{ once: false, amount: 0.2 }}
+            whileInView="show"
+          >
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <motion.div
+                key={product.id}
+                transition={{ duration: 0.3 }}
+                variants={cardVariants}
+                viewport={{ once: false, amount: 0.2 }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+                }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </main>
     </div>

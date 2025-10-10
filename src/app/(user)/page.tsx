@@ -6,30 +6,6 @@ import Hero from "../../components/home/Hero";
 import JastForYouProducts from "../../components/home/JastForYou";
 import PromoCards from "../../components/home/PromoCards";
 export default function Home() {
-  const slideData = [
-    {
-      title: "Welcome to Our Site",
-      description: "Explore our features and offerings.",
-      image:
-        "https://i.ibb.co.com/8gX5V9fP/Sky-Blue-and-White-Modern-Headphone-Sale-Promotion-Instagram-Post.png",
-      link: "/features",
-    },
-    {
-      title: "Join Our Community",
-      description: "Connect with like-minded individuals.",
-      image:
-        "https://i.ibb.co.com/5hSW5ZJP/alfred-kenneally-lxw7-Dqi-RF2s-unsplash.jpg",
-      link: "/community",
-    },
-    {
-      title: "Learn More",
-      description: "Discover more about what we do.",
-      image:
-        "https://i.ibb.co.com/5hSW5ZJP/alfred-kenneally-lxw7-Dqi-RF2s-unsplash.jpg",
-      link: "/learn",
-    },
-  ];
-
   return (
     <>
       <Hero />
@@ -42,7 +18,6 @@ export default function Home() {
       <JastForYouProducts />
       {/* <Newsletter /> */}
       {/* <Testimonials /> */}
-      {/* <PromoCards /> */}
     </>
   );
 }
