@@ -16,11 +16,13 @@ export default function JustForYouProducts() {
   // Animation variants
   const cardVariants = {
     hidden: { opacity: 0, y: 40 },
+    
     visible: {
       opacity: 1,
       y: 0,
       transition: { duration: 0.4, ease: "easeOut" },
     },
+    
   };
 
   return (
@@ -45,6 +47,10 @@ export default function JustForYouProducts() {
               className="w-full"
               initial="hidden"
               variants={cardVariants}
+               whileHover={{
+                scale: 1.05,
+                boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+              }}
               viewport={{ once: false, amount: 0.2 }} // scroll এ আবার animate হবে
               whileInView="visible"
             >

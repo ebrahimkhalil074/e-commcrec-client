@@ -16,7 +16,7 @@ import {
 
 export const adminLinks = [
   {
-    label: "Dashboard",
+    label: "Overview",
     href: "/admin/overview",
     icon: <FaChartBar size={16} />,
   },
@@ -165,7 +165,7 @@ export const adminLinks = [
 
 export const sellerLinks = [
   {
-    label: "Dashboard",
+    label: "Overview",
     href: "/seller/overview",
     icon: <FaBoxOpen size={16} />,
   },
@@ -219,7 +219,7 @@ export const sellerLinks = [
 
 export const customerLinks = [
   {
-    label: "Dashboard",
+    label: "Overview",
     href: "/customer/overview",
     icon: <FaBoxOpen size={16} />,
   },
@@ -256,7 +256,7 @@ export const customerLinks = [
 ];
 export const delivaryBoyLinks = [
   {
-    label: "Dashboard",
+    label: "Overview",
     href: "/delivaryboy/overview",
     icon: <FaBoxOpen size={16} />,
   },

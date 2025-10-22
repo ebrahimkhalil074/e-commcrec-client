@@ -95,6 +95,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const ProductCard = ({ product }: { product: any }) => {
+  console.log(product)
   const { price, discount = 0 } = product;
   const discountedPrice =
     discount > 0 ? price - (price * discount) / 100 : price;
@@ -106,9 +107,9 @@ const ProductCard = ({ product }: { product: any }) => {
       <div className="relative  h-[250px]">
         <Image
           fill
-          alt={product.name}
+          alt={product?.name}
           className="object-contain p-4"
-          src={product.images?.[0]?.url || "/placeholder.jpg"}
+          src={product?.images?.[0]?.url || "/placeholder.jpg"}
         />
 
         {/* Discount Badge */}
@@ -122,17 +123,17 @@ const ProductCard = ({ product }: { product: any }) => {
       {/* Product Info */}
       <div className="p-4 space-y-2">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white line-clamp-1">
-          {product.name}
+          {product?.name}
         </h3>
 
         {/* Price */}
         <div className="text-sm text-gray-600 dark:text-gray-300">
           <span className="font-bold text-lg text-amber-600">
-            ${discountedPrice.toFixed(2)}
+            ${discountedPrice?.toFixed(2)}
           </span>
           {discount > 0 && (
             <span className="line-through ml-2 text-red-500 text-sm">
-              ${price.toFixed(2)}
+              ${price?.toFixed(2)}
             </span>
           )}
         </div>

@@ -50,10 +50,6 @@ export const siteConfig = {
       label: "Profile",
       href: "/profile",
     },
-    {
-      label: "Logout",
-      href: "/logout",
-    },
   ],
   links: {
     github: "https://github.com/heroui-inc/heroui",

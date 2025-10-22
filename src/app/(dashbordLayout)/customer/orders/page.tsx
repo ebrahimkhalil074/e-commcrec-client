@@ -366,6 +366,8 @@ function OrderDetailsModal({
   order: Order;
   onClose: () => void;
 }) {
+  console.log(order);
+  
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-md max-w-2xl w-full p-6">
